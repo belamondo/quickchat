@@ -9,6 +9,7 @@ import { CrmComponent } from './crm.component';
 /**
  * Modules
  */
+import { ClientComponent } from './components/client/client.component';
 import { CrmRoutingModule } from './crm-routing.module';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 
@@ -24,8 +25,9 @@ import { SharedModule } from './../shared/shared.module';
     SharedModule
   ],
   declarations: [
+    ClientComponent,
     CrmComponent,
-    DashboardComponent
+    DashboardComponent,
   ]
 })
 export class CrmModule { }

@@ -100,9 +100,9 @@ export class CrmComponent implements OnInit {
               icon: 'home',
               link: ['dashboard']
             }, {
-              name: 'Regras',
-              icon: 'account_circle',
-              link: ['rule']
+              name: 'Cadastrar cliente',
+              icon: 'person',
+              link: ['client']
             }];
           } else {
             this._router.navigate(['/main/profile_choice'])

@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 /**
  * Components
  */
+import { ClientComponent } from './components/client/client.component';
 import { CrmComponent } from './crm.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 
@@ -15,6 +16,9 @@ const routes: Routes = [{
   }, {
     path: 'dashboard',
     component: DashboardComponent
+  }, {
+    path: 'client',
+    component: ClientComponent
   }]
 }];
 

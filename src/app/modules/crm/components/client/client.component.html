@@ -1,0 +1,29 @@
+<mat-card *ngIf="!isStarted" class="container">
+    <mat-spinner></mat-spinner>
+</mat-card>
+
+<mat-card *ngIf="isStarted" class="container">
+  <form [formGroup]="clientForm" (ngSubmit)="onClientFormSubmit()">
+    <mat-card-title>Cadastro de cliente</mat-card-title>
+    <mat-form-field appearance="outline">
+      <mat-label>Nome</mat-label>
+      <input matInput placeholder="Digite seu nome" type="text" formControlName="name" required>
+    </mat-form-field>
+
+    <div class="flex">
+      <mat-radio-group formControlName="gender">
+        <mat-radio-button value="Masculino">Masculino</mat-radio-button>
+        <mat-radio-button value="Feminino">Feminino</mat-radio-button>
+      </mat-radio-group>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Nascimento</mat-label>
+        <input matInput [matDatepicker]="picker" placeholder="Clique no ícone" disabled required>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker disabled="false"></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <button mat-raised-button>Cadastrar</button>
+  </form>
+</mat-card>

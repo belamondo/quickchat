@@ -28,6 +28,7 @@
     "hammerjs": "^2.0.8",
     "rxjs": "^6.0.0",
     "rxjs-compat": "^6.1.0",
+    "text-mask-addons": "^3.7.2",
     "zone.js": "^0.8.26"
   },
   "devDependencies": {

@@ -48,8 +48,30 @@ img {
     display: flex;
 }
 
+.checkbox mat-label {
+    display: block;
+    width: 100%;
+    font-size: 12px;
+    margin-left: 12px;
+    margin-bottom: 5%;
+    color: #6b6b6b;
+}
+
+.checkbox mat-checkbox {
+    margin-inline-end: 10px;
+}
+
 mat-radio-group {
     width: 100%;
+}
+
+mat-radio-group mat-label {
+    display: block;
+    width: 100%;
+    font-size: 12px;
+    margin-left: 12px;
+    margin-bottom: 5%;
+    color: #6b6b6b;
 }
 
 @media screen and (max-width:480px){

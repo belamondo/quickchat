@@ -11,19 +11,31 @@
     </mat-form-field>
 
     <div class="flex">
-      <mat-radio-group formControlName="gender">
+      <mat-radio-group>
+        <mat-label>Gênero *</mat-label>
         <mat-radio-button value="Masculino">Masculino</mat-radio-button>
         <mat-radio-button value="Feminino">Feminino</mat-radio-button>
       </mat-radio-group>
 
       <mat-form-field appearance="outline">
         <mat-label>Nascimento</mat-label>
-        <input matInput [matDatepicker]="picker" placeholder="Clique no ícone" disabled required>
+        <input matInput [matDatepicker]="picker" placeholder="Digite ou clique no ícone"
+        [textMask]="{mask: mask.date, pipe: autoCorrectedDatePipe}" required>
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker disabled="false"></mat-datepicker>
+        <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
     </div>
 
-    <button mat-raised-button>Cadastrar</button>
+    <div class="flex">
+      <section class="checkbox">
+        <mat-label>Checkboxes</mat-label>
+        <mat-checkbox>Checked</mat-checkbox>
+        <mat-checkbox>Indeterminate</mat-checkbox>
+      </section>
+    </div>
+
+    <div class="flex">      
+      <button mat-raised-button disabled="clientForm.invalid">Cadastrar</button>
+    </div>
   </form>
 </mat-card>

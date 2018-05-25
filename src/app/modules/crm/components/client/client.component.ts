@@ -20,6 +20,9 @@ import { CrudService } from './../../../shared/services/firebase/crud.service';
  */
 import createAutoCorrectedDatePipe from 'text-mask-addons/dist/createAutoCorrectedDatePipe';
 
+import { Observable } from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
+
 @Component({
   selector: 'app-client',
   templateUrl: './client.component.html',
@@ -37,7 +40,11 @@ export class ClientComponent implements OnInit {
   public title: string;
   //Common properties: end
 
-  public autoCorrectedDatePipe: any = createAutoCorrectedDatePipe('dd/mm/yyyy');  
+  public clientDocumentForm: FormGroup;
+
+  public autoCorrectedDatePipe: any;
+  public documents: any;
+  public filteredOptions: Observable<string[]>;
 
   constructor(
     private _crud: CrudService,
@@ -46,13 +53,27 @@ export class ClientComponent implements OnInit {
     public _snackbar: MatSnackBar
   ) {
   }
-
+  
   ngOnInit() {
+    this.autoCorrectedDatePipe = createAutoCorrectedDatePipe('dd/mm/yyyy');
+    this.documents = JSON.parse(sessionStorage.getItem('documents'));
+
+    // this.filteredOptions = this.clientDocumentForm.valueChanges
+    //   .pipe(
+    //     startWith(''),
+    //     map(val => this.filter(val))
+    //   );
+
     this.clientForm = new FormGroup({
       name: new FormControl(null, Validators.required),
       birthday: new FormControl(null, Validators.required),
       gender: new FormControl(null, Validators.required),
     });
+
+    this.clientDocumentForm = new FormGroup({
+      name: new FormControl(null)
+    })
+
     this.isStarted = false;
 
     this.mask = {
@@ -100,6 +121,11 @@ export class ClientComponent implements OnInit {
       }
     })
   }
+
+  // filter(val: string): string[] {
+  //   return this.documents.filter(option =>
+  //     option.toLowerCase().includes(val.toLowerCase()));
+  // }
 
   onClientFormSubmit = () => {}
 }

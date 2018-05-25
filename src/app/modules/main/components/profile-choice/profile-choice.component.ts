@@ -15,6 +15,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./profile-choice.component.css']
 })
 export class ProfileChoiceComponent implements OnInit {
+  mask: any;
   peopleForm: FormGroup;
   profileChoiceForm: FormGroup;
 
@@ -27,6 +28,15 @@ export class ProfileChoiceComponent implements OnInit {
   }
   
   ngOnInit() {
+    this.mask = {
+      cpf: [/\d/, /\d/, /\d/,'.', /\d/, /\d/, /\d/,'.', /\d/, /\d/, /\d/,'-', /\d/,/\d/ ],
+      date: [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/],
+      zip: [/\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/],
+      phone: ['(', /\d/, /\d/, ')',' ' , /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/,],
+      cell_phone: ['(', /\d/, /\d/, ')',' ' , /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/],
+      cnpj: [/\d/, /\d/,'.', /\d/, /\d/, /\d/,'.', /\d/, /\d/, /\d/,'/', /\d/,/\d/,/\d/,/\d/,'-',/\d/,/\d/]
+    };
+    
     this.profileChoiceForm = new FormGroup({
       description: new FormControl(null)
     });

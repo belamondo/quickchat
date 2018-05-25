@@ -22,6 +22,25 @@ mat-radio-button {
     margin-inline-end: 1em;
 }
 
+mat-radio-group {
+    width: 100%;
+}
+
+mat-radio-group mat-label {
+    display: block;
+    width: 100%;
+    font-size: 12px;
+    margin-left: 12px;
+    margin-bottom: 5%;
+    color: #6b6b6b;
+}
+
+mat-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 video {
     width: 100%;
     height: auto;
@@ -61,18 +80,12 @@ img {
     margin-inline-end: 10px;
 }
 
-mat-radio-group {
-    width: 100%;
+.spinner-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-mat-radio-group mat-label {
-    display: block;
-    width: 100%;
-    font-size: 12px;
-    margin-left: 12px;
-    margin-bottom: 5%;
-    color: #6b6b6b;
-}
 
 @media screen and (max-width:480px){
 	.flex {

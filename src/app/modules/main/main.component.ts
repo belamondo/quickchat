@@ -99,10 +99,6 @@ export class MainComponent implements OnInit {
               name: 'Painel inicial',
               icon: 'home',
               link: ['dashboard']
-            }, {
-              name: 'Regras',
-              icon: 'account_circle',
-              link: ['rule']
             }];
           } else {
             this._router.navigate(['/main/profile_choice'])

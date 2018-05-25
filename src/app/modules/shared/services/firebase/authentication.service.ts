@@ -93,7 +93,9 @@ export class AuthenticationService {
         if(fbRes && fbRes['user']['uid']) {
           fbRes['code'] = "l-success-01";
           fbRes['message'] = "Welcome";
-
+          
+          sessionStorage.clear();
+          
           this._router.navigate([params.navigateTo]);
           
           this._snackbar.open(fbRes['message'],'',{
@@ -126,6 +128,8 @@ export class AuthenticationService {
           message: 'Parâmetro obrigatório: navigateTo'
         })
       }
+
+      sessionStorage.clear();
 
       _authentication.signOut();
 

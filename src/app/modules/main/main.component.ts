@@ -90,7 +90,7 @@ export class MainComponent implements OnInit {
           route: 'people',
           whereId: res['id']
         }).then(res => { 
-          if (res[0]) { console.log(res[0])
+          if (res[0]) {
             this.user = {
               name: res[0]['_data']['name'].split(' ')[0]
             }

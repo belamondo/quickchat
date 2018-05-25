@@ -82,7 +82,7 @@ export class CrudService {
 
       functionToFilter
       .get()
-      .then((querySnapshot) => { console.log(querySnapshot)
+      .then((querySnapshot) => {
         let result = [];
         
         if((querySnapshot.exists && params.whereId) || (querySnapshot.docs && querySnapshot.docs.length > 0)) {

@@ -41,9 +41,7 @@ export class CashFlowGuard implements CanActivate {
           route: 'people',
           whereId: res['id']
         }).then(res => { 
-          if (res[0]) {
-            this._router.navigate(['/cash-flow/dashboard'])
-          } else {
+          if (!res[0]) {
             this._router.navigate(['/main/profile_choice'])
           }
         })

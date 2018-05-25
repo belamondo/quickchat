@@ -10,6 +10,7 @@ import { LoginComponent } from './components/login/login.component';
  * Guards
  */
 import { AuthGuard } from './modules/shared/guards/auth.guard';
+import { CashFlowGuard } from './modules/shared/guards/cash-flow.guard';
 import { CrmGuard } from './modules/shared/guards/crm.guard';
 
 /**
@@ -30,7 +31,7 @@ const routes: Routes = [{
 }, {
   path: 'cash_flow',
   loadChildren: './modules/cash-flow/cash-flow.module#CashFlowModule',
-  canActivate: [AuthGuard]
+  canActivate: [CashFlowGuard]
 }, {
   path: 'crm',
   loadChildren: './modules/crm/crm.module#CrmModule',

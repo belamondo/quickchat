@@ -1,7 +1,7 @@
 <mat-card class="container">
   <form [formGroup]="profileChoiceForm" (ngSubmit)="onProfileChoiceFormSubmit()">
     <mat-card-title>Tipo de usuário</mat-card-title>
-    
+
     <mat-radio-group formControlName="description">
       <mat-radio-button value="animal">Animal</mat-radio-button>
       <mat-radio-button value="business">Empresa</mat-radio-button>
@@ -23,16 +23,15 @@
 
     <div class="flex">
       <mat-radio-group formControlName="gender">
+        <mat-label>Gênero *</mat-label>
         <mat-radio-button value="Masculino">Masculino</mat-radio-button>
         <mat-radio-button value="Feminino">Feminino</mat-radio-button>
       </mat-radio-group>
 
       <mat-form-field appearance="outline">
         <mat-label>Nascimento</mat-label>
-        <mat-icon matPrefix>calendar_today</mat-icon>      
-        <input matInput [matDatepicker]="picker" placeholder="Choose a date" disabled required (dateChange)="onBirthdayChange($event)">
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker disabled="false"></mat-datepicker>
+        <input matInput placeholder="Digite ou clique no ícone" formControlName="birthday" [textMask]="{mask: mask.date, pipe: autoCorrectedDatePipe}"
+          required>
       </mat-form-field>
     </div>
 
@@ -49,5 +48,5 @@
 </mat-card>
 
 <mat-card class="container" *ngIf="profileChoiceForm.get('description').value === 'entity'">
-    Formulário de entidade
-  </mat-card>
+  Formulário de entidade
+</mat-card>

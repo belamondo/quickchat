@@ -38,9 +38,7 @@ export class AuthGuard implements CanActivate {
           route: 'people',
           whereId: res['id']
         }).then(res => { 
-          if (res[0]) {
-            this._router.navigate(['/main/dashboard'])
-          } else {
+          if (!res[0]) {
             this._router.navigate(['/main/profile_choice'])
           }
         })

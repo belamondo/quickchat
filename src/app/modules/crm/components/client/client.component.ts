@@ -55,15 +55,6 @@ export class ClientComponent implements OnInit {
   }
   
   ngOnInit() {
-    this.autoCorrectedDatePipe = createAutoCorrectedDatePipe('dd/mm/yyyy');
-    this.documents = JSON.parse(sessionStorage.getItem('documents'));
-
-    // this.filteredOptions = this.clientDocumentForm.valueChanges
-    //   .pipe(
-    //     startWith(''),
-    //     map(val => this.filter(val))
-    //   );
-
     this.clientForm = new FormGroup({
       name: new FormControl(null, Validators.required),
       birthday: new FormControl(null, Validators.required),
@@ -71,8 +62,21 @@ export class ClientComponent implements OnInit {
     });
 
     this.clientDocumentForm = new FormGroup({
-      name: new FormControl(null)
+      type: new FormControl(null)
     })
+
+    this.autoCorrectedDatePipe = createAutoCorrectedDatePipe('dd/mm/yyyy');
+    this.documents = JSON.parse(sessionStorage.getItem('documents'));
+    
+    this.filteredOptions = this.clientDocumentForm.get('type').valueChanges
+      .pipe(
+        startWith<string>(''),
+        map(value => {
+          return this.filter(value)
+          // typeof value === 'string' ? value : value
+        }),
+        //map(name => name ? this.filter(name) : this.documents.slice())
+      );
 
     this.isStarted = false;
 
@@ -122,10 +126,16 @@ export class ClientComponent implements OnInit {
     })
   }
 
-  // filter(val: string): string[] {
-  //   return this.documents.filter(option =>
-  //     option.toLowerCase().includes(val.toLowerCase()));
-  // }
+  filter(name: string) { console.log(name)
+    if(name) {      
+      return this.documents.filter(option =>
+        option._data.name.toLowerCase().indexOf(name.toLowerCase()) === 0);
+    }
+  }
+
+  displayFn(user?): string | undefined {
+    return user ? user.name : undefined;
+  }
 
   onClientFormSubmit = () => {}
 }

@@ -1,0 +1,35 @@
+<h2 mat-dialog-title>Adicionar documento</h2>
+
+<div class="flex">  
+  <mat-form-field appearance="outline">
+    <mat-select placeholder="Tipo de documento *" #documentType>
+      <mat-option *ngFor="let document of data.documents" [value]="document._data.name">
+        {{ document._data.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+      <mat-label>Valor</mat-label>
+      <input matInput placeholder="Identificador do documento" type="text" #documentValue required>
+    </mat-form-field>
+</div>
+
+<div class="flex">
+  <mat-form-field appearance="outline">
+    <mat-label>Data de emissão</mat-label>
+    <input matInput placeholder="Digite ou clique no ícone" [textMask]="{mask: data.mask.date, pipe: data.autoCorrectedDatePipe}"
+      required #documentMakingDate>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Data de validade</mat-label>
+    <input matInput placeholder="Digite ou clique no ícone" [textMask]="{mask: data.mask.date, pipe: data.autoCorrectedDatePipe}"
+      required #documentValidityDate>
+  </mat-form-field>
+</div>
+
+<div class="flex">
+  <button mat-button [mat-dialog-close]="this.documentType.value" [disabled]="!this.documentType.value && (this.documentValue.value.length < 3)">Adicionar</button>
+  <button mat-button [mat-dialog-close]="false">Cancelar</button>
+</div>

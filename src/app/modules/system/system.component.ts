@@ -10,13 +10,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./system.component.css']
 })
 export class SystemComponent implements OnInit {
-
   public views: any;
 
   constructor() { }
 
   ngOnInit() {
-
     /* Options to show in side nav menu */
     this.views = [{
       name: 'Painel inicial',

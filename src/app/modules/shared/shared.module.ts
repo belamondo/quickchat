@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
+
 
 /**
  * Guards
@@ -11,7 +13,6 @@ import { AuthGuard } from './guards/auth.guard';
 /**
  * Modules
  */
-import { ComponentModule } from './component.module';
 import { MaterialModule } from './material.module';
 
 /**
@@ -25,26 +26,36 @@ import { CrudService } from './services/firebase/crud.service';
  */
 import { TextMaskModule } from 'angular2-text-mask';
 
+/**
+ * Components
+ */
 import { DeleteConfirmComponent } from './components/delete-confirm/delete-confirm.component';
+import { TableDataComponent } from './components/table-data/table-data.component';
+import { TopbarMenuComponent } from './components/topbar-menu/topbar-menu.component';
+
 @NgModule({
   imports: [
     CommonModule,
-    ComponentModule,
     MaterialModule,
     ReactiveFormsModule,
-    TextMaskModule
+    TextMaskModule,
+    RouterModule
   ], exports: [
     DeleteConfirmComponent,
-    ComponentModule,
     MaterialModule,
     ReactiveFormsModule,
-    TextMaskModule
+    RouterModule,
+    TableDataComponent,
+    TextMaskModule,
+    TopbarMenuComponent,
   ], providers: [
     AuthenticationService,
     AuthGuard,
     CrudService
   ], declarations: [
-    DeleteConfirmComponent
+    DeleteConfirmComponent,
+    TableDataComponent,
+    TopbarMenuComponent
   ], entryComponents: [
     DeleteConfirmComponent
   ]

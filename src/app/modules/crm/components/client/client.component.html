@@ -32,29 +32,21 @@
       </div>
     </mat-card-content>
   
-    <form [formGroup]="clientDocumentForm">
-      <mat-card-header>
-        <mat-card-subtitle>Documentos</mat-card-subtitle>
-      </mat-card-header>
-      
-      <mat-card-content>
-        <div class="flex">
-          <mat-form-field appearance="outline">
-            <mat-select placeholder="Tipo">
-              <mat-option *ngFor="let document of documents" [value]="document._id">
-                {{ document._data.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+    <mat-card-header>
+      <mat-card-subtitle>Documentos</mat-card-subtitle>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <div class="flex">
+        <button mat-raised-button type="button" (click)="addDocument()">Adicionar documento</button>
 
-          <section class="checkbox">
-            <mat-label>Checkboxes</mat-label>
-            <mat-checkbox>Checked</mat-checkbox>
-            <mat-checkbox>Indeterminate</mat-checkbox>
-          </section>
-        </div>
-      </mat-card-content>
-    </form>
+        <!-- <section class="checkbox">
+          <mat-label>Checkboxes</mat-label>
+          <mat-checkbox>Checked</mat-checkbox>
+          <mat-checkbox>Indeterminate</mat-checkbox>
+        </section> -->
+      </div>
+    </mat-card-content>
   </form>
   
   <mat-card-actions>

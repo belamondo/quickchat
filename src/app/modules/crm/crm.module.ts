@@ -9,7 +9,7 @@ import { CrmComponent } from './crm.component';
 /**
  * Modules
  */
-import { ClientComponent } from './components/client/client.component';
+import { ClientComponent, DialogDocumentForm } from './components/client/client.component';
 import { CrmRoutingModule } from './crm-routing.module';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 
@@ -28,6 +28,10 @@ import { SharedModule } from './../shared/shared.module';
     ClientComponent,
     CrmComponent,
     DashboardComponent,
+    DialogDocumentForm,
+  ], 
+  entryComponents: [
+    DialogDocumentForm
   ]
 })
 export class CrmModule { }

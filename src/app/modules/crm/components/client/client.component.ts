@@ -1,13 +1,19 @@
 import {
   Component,
-  OnInit
+  OnInit,
+  Inject
 } from '@angular/core';
 import {
   FormGroup,
   FormControl,
   Validators
 } from '@angular/forms';
-import { MatSnackBar } from '@angular/material';
+import { 
+  MatSnackBar, 
+  MatDialogRef, 
+  MatDialog, 
+  MAT_DIALOG_DATA 
+} from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 
 /**
@@ -40,13 +46,12 @@ export class ClientComponent implements OnInit {
   public title: string;
   //Common properties: end
 
-  public clientDocumentForm: FormGroup;
-
   public autoCorrectedDatePipe: any;
   public documents: any;
 
   constructor(
     private _crud: CrudService,
+    private _dialog: MatDialog,
     private _route: ActivatedRoute,
     private _router: Router,
     public _snackbar: MatSnackBar
@@ -60,12 +65,9 @@ export class ClientComponent implements OnInit {
       gender: new FormControl(null, Validators.required),
     });
 
-    this.clientDocumentForm = new FormGroup({
-      type: new FormControl(null)
-    })
-
     this.autoCorrectedDatePipe = createAutoCorrectedDatePipe('dd/mm/yyyy');
     this.documents = JSON.parse(sessionStorage.getItem('documents'));
+
     this.isStarted = false;
     this.mask = {
       cpf: [/\d/, /\d/, /\d/,'.', /\d/, /\d/, /\d/,'.', /\d/, /\d/, /\d/,'-', /\d/,/\d/ ],
@@ -113,5 +115,40 @@ export class ClientComponent implements OnInit {
     })
   }
 
+  addDocument = () => {
+    let dialogRef = this._dialog.open(DialogDocumentForm, {
+      height: '320px',
+      width: '800px',
+      data: {
+        documents: this.documents,
+        mask: this.mask,
+        autoCorrectedDatePipe: this.autoCorrectedDatePipe
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result)
+    });
+  }
+
   onClientFormSubmit = () => {}
+}
+
+/**
+ * Dialog document
+ */
+@Component({
+  selector: 'dialog-document-form',
+  templateUrl: './dialog-document-form.html',
+})
+export class DialogDocumentForm {
+  constructor(
+    public dialogRef: MatDialogRef<DialogDocumentForm>,
+    @Inject(MAT_DIALOG_DATA) public data: any) { 
+      console.log(this.data)
+    }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
 }

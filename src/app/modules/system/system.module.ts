@@ -5,10 +5,9 @@ import { CommonModule } from '@angular/common';
  * Components
  */
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { SystemComponent } from './system.component';
-import { TopbarMenuComponent } from './../shared/components/topbar-menu/topbar-menu.component';
 import { ProductComponent, DialogFormComponent } from './components/product/product.component';
 import { ServiceComponent, DialogFormServiceComponent } from './components/service/service.component';
+import { SystemComponent } from './system.component';
 
 /**
  * Modules
@@ -27,7 +26,6 @@ import { SystemRoutingModule } from './system-routing.module';
     DialogFormComponent,
     DialogFormServiceComponent,
     SystemComponent,
-    TopbarMenuComponent,
     ProductComponent,
     ServiceComponent
   ],

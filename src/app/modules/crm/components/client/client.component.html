@@ -36,18 +36,17 @@
       <mat-card-header>
         <mat-card-subtitle>Documentos</mat-card-subtitle>
       </mat-card-header>
-
+      
       <mat-card-content>
-        <mat-form-field appearance="outline">
-          <input type="text" placeholder="Tipo" aria-label="tipo" matInput formControlName="type" [matAutocomplete]="auto">
-          <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-            <mat-option *ngFor="let option of filteredOptions | async" [value]="option._data">
-              {{ option._data.name }}
-            </mat-option>
-          </mat-autocomplete>
-        </mat-form-field>
-
         <div class="flex">
+          <mat-form-field appearance="outline">
+            <mat-select placeholder="Tipo">
+              <mat-option *ngFor="let document of documents" [value]="document._id">
+                {{ document._data.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
           <section class="checkbox">
             <mat-label>Checkboxes</mat-label>
             <mat-checkbox>Checked</mat-checkbox>

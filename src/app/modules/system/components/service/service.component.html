@@ -1,0 +1,41 @@
+<mat-card *ngIf="!isStarted" class="container">
+    <div class="spinner-container">
+      <mat-spinner></mat-spinner>
+    </div>
+  </mat-card>
+  
+  <mat-card *ngIf="isStarted" class="container">
+    <form [formGroup]="serviceForm" (ngSubmit)="onSeriveFormSubmit()">
+      <mat-card-header>
+        <mat-card-title>Cadastro de serviço</mat-card-title>
+      </mat-card-header>
+  
+      <hr>
+      <mat-card-content>
+        <mat-form-field appearance="outline">
+          <mat-label>Descrição</mat-label>
+          <input matInput placeholder="Descrição dos serviços" type="text" formControlName="description" required>
+        </mat-form-field>
+  
+        <div *ngFor="let field of fields; let i = index">
+          <mat-form-field appearance="outline" style="width: 85%">
+            <mat-label>{{field}}</mat-label>
+            <input matInput placeholder="{{field}}" type="text" formControlName="{{field}}">
+          </mat-form-field>
+          <i class="material-icons" style="cursor: pointer;" (click)="removeField(i)">
+            remove_circle
+          </i>
+        </div>
+  
+        <button mat-raised-button type="button" (click)="addField()">Adicionar campo</button>
+      </mat-card-content>
+      <hr>
+      
+    </form>
+  
+    <mat-card-actions>
+      <div class="flex">
+        <button mat-raised-button disabled="serviceForm.invalid">{{submitButton}}</button>
+      </div>
+    </mat-card-actions>
+  </mat-card>

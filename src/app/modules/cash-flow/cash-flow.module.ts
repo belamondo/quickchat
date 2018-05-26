@@ -1,15 +1,27 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { CashFlowRoutingModule } from './cash-flow-routing.module';
+/**
+ * Components
+ */
 import { CashFlowComponent } from './cash-flow.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+
+/**
+ * Modules
+ */
+import { CashFlowRoutingModule } from './cash-flow-routing.module';
+import { SharedModule } from './../shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
-    CashFlowRoutingModule
+    CashFlowRoutingModule,
+    SharedModule
   ],
-  declarations: [CashFlowComponent, DashboardComponent]
+  declarations: [
+    CashFlowComponent,
+    DashboardComponent
+  ]
 })
 export class CashFlowModule { }

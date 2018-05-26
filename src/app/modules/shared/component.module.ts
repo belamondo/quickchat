@@ -10,7 +10,7 @@ import { TableDataComponent } from './components/table-data/table-data.component
     TableDataComponent,
   ],
   declarations: [
-    TableDataComponent,
+    TableDataComponent
   ]
 })
 export class ComponentModule { }

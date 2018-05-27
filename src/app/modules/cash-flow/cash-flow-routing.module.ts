@@ -6,6 +6,8 @@ import { Routes, RouterModule } from '@angular/router';
  */
 import { CashFlowComponent } from './cash-flow.component';
 import { DashboardComponent } from './../cash-flow/components/dashboard/dashboard.component';
+import { ExpenseComponent } from './components/expense/expense.component';
+import { IncomingOutcomingComponent } from './components/incoming-outcoming/incoming-outcoming.component';
 
 const routes: Routes = [{
   path: '', component: CashFlowComponent, children: [{
@@ -15,6 +17,12 @@ const routes: Routes = [{
   }, {
     path: 'dashboard',
     component: DashboardComponent
+  }, {
+    path: 'expense',
+    component: ExpenseComponent
+  }, {
+    path: 'incoming-outcoming',
+    component: IncomingOutcomingComponent
   }]
 }];
 

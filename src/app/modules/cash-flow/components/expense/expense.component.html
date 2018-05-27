@@ -5,26 +5,25 @@
 </mat-card>
 
 <mat-card *ngIf="isStarted" class="container">
-  <form [formGroup]="productForm" (ngSubmit)="onProductFormSubmit()">
+  <form [formGroup]="expenseForm" (ngSubmit)="onExpenseFormSubmit()">
     <mat-card-header>
-      <mat-card-title>Cadastro de produto</mat-card-title>
+      <mat-card-title>Cadastro de tipo de despesa</mat-card-title>
     </mat-card-header>
 
     <hr>
     <mat-card-content>
       <mat-form-field appearance="outline">
         <mat-label>Nome</mat-label>
-        <input matInput placeholder="Nome do produto" type="text" formControlName="name" required>
+        <input matInput placeholder="Nome da despesa" type="text" formControlName="name" required>
       </mat-form-field>
 
       <mat-form-field appearance="outline">
-        <mat-label>Código de barras</mat-label>
-        <input matInput placeholder="Código de barras" type="text" formControlName="barcode">
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Unidade de medida</mat-label>
-        <input matInput placeholder="Unidade de medida" type="text" formControlName="unit">
+        <mat-label>Modalidade</mat-label>
+        <mat-select placeholder="Modalidade da despesa" formControlName="type" required>
+          <mat-option value="expense">Despesa adm</mat-option>
+          <mat-option value="fixed-cost">Custo Fixo</mat-option>
+          <mat-option value="variable-cost">Custo Variável</mat-option>
+        </mat-select>
       </mat-form-field>
 
       <div *ngFor="let field of fields; let i = index">
@@ -39,8 +38,8 @@
 
       <button mat-raised-button type="button" (click)="addField()">Adicionar campo</button>
     </mat-card-content>
-    <hr>
+    <hr>  
     
-    <button mat-raised-button [disabled]="productForm.invalid">{{submitButton}}</button>
+    <button mat-raised-button [disabled]="expenseForm.invalid">{{submitButton}}</button>
   </form>
 </mat-card>

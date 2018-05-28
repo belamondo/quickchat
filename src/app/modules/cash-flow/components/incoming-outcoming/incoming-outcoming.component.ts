@@ -1,7 +1,8 @@
 import {
   Component,
   OnInit,
-  Inject
+  Inject,
+  ViewChild
 } from '@angular/core';
 import {
   FormGroup,
@@ -12,7 +13,8 @@ import {
   MatDialog,
   MatDialogRef,
   MAT_DIALOG_DATA,
-  MatSnackBar
+  MatSnackBar,
+  MatTableDataSource
 } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -48,7 +50,22 @@ export class IncomingOutcomingComponent implements OnInit {
   public fields: any = [];
   public types: any = [];
   public receivers: any = [];
+  public incomingsAndOutcomings: any = [
+    /* Mock - start */
+    { date: '27/05/2018', modality: 'Despesa', type: 'Salário administração', price: 3000},
+    { date: '27/05/2018', modality: 'Receita', type: 'Impressão A4 PB', price: 20},
+    { date: '27/05/2018', modality: 'Despesa', type: 'Aluguel', price: 800},
+    { date: '27/05/2018', modality: 'Receita', type: 'Plotagem', price: 50},
+    { date: '27/05/2018', modality: 'Despesa', type: 'Energia', price: 150},
+    { date: '27/05/2018', modality: 'Receita', type: 'Caderno personalizado', price: 40}
+    /* Mock - end */
+  ];
   //Common properties: end
+
+  /* Table stuffs: start */
+  public displayedColumns = ['date', 'modality', 'type', 'price'];
+  public dataSource = new MatTableDataSource<IncomingOutcoming>(this.incomingsAndOutcomings);
+  /* Table stuffs: end */
 
   /* Mock - start */
   public outcomings: any = [
@@ -89,10 +106,11 @@ export class IncomingOutcomingComponent implements OnInit {
       type: new FormControl(null, Validators.required),
       receiver: new FormControl(null, Validators.required),
       price: new FormControl(null, Validators.required),
+      payment: new FormControl(null, Validators.required),
+      paymentQtd: new FormControl(null),
       date: new FormControl(null, Validators.required),
     });
 
-    
     this.autoCorrectedDatePipe = createAutoCorrectedDatePipe('dd/mm/yyyy');
 
     this.mask = {
@@ -130,7 +148,7 @@ export class IncomingOutcomingComponent implements OnInit {
     })
   }
 
-  onIncomingOutcomingFormSubmit = () => { console.log(this.incomingOutcomingForm.controls) }
+  onIncomingOutcomingFormSubmit = () => { }
 
   getListOfTypes = (value) => {
     if(value === 'outcoming'){
@@ -180,3 +198,12 @@ export class DialogFormIncomingOutcomingComponent {
   }
 
 }
+
+/* Table stuffs: continuation */
+export interface IncomingOutcoming {
+  date: string;
+  modality: string;
+  type: string;
+  price: number;
+}
+/* Table stuffs: end */

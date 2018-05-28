@@ -30,6 +30,9 @@ import { TextMaskModule } from 'angular2-text-mask';
  * Components
  */
 import { DeleteConfirmComponent } from './components/delete-confirm/delete-confirm.component';
+import { DialogAddressComponent } from './components/dialog-address/dialog-address.component';
+import { DialogContactComponent } from './components/dialog-contact/dialog-contact.component';
+import { DialogDocumentComponent } from './components/dialog-document/dialog-document.component';
 import { TableDataComponent } from './components/table-data/table-data.component';
 import { TopbarMenuComponent } from './components/topbar-menu/topbar-menu.component';
 
@@ -42,6 +45,9 @@ import { TopbarMenuComponent } from './components/topbar-menu/topbar-menu.compon
     RouterModule
   ], exports: [
     DeleteConfirmComponent,
+    DialogAddressComponent,
+    DialogContactComponent,
+    DialogDocumentComponent,
     MaterialModule,
     ReactiveFormsModule,
     RouterModule,
@@ -54,10 +60,16 @@ import { TopbarMenuComponent } from './components/topbar-menu/topbar-menu.compon
     CrudService
   ], declarations: [
     DeleteConfirmComponent,
+    DialogAddressComponent,
+    DialogContactComponent,
+    DialogDocumentComponent,
     TableDataComponent,
     TopbarMenuComponent
   ], entryComponents: [
-    DeleteConfirmComponent
+    DeleteConfirmComponent,
+    DialogAddressComponent,
+    DialogContactComponent,
+    DialogDocumentComponent,
   ]
 })
 export class SharedModule { }

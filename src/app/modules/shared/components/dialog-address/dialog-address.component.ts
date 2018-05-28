@@ -4,11 +4,11 @@ import { MAT_DIALOG_DATA } from '@angular/material';
 import { Http, RequestOptions, Headers } from '@angular/http';
 
 @Component({
-  selector: 'app-address',
-  templateUrl: './address.component.html',
-  styleUrls: ['./address.component.css']
+  selector: 'app-dialog-address',
+  templateUrl: './dialog-address.component.html',
+  styleUrls: ['./dialog-address.component.css']
 })
-export class AddressComponent implements OnInit {
+export class DialogAddressComponent implements OnInit {
   public addressForm: FormGroup;
   
   constructor(

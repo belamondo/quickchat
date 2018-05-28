@@ -9,7 +9,7 @@ import { CrmComponent } from './crm.component';
 /**
  * Modules
  */
-import { ClientComponent, DialogDocumentForm, DialogContactForm } from './components/client/client.component';
+import { ClientComponent } from './components/client/client.component';
 import { CrmRoutingModule } from './crm-routing.module';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 
@@ -17,7 +17,6 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
  * Modules
  */
 import { SharedModule } from './../shared/shared.module';
-import { AddressComponent } from './components/client/address.component';
 
 @NgModule({
   imports: [
@@ -29,14 +28,6 @@ import { AddressComponent } from './components/client/address.component';
     ClientComponent,
     CrmComponent,
     DashboardComponent,
-    DialogContactForm,
-    DialogDocumentForm,
-    AddressComponent,
-  ], 
-  entryComponents: [
-    AddressComponent,
-    DialogContactForm,
-    DialogDocumentForm
   ]
 })
 export class CrmModule { }

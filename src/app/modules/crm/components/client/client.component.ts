@@ -19,7 +19,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 /**
  * Components
  */
-import { AddressComponent } from './address.component';
+import { DialogAddressComponent } from '../../../shared/components/dialog-address/dialog-address.component';
+import { DialogContactComponent } from '../../../shared/components/dialog-contact/dialog-contact.component';
+import { DialogDocumentComponent } from '../../../shared/components/dialog-document/dialog-document.component';
 
 /**
  * Services
@@ -134,7 +136,7 @@ export class ClientComponent implements OnInit {
   }
 
   addAddress = () => {
-    let dialogRef = this._dialog.open(AddressComponent, {
+    let dialogRef = this._dialog.open(DialogAddressComponent, {
       height: '500px',
       width: '800px',
       data: {
@@ -158,7 +160,7 @@ export class ClientComponent implements OnInit {
   }
 
   addContact = () => {
-    let dialogRef = this._dialog.open(DialogContactForm, {
+    let dialogRef = this._dialog.open(DialogContactComponent, {
       height: '250px',
       width: '800px',
       data: {
@@ -185,7 +187,7 @@ export class ClientComponent implements OnInit {
   }
 
   addDocument = () => {
-    let dialogRef = this._dialog.open(DialogDocumentForm, {
+    let dialogRef = this._dialog.open(DialogDocumentComponent, {
       height: '320px',
       width: '800px',
       data: {
@@ -213,42 +215,4 @@ export class ClientComponent implements OnInit {
   }
 
   onClientFormSubmit = () => {}
-}
-
-/**
- * Dialog document
- */
-@Component({
-  selector: 'dialog-document-form',
-  templateUrl: './dialog-document-form.html',
-})
-export class DialogDocumentForm {
-  constructor(
-    public dialogRef: MatDialogRef<DialogDocumentForm>,
-    @Inject(MAT_DIALOG_DATA) public data: any) { 
-      console.log(this.data)
-    }
-
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
-}
-
-/**
- * Dialog contact
- */
-@Component({
-  selector: 'dialog-contact-form',
-  templateUrl: './dialog-contact-form.html',
-})
-export class DialogContactForm {
-  constructor(
-    public dialogRef: MatDialogRef<DialogContactForm>,
-    @Inject(MAT_DIALOG_DATA) public data: any) { 
-      console.log(this.data)
-    }
-
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
 }

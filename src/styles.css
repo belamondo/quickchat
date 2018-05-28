@@ -67,6 +67,10 @@ img {
     display: flex;
 }
 
+.flex section {
+    width: 100%;
+}
+
 .checkbox mat-label {
     display: block;
     width: 100%;

@@ -19,13 +19,5 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.isStarted = false;
-    
-    this._crud.read({
-      route: 'test'
-    })
-    .then(res => {
-      console.log(res)
-      this.isStarted = true;
-    })
   }
 }

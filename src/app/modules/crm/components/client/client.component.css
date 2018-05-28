@@ -1,0 +1,13 @@
+section button {
+    margin-bottom: 20px;
+}
+
+.action-icon { 
+    width: 10%;
+    cursor: pointer;
+}
+
+.subtext {
+    font-size: 10px;
+    margin-right: 10px;
+}

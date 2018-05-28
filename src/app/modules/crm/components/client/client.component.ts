@@ -17,6 +17,11 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 
 /**
+ * Components
+ */
+import { AddressComponent } from './address.component';
+
+/**
  * Services
  */
 import { CrudService } from './../../../shared/services/firebase/crud.service';
@@ -47,6 +52,11 @@ export class ClientComponent implements OnInit {
   //Common properties: end
 
   public autoCorrectedDatePipe: any;
+  public addressesObject: any;
+  public addresses: any;
+  public contactsObject: any;
+  public contacts: any;
+  public documentsObject: any;
   public documents: any;
 
   constructor(
@@ -66,7 +76,15 @@ export class ClientComponent implements OnInit {
     });
 
     this.autoCorrectedDatePipe = createAutoCorrectedDatePipe('dd/mm/yyyy');
+
+    this.addressesObject = [];
+    this.addresses = JSON.parse(sessionStorage.getItem('documents'));
+
+    this.documentsObject = [];
     this.documents = JSON.parse(sessionStorage.getItem('documents'));
+
+    this.contactsObject = [];
+    this.contacts = JSON.parse(sessionStorage.getItem('contacts'));
 
     this.isStarted = false;
     this.mask = {
@@ -115,6 +133,57 @@ export class ClientComponent implements OnInit {
     })
   }
 
+  addAddress = () => {
+    let dialogRef = this._dialog.open(AddressComponent, {
+      height: '500px',
+      width: '800px',
+      data: {
+        addresses: this.addresses,
+        mask: this.mask,
+        autoCorrectedDatePipe: this.autoCorrectedDatePipe
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result) {
+        console.log(result)
+
+        this.addressesObject.push(result);
+      }
+    });
+  }
+
+  deleteAddress = (i) => {
+    this.addressesObject.splice(i, 1);
+  }
+
+  addContact = () => {
+    let dialogRef = this._dialog.open(DialogContactForm, {
+      height: '250px',
+      width: '800px',
+      data: {
+        contacts: this.contacts,
+        mask: this.mask
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result) {
+        this.contacts.forEach(element => {
+          if(element._data.mask === result.type) {
+            result.type = element._data.name;
+          }
+        });
+
+        this.contactsObject.push(result);
+      }
+    });
+  }
+
+  deleteContact = (i) => {
+    this.contactsObject.splice(i, 1);
+  }
+
   addDocument = () => {
     let dialogRef = this._dialog.open(DialogDocumentForm, {
       height: '320px',
@@ -127,8 +196,20 @@ export class ClientComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(result)
+      if(result) {
+        this.documents.forEach(element => {
+          if(element._data.mask === result.type) {
+            result.type = element._data.name;
+          }
+        });
+
+        this.documentsObject.push(result);
+      }
     });
+  }
+
+  deleteDocument = (i) => {
+    this.documentsObject.splice(i, 1);
   }
 
   onClientFormSubmit = () => {}
@@ -144,6 +225,25 @@ export class ClientComponent implements OnInit {
 export class DialogDocumentForm {
   constructor(
     public dialogRef: MatDialogRef<DialogDocumentForm>,
+    @Inject(MAT_DIALOG_DATA) public data: any) { 
+      console.log(this.data)
+    }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+}
+
+/**
+ * Dialog contact
+ */
+@Component({
+  selector: 'dialog-contact-form',
+  templateUrl: './dialog-contact-form.html',
+})
+export class DialogContactForm {
+  constructor(
+    public dialogRef: MatDialogRef<DialogContactForm>,
     @Inject(MAT_DIALOG_DATA) public data: any) { 
       console.log(this.data)
     }

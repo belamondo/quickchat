@@ -41,6 +41,25 @@ export class AuthGuard implements CanActivate {
           if (!res[0]) {
             this._router.navigate(['/main/profile_choice'])
           }
+
+          if(!sessionStorage.getItem('documents')) {
+            this._crud.read({
+              route: 'documents',
+              where:[['type','==','people']]
+            }).then(res => {
+              console.log(res)
+              sessionStorage.setItem('documents', JSON.stringify(res))
+            })
+          }
+
+          if(!sessionStorage.getItem('contacts')) {
+            this._crud.read({
+              route: 'contacts'
+            }).then(res => {
+              console.log(res)
+              sessionStorage.setItem('contacts', JSON.stringify(res))
+            })
+          }
         })
       })
 

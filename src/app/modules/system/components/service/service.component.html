@@ -14,7 +14,7 @@
       <mat-card-content>
         <mat-form-field appearance="outline">
           <mat-label>Descrição</mat-label>
-          <input matInput placeholder="Descrição dos serviços" type="text" formControlName="description" required>
+          <input matInput placeholder="Descrição dos serviços" type="text" formControlName="name" required>
         </mat-form-field>
   
         <div *ngFor="let field of fields; let i = index">
@@ -31,11 +31,6 @@
       </mat-card-content>
       <hr>
       
+      <button mat-raised-button [disabled]="serviceForm.invalid">{{submitButton}}</button>
     </form>
-  
-    <mat-card-actions>
-      <div class="flex">
-        <button mat-raised-button disabled="serviceForm.invalid">{{submitButton}}</button>
-      </div>
-    </mat-card-actions>
   </mat-card>

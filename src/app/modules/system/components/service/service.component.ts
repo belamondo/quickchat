@@ -53,7 +53,7 @@ export class ServiceComponent implements OnInit {
   ngOnInit() {
 
     this.serviceForm = new FormGroup({
-      description: new FormControl(null, Validators.required),
+      name: new FormControl(null, Validators.required),
     });
 
     this.serviceFormInit();
@@ -91,7 +91,7 @@ export class ServiceComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if(result || result !== ''){
+      if(result){
         this.serviceForm.addControl(result, new FormControl(null));
         this.fields.push(result);
       }

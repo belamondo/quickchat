@@ -6,6 +6,9 @@ import { CommonModule } from '@angular/common';
  */
 import { CashFlowComponent } from './cash-flow.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { ExpenseComponent, DialogFormExpenseComponent } from './components/expense/expense.component';
+import { IncomingOutcomingComponent, DialogFormIncomingOutcomingComponent } from './components/incoming-outcoming/incoming-outcoming.component';
+import { ReportComponent } from './components/report/report.component';
 
 /**
  * Modules
@@ -21,7 +24,16 @@ import { SharedModule } from './../shared/shared.module';
   ],
   declarations: [
     CashFlowComponent,
-    DashboardComponent
+    DashboardComponent,
+    DialogFormExpenseComponent,
+    DialogFormIncomingOutcomingComponent,
+    ExpenseComponent,
+    IncomingOutcomingComponent,
+    ReportComponent
+  ],
+  entryComponents: [
+    DialogFormExpenseComponent,
+    DialogFormIncomingOutcomingComponent
   ]
 })
 export class CashFlowModule { }

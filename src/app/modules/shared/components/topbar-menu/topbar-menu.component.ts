@@ -89,7 +89,7 @@ export class TopbarMenuComponent implements OnInit {
         }
         
         this._crud.read({
-          route: 'people',
+          collection: 'people',
           whereId: res['id']
         }).then(res => { 
           if (res[0]) {

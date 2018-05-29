@@ -56,7 +56,7 @@ export class ProfileChoiceComponent implements OnInit {
     this._auth.setUser()
       .then(res => {
         this._crud.read({
-          route: 'people',
+          collection: 'people',
           whereId: res['id']
         }).then(resPeople => {
           if (resPeople['length'] > 0) {
@@ -69,7 +69,7 @@ export class ProfileChoiceComponent implements OnInit {
             return false;
           } else {
             this._crud.update({
-              route: 'people',
+              collection: 'people',
               whereId: res['id'],
               objectToUpdate: this.peopleForm.value
             }).then(res => {

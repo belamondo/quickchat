@@ -36,7 +36,7 @@ export class ProfileChoiceGuard implements CanActivate {
         }
 
         this._crud.read({
-          route: 'people',
+          collection: 'people',
           whereId: res['id']
         }).then(res => {
           if (res['length'] > 0) {

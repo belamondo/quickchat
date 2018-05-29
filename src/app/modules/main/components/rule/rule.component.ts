@@ -20,7 +20,7 @@ export class RuleComponent implements OnInit {
 
   onSubmitRule = () => {
     this._crud.create({
-      route: 'Rules',
+      collection: 'Rules',
       objectToCreate: this.ruleForm.value
     })
   }

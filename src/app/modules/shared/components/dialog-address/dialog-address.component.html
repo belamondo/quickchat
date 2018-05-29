@@ -1,7 +1,7 @@
 <h2 mat-dialog-title>Adicionar endereço</h2>
 <form [formGroup]="addressForm">
   <div class="flex">    
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" id="zip">
       <mat-label>CEP</mat-label>
       <input matInput placeholder="Digite o CEP" type="text" formControlName="zip" (focusout)="findAddress(addressForm.value.zip)" [textMask]="{mask: data.mask.zip}"
         required>

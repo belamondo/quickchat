@@ -8,33 +8,49 @@ import {
   FormControl,
   Validators
 } from '@angular/forms';
-import { 
-  MatSnackBar, 
-  MatDialogRef, 
-  MatDialog, 
-  MAT_DIALOG_DATA 
+import {
+  MatSnackBar,
+  MatDialogRef,
+  MatDialog,
+  MAT_DIALOG_DATA
 } from '@angular/material';
-import { ActivatedRoute, Router } from '@angular/router';
+import {
+  ActivatedRoute,
+  Router
+} from '@angular/router';
 
 /**
  * Components
  */
-import { DialogAddressComponent } from '../../../shared/components/dialog-address/dialog-address.component';
-import { DialogContactComponent } from '../../../shared/components/dialog-contact/dialog-contact.component';
-import { DialogDocumentComponent } from '../../../shared/components/dialog-document/dialog-document.component';
+import {
+  DialogAddressComponent
+} from '../../../shared/components/dialog-address/dialog-address.component';
+import {
+  DialogContactComponent
+} from '../../../shared/components/dialog-contact/dialog-contact.component';
+import {
+  DialogDocumentComponent
+} from '../../../shared/components/dialog-document/dialog-document.component';
 
 /**
  * Services
  */
-import { CrudService } from './../../../shared/services/firebase/crud.service';
+import {
+  CrudService
+} from './../../../shared/services/firebase/crud.service';
 
 /**
  * Third party
  */
 import createAutoCorrectedDatePipe from 'text-mask-addons/dist/createAutoCorrectedDatePipe';
 
-import { Observable } from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
+import {
+  Observable
+} from 'rxjs';
+import {
+  map,
+  startWith
+} from 'rxjs/operators';
 
 @Component({
   selector: 'app-client',
@@ -43,7 +59,8 @@ import {map, startWith} from 'rxjs/operators';
 })
 export class ClientComponent implements OnInit {
   //Common properties: start
-  public clientForm: FormGroup;
+  public personForm: FormGroup;
+  public companyForm: FormGroup;
   public isStarted: boolean;
   public mask: any;
   public paramToSearch: any;
@@ -56,6 +73,7 @@ export class ClientComponent implements OnInit {
   public autoCorrectedDatePipe: any;
   public addressesObject: any;
   public addresses: any;
+  public clientType: string;
   public contactsObject: any;
   public contacts: any;
   public documentsObject: any;
@@ -67,35 +85,32 @@ export class ClientComponent implements OnInit {
     private _route: ActivatedRoute,
     private _router: Router,
     public _snackbar: MatSnackBar
-  ) {
-  }
-  
+  ) {}
+
   ngOnInit() {
-    this.clientForm = new FormGroup({
+    this.personForm = new FormGroup({
       name: new FormControl(null, Validators.required),
-      birthday: new FormControl(null, Validators.required),
+      birthday: new FormControl(null),
       gender: new FormControl(null, Validators.required),
+    });
+
+    this.companyForm = new FormGroup({
+      business_name: new FormControl(null, Validators.required),
+      company_name: new FormControl(null, Validators.required)
     });
 
     this.autoCorrectedDatePipe = createAutoCorrectedDatePipe('dd/mm/yyyy');
 
     this.addressesObject = [];
-    this.addresses = JSON.parse(sessionStorage.getItem('documents'));
 
     this.documentsObject = [];
-    this.documents = JSON.parse(sessionStorage.getItem('documents'));
 
     this.contactsObject = [];
     this.contacts = JSON.parse(sessionStorage.getItem('contacts'));
 
     this.isStarted = false;
     this.mask = {
-      cpf: [/\d/, /\d/, /\d/,'.', /\d/, /\d/, /\d/,'.', /\d/, /\d/, /\d/,'-', /\d/,/\d/ ],
-      date: [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/],
-      zip: [/\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/],
-      phone: ['(', /\d/, /\d/, ')',' ' , /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/,],
-      cell_phone: ['(', /\d/, /\d/, ')',' ' , /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/],
-      cnpj: [/\d/, /\d/,'.', /\d/, /\d/, /\d/,'.', /\d/, /\d/, /\d/,'/', /\d/,/\d/,/\d/,/\d/,'-',/\d/,/\d/]
+      date: [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]
     };
 
     this.clientFormInit();
@@ -112,18 +127,27 @@ export class ClientComponent implements OnInit {
 
         let param = this.paramToSearch.replace(':', '');
 
-        this._crud
-          .read({
-            route: "clients",
-            where: [{
-              field: "id",
-              value: param
-            }]
-          }).then(res => {
-            this.clientForm.patchValue(res['obj'][0]);
-
-            this.isStarted = true;
-          })
+        if (this.clientType === 'person') {
+          this._crud
+            .read({
+              collection: "clientsPeople",
+              whereId: param
+            }).then(res => {
+              this.personForm.patchValue(res['obj'][0]);
+  
+              this.isStarted = true;
+            })
+        } else {
+          this._crud
+            .read({
+              collection: "clientsCompanies",
+              whereId: param
+            }).then(res => {
+              this.companyForm.patchValue(res['obj'][0]);
+  
+              this.isStarted = true;
+            })
+        }
       } else {
         this.submitToCreate = true;
         this.submitToUpdate = false;
@@ -135,19 +159,28 @@ export class ClientComponent implements OnInit {
     })
   }
 
+  clientTypeChoice = (event) => {
+    this.clientType = event.value;
+
+    if (this.clientType === 'person') {
+      this.documents = JSON.parse(sessionStorage.getItem('peopleDocuments'));
+    } else {
+      this.documents = JSON.parse(sessionStorage.getItem('companiesDocuments'));
+    }
+  }
+
   addAddress = () => {
     let dialogRef = this._dialog.open(DialogAddressComponent, {
       height: '500px',
       width: '800px',
       data: {
-        addresses: this.addresses,
         mask: this.mask,
         autoCorrectedDatePipe: this.autoCorrectedDatePipe
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if(result) {
+      if (result) {
         console.log(result)
 
         this.addressesObject.push(result);
@@ -170,9 +203,9 @@ export class ClientComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if(result) {
+      if (result) {
         this.contacts.forEach(element => {
-          if(element._data.mask === result.type) {
+          if (element._data.mask === result.type) {
             result.type = element._data.name;
           }
         });
@@ -198,9 +231,9 @@ export class ClientComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if(result) {
+      if (result) {
         this.documents.forEach(element => {
-          if(element._data.mask === result.type) {
+          if (element._data.mask === result.type) {
             result.type = element._data.name;
           }
         });
@@ -214,5 +247,89 @@ export class ClientComponent implements OnInit {
     this.documentsObject.splice(i, 1);
   }
 
-  onClientFormSubmit = () => {}
+  onCompanyFormSubmit = () => {
+    console.log(this.companyForm.value)  
+  }
+
+  onPersonFormSubmit = () => {
+    if(this.submitToUpdate) {
+      this._crud
+      .update({
+        collection: 'clientsPeople',
+        whereId: this.paramToSearch.replace(':', ''),
+        objectToUpdate: this.personForm.value
+      });
+
+      if(this.documentsObject.length > 0) {
+        this._crud
+        .update({
+          collection: 'clientsPeople/'+this.paramToSearch.replace(':', ''),
+          whereId: this.paramToSearch.replace(':', ''),
+          objectToUpdate: JSON.stringify(this.documentsObject)
+        });
+      }
+
+      if(this.contactsObject.length > 0) {
+        this._crud
+        .update({
+          collection: 'clientsPeopleContacts',
+          whereId: this.paramToSearch.replace(':', ''),
+          objectToUpdate: JSON.stringify(this.contactsObject)
+        });
+      }
+
+      if(this.addressesObject.length > 0) {
+        this._crud
+        .update({
+          collection: 'clientsPeopleAddresses',
+          whereId: this.paramToSearch.id,
+          objectToUpdate: {
+            addressesToParse: JSON.stringify(this.addressesObject)
+          }
+        });
+      }
+    }
+
+    if(this.submitToCreate) {
+      this._crud
+      .create({
+        collection: 'clientsPeople',
+        objectToCreate: this.personForm.value
+      }).then(res => {
+        console.log(this.contactsObject)
+        if(this.documentsObject.length > 0) {
+          this._crud
+          .update({
+            collection: 'clientsPeopleDocuments',
+            whereId: res['id'],
+            objectToUpdate: {
+              documentsToParse: JSON.stringify(this.documentsObject)
+            }
+          }).then(res => {
+            console.log(res)
+          })
+        };
+
+        if(this.contactsObject.length > 0) {
+          this._crud
+          .update({
+            collection: 'clientsPeopleContacts',
+            whereId: res['id'],
+            objectToUpdate: {
+              contactsToParse: JSON.stringify(this.contactsObject)
+            }
+          })
+        };
+
+        if(this.addressesObject.length > 0) {
+          this._crud
+          .update({
+            collection: 'clientsPeopleAddresses',
+            whereId: res['id'],
+            objectToUpdate: this.addressesObject
+          })
+        };
+      })
+    }
+  }
 }

@@ -35,26 +35,36 @@ export class AuthGuard implements CanActivate {
         }
         
         this._crud.read({
-          route: 'people',
+          collection: 'people',
           whereId: res['id']
         }).then(res => { 
           if (!res[0]) {
             this._router.navigate(['/main/profile_choice'])
           }
 
-          if(!sessionStorage.getItem('documents')) {
+          if(!sessionStorage.getItem('companiesDocuments')) {
             this._crud.read({
-              route: 'documents',
+              collection: 'documents',
+              where:[['type','==','companies']]
+            }).then(res => {
+              console.log(res)
+              sessionStorage.setItem('companiesDocuments', JSON.stringify(res))
+            })
+          }
+
+          if(!sessionStorage.getItem('peopleDocuments')) {
+            this._crud.read({
+              collection: 'documents',
               where:[['type','==','people']]
             }).then(res => {
               console.log(res)
-              sessionStorage.setItem('documents', JSON.stringify(res))
+              sessionStorage.setItem('peopleDocuments', JSON.stringify(res))
             })
           }
 
           if(!sessionStorage.getItem('contacts')) {
             this._crud.read({
-              route: 'contacts'
+              collection: 'contacts'
             }).then(res => {
               console.log(res)
               sessionStorage.setItem('contacts', JSON.stringify(res))

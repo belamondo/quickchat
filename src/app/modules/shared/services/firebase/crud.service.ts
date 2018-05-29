@@ -33,6 +33,21 @@ export class CrudService {
           message: 'Required param: collection'
         })
       }
+
+      if(!params.objectToCreate) {
+        resolve({
+          code: 'c-error-03',
+          message: 'Required param: objectToCreate'
+        })
+      }
+
+      _firestore.collection(params.collection).add(params.objectToCreate)
+      .catch(err => {
+        return err;
+      })
+      .then(res => {
+        resolve(res);
+      })
     }
   })
 
@@ -49,10 +64,10 @@ export class CrudService {
     } else {
       let key, obj, ref, res, objFiltered, stringToFilter, stringCreatingFilter, functionToFilter;
     
-      if(!params.route) {
+      if(!params.collection) {
         resolve({
           code: 'r-error-02',
-          message: 'Required param: route'
+          message: 'Required param: collection'
         })
       }
 
@@ -63,7 +78,7 @@ export class CrudService {
         })
       }
 
-      stringToFilter = "_firestore.collection(params.route)";
+      stringToFilter = "_firestore.collection(params.collection)";
       stringCreatingFilter = "";
 
       if(params.whereId) {
@@ -115,10 +130,10 @@ export class CrudService {
     } else {
       let key, obj, ref, res, objFiltered, stringToFilter, stringCreatingFilter, functionToFilter;
     
-      if(!params.route) {
+      if(!params.collection) {
         resolve({
           code: 'u-error-02',
-          message: 'Required param: route'
+          message: 'Required param: collection'
         })
       }
 
@@ -136,9 +151,9 @@ export class CrudService {
         })
       }
 
-      stringToFilter = "_firestore.collection(params.route)";
+      stringToFilter = "_firestore.collection(params.collection)";
       stringCreatingFilter = "";
-      console.log(params)
+      
       if(params.whereId) { 
         stringCreatingFilter += ".doc('"+params.whereId+"')";
       }
@@ -155,6 +170,7 @@ export class CrudService {
       functionToFilter
       .set(params.objectToUpdate)
       .then(res => {
+        console.log(res);
         resolve({
           code: 'u-success-01',
           message: 'Update successful'

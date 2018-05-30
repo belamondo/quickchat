@@ -39,7 +39,20 @@ export class CrmGuard implements CanActivate {
           whereId: res['id']
         }).then(res => { 
           if (!res[0]) {
-            this._router.navigate(['/main/profile_choice'])
+            this._router.navigate(['/main/profile_choice']);
+
+            return false;
+          }
+
+          //Populate clients item on sessionStorage
+          if(!sessionStorage.getItem('clients')) {
+            this._crud.read({
+              collection: 'clients',
+              whereId: res['id']
+            }).then(resClients => {
+              console.log(resClients)
+              sessionStorage.setItem('clients', JSON.stringify(resClients))
+            })
           }
         })
       })

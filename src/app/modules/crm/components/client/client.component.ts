@@ -52,6 +52,12 @@ import {
   startWith
 } from 'rxjs/operators';
 
+/**
+ * Validators
+ */
+import { ValidateCnpj } from '../../../shared/validators/cnpj.validator';
+import { ValidateCpf } from '../../../shared/validators/cpf.validator';
+
 @Component({
   selector: 'app-client',
   templateUrl: './client.component.html',
@@ -89,12 +95,14 @@ export class ClientComponent implements OnInit {
 
   ngOnInit() {
     this.personForm = new FormGroup({
+      cpf: new FormControl(null, [Validators.required, ValidateCpf]),
       name: new FormControl(null, Validators.required),
       birthday: new FormControl(null),
       gender: new FormControl(null, Validators.required),
     });
 
     this.companyForm = new FormGroup({
+      cnpj: new FormControl(null, [Validators.required,ValidateCnpj]),
       business_name: new FormControl(null, Validators.required),
       company_name: new FormControl(null, Validators.required)
     });
@@ -110,6 +118,7 @@ export class ClientComponent implements OnInit {
 
     this.isStarted = false;
     this.mask = {
+      cpf: [/\d/, /\d/, /\d/,'.', /\d/, /\d/, /\d/,'.', /\d/, /\d/, /\d/,'-', /\d/,/\d/ ],
       date: [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]
     };
 
@@ -245,6 +254,14 @@ export class ClientComponent implements OnInit {
 
   deleteDocument = (i) => {
     this.documentsObject.splice(i, 1);
+  }
+
+  checkPersonExistence = (cpf) =>{
+    if(!this.personForm.get('cpf').errors) {
+      //Check existence of client by cpf, first on sessionStorage, then, if there are at least 400 clients in the sesionStorage (populated on crm.guard || cash-flow.guard) and none of then are related to the cpf, look on firestore clients collection
+
+      console.log(sessionStorage.getItem('clients'))
+    }
   }
 
   onCompanyFormSubmit = () => {

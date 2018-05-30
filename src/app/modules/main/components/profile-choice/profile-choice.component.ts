@@ -1,6 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
-import { MatDatepickerIntl, MatSnackBar } from '@angular/material';
+import { MatDatepickerIntl, MatSnackBar, MatDialog } from '@angular/material';
+
+/**
+ * Components
+ */
+import { DialogAddressComponent } from './../../../shared/components/dialog-address/dialog-address.component';
+import { DialogContactComponent } from '../../../shared/components/dialog-contact/dialog-contact.component';
+import { DialogDocumentComponent } from '../../../shared/components/dialog-document/dialog-document.component';
 
 /**
  * Services
@@ -15,13 +22,24 @@ import { Router } from '@angular/router';
   styleUrls: ['./profile-choice.component.css']
 })
 export class ProfileChoiceComponent implements OnInit {
-  mask: any;
-  peopleForm: FormGroup;
-  profileChoiceForm: FormGroup;
+  public peopleForm: FormGroup;
+  public profileChoiceForm: FormGroup;
+  
+  public mask: any;
+
+  public autoCorrectedDatePipe: any;
+  public addressesObject: any;
+  public addresses: any;
+  public clientType: string;
+  public contactsObject: any;
+  public contacts: any;
+  public documentsObject: any;
+  public documents: any;
 
   constructor(
     private _auth: AuthenticationService,
     private _crud: CrudService,
+    private _dialog: MatDialog,
     private _router: Router,
     public _snackbar: MatSnackBar
   ) {
@@ -46,6 +64,84 @@ export class ProfileChoiceComponent implements OnInit {
       gender: new FormControl(null, Validators.required),
       birthday: new FormControl(null, Validators.required)
     });
+  }
+
+  addAddress = () => {
+    let dialogRef = this._dialog.open(DialogAddressComponent, {
+      height: '500px',
+      width: '800px',
+      data: {
+        mask: this.mask,
+        autoCorrectedDatePipe: this.autoCorrectedDatePipe
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log(result)
+
+        this.addressesObject.push(result);
+      }
+    });
+  }
+
+  deleteAddress = (i) => {
+    this.addressesObject.splice(i, 1);
+  }
+
+  addContact = () => {
+    let dialogRef = this._dialog.open(DialogContactComponent, {
+      height: '250px',
+      width: '800px',
+      data: {
+        contacts: this.contacts,
+        mask: this.mask
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.contacts.forEach(element => {
+          if (element._data.mask === result.type) {
+            result.type = element._data.name;
+          }
+        });
+
+        this.contactsObject.push(result);
+      }
+    });
+  }
+
+  deleteContact = (i) => {
+    this.contactsObject.splice(i, 1);
+  }
+
+  addDocument = () => {
+    let dialogRef = this._dialog.open(DialogDocumentComponent, {
+      height: '320px',
+      width: '800px',
+      data: {
+        documents: this.documents,
+        mask: this.mask,
+        autoCorrectedDatePipe: this.autoCorrectedDatePipe
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.documents.forEach(element => {
+          if (element._data.mask === result.type) {
+            result.type = element._data.name;
+          }
+        });
+
+        this.documentsObject.push(result);
+      }
+    });
+  }
+
+  deleteDocument = (i) => {
+    this.documentsObject.splice(i, 1);
   }
 
   onBirthdayChange = (event) => {

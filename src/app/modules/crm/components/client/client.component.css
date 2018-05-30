@@ -1,3 +1,7 @@
+#cpf {
+    width: 50%;
+}
+
 section button {
     margin-bottom: 20px;
 }
@@ -10,4 +14,10 @@ section button {
 .subtext {
     font-size: 10px;
     margin-right: 10px;
+}
+
+@media screen and (max-width:480px){
+	#cpf {
+        width: 100%;
+    }
 }

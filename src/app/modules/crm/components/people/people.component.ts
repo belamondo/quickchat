@@ -6,7 +6,8 @@ import {
 import {
   FormGroup,
   FormControl,
-  Validators
+  Validators,
+  FormGroupDirective
 } from '@angular/forms';
 import {
   MatSnackBar,
@@ -55,18 +56,21 @@ import {
 /**
  * Validators
  */
-import { ValidateCnpj } from '../../../shared/validators/cnpj.validator';
-import { ValidateCpf } from '../../../shared/validators/cpf.validator';
+import {
+  ValidateCnpj
+} from '../../../shared/validators/cnpj.validator';
+import {
+  ValidateCpf
+} from '../../../shared/validators/cpf.validator';
 
 @Component({
-  selector: 'app-client',
-  templateUrl: './client.component.html',
-  styleUrls: ['./client.component.css']
+  selector: 'app-people',
+  templateUrl: './people.component.html',
+  styleUrls: ['./people.component.css']
 })
-export class ClientComponent implements OnInit {
+export class PeopleComponent implements OnInit {
   //Common properties: start
   public personForm: FormGroup;
-  public companyForm: FormGroup;
   public isStarted: boolean;
   public mask: any;
   public paramToSearch: any;
@@ -84,6 +88,8 @@ export class ClientComponent implements OnInit {
   public contacts: any;
   public documentsObject: any;
   public documents: any;
+  public relationships: any;
+  public relationshipsObject: any;
 
   constructor(
     private _crud: CrudService,
@@ -101,12 +107,6 @@ export class ClientComponent implements OnInit {
       gender: new FormControl(null, Validators.required),
     });
 
-    this.companyForm = new FormGroup({
-      cnpj: new FormControl(null, [Validators.required,ValidateCnpj]),
-      business_name: new FormControl(null, Validators.required),
-      company_name: new FormControl(null, Validators.required)
-    });
-
     this.autoCorrectedDatePipe = createAutoCorrectedDatePipe('dd/mm/yyyy');
 
     this.addressesObject = [];
@@ -118,64 +118,43 @@ export class ClientComponent implements OnInit {
 
     this.isStarted = false;
     this.mask = {
-      cpf: [/\d/, /\d/, /\d/,'.', /\d/, /\d/, /\d/,'.', /\d/, /\d/, /\d/,'-', /\d/,/\d/ ],
+      cpf: [/\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '-', /\d/, /\d/],
       date: [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]
     };
 
-    this.clientFormInit();
+    this.peopleRelatedFormInit();
   }
 
-  clientFormInit = () => {
+  peopleRelatedFormInit = () => {
     this._route.params.subscribe(params => {
       if (params.id) {
         this.paramToSearch = params.id;
         this.submitToCreate = false;
         this.submitToUpdate = true;
-        this.title = "Atualizar cliente";
+        this.title = "Atualizar pessoa";
         this.submitButton = "Atualizar";
 
+        let userData = JSON.parse(sessionStorage.getItem('userData'));
         let param = this.paramToSearch.replace(':', '');
 
-        if (this.clientType === 'person') {
-          this._crud
-            .read({
-              collection: "clientsPeople",
-              whereId: param
-            }).then(res => {
-              this.personForm.patchValue(res['obj'][0]);
-  
-              this.isStarted = true;
-            })
-        } else {
-          this._crud
-            .read({
-              collection: "clientsCompanies",
-              whereId: param
-            }).then(res => {
-              this.companyForm.patchValue(res['obj'][0]);
-  
-              this.isStarted = true;
-            })
-        }
+        this._crud
+          .read({
+            collectionsAndDocs: [userData[0]['_data']['userType'],userData[0]['_id'],'peopleRelated'],
+          }).then(res => {
+            this.personForm.patchValue(res['obj'][0]);
+
+            this.isStarted = true;
+          })
+
       } else {
         this.submitToCreate = true;
         this.submitToUpdate = false;
-        this.title = "Cadastrar cliente";
+        this.title = "Cadastrar pessoa";
         this.submitButton = "Cadastrar";
 
         this.isStarted = true;
       }
     })
-  }
-
-  clientTypeChoice = (event) => {
-    this.clientType = event.value;
-
-    if (this.clientType === 'person') {
-      this.documents = JSON.parse(sessionStorage.getItem('peopleDocuments'));
-    } else {
-      this.documents = JSON.parse(sessionStorage.getItem('companiesDocuments'));
-    }
   }
 
   addAddress = () => {
@@ -256,67 +235,64 @@ export class ClientComponent implements OnInit {
     this.documentsObject.splice(i, 1);
   }
 
-  checkPersonExistence = (cpf) =>{
-    if(!this.personForm.get('cpf').errors) {
-      //Check existence of client by cpf, first on sessionStorage, then, if there are at least 400 clients in the sesionStorage (populated on crm.guard || cash-flow.guard) and none of then are related to the cpf, look on firestore clients collection
+  checkPersonExistence = (cpf) => {
+    if (!this.personForm.get('cpf').errors) {
+      //Check existence of peopleRelated by cpf, first on sessionStorage, then, if there are at least 400 peopleRelated in the sesionStorage (populated on crm.guard || cash-flow.guard) and none of then are related to the cpf, look on firestore peopleRelated collection
 
-      console.log(sessionStorage.getItem('clients'))
+      console.log(sessionStorage.getItem('peopleRelated'))
     }
   }
 
-  onCompanyFormSubmit = () => {
-    console.log(this.companyForm.value)  
-  }
-
-  onPersonFormSubmit = () => {
+  onPersonFormSubmit = (formDirective: FormGroupDirective) => {
     let userData = JSON.parse(sessionStorage.getItem('userData'));
-    if(this.submitToUpdate) {
+
+    if (this.submitToUpdate) {
       this._crud
-      .update({
-        collectionsAndDocs: ['clientsPeople', this.paramToSearch.replace(':', '')],
-        objectToUpdate: this.personForm.value
-      });
-
-      if(this.documentsObject.length > 0) {
-        this._crud
         .update({
-          collectionsAndDocs: ['clientsPeople', this.paramToSearch.replace(':', '')],
-          objectToUpdate: JSON.stringify(this.documentsObject)
+          collectionsAndDocs: [userData[0]['_data']['userType'],userData[0]['_id'],'peopleRelated',this.paramToSearch.replace(':', '')],
+          objectToUpdate: this.personForm.value
         });
+
+      if (this.documentsObject.length > 0) {
+        this._crud
+          .update({
+            collectionsAndDocs: [userData[0]['_data']['userType'],userData[0]['_id'],'peopleRelated',this.paramToSearch.replace(':', ''),'peopleRelatedDocuments',this.paramToSearch.replace(':', '')],
+            objectToUpdate: JSON.stringify(this.documentsObject)
+          });
       }
 
-      if(this.contactsObject.length > 0) {
+      if (this.contactsObject.length > 0) {
         this._crud
-        .update({
-          collectionsAndDocs: ['clientsPeopleContacts', this.paramToSearch.replace(':', '')],
-          objectToUpdate: JSON.stringify(this.contactsObject)
-        });
+          .update({
+            collectionsAndDocs: [userData[0]['_data']['userType'],userData[0]['_id'],'peopleRelated',this.paramToSearch.replace(':', ''),'peopleRelatedContacts',this.paramToSearch.replace(':', '')],
+            objectToUpdate: JSON.stringify(this.contactsObject)
+          });
       }
 
-      if(this.addressesObject.length > 0) {
+      if (this.addressesObject.length > 0) {
         this._crud
-        .update({
-          collectionsAndDocs: 'clientsPeopleAddresses',
-          whereId: this.paramToSearch.id,
-          objectToUpdate: {
-            addressesToParse: JSON.stringify(this.addressesObject)
-          }
-        });
+          .update({
+            collectionsAndDocs: [userData[0]['_data']['userType'],userData[0]['_id'],'peopleRelated',this.paramToSearch.replace(':', ''),'peopleRelatedAddresses',this.paramToSearch.replace(':', '')],
+            objectToUpdate: {
+              addressesToParse: JSON.stringify(this.addressesObject)
+            }
+          });
       }
     }
 
-    if(this.submitToCreate) {
+    if (this.submitToCreate) {
+      formDirective.resetForm();
+
       this._crud
       .create({
-        collectionsAndDocs: [userData[0]['_data']['userType'],userData[0]['_id'],'clients'],
+        collectionsAndDocs: [userData[0]['_data']['userType'],userData[0]['_id'],'peopleRelated'],
         objectToCreate: this.personForm.value
-      }).then(res => {
-        console.log(this.contactsObject)
+      }).then(res => { 
         if(this.documentsObject.length > 0) {
           this._crud
-          .create({
-            collectionsAndDocs: [userData[0]['_data']['userType'],userData[0]['_id'],'clients',res['id'],'clientsDocuments'],
-            objectToCreate: {
+          .update({
+            collectionsAndDocs: [userData[0]['_data']['userType'],userData[0]['_id'],'peopleRelated',res['id'],'peopleRelatedDocuments',res['id']],
+            objectToUpdate: {
               documentsToParse: JSON.stringify(this.documentsObject)
             }
           })
@@ -324,9 +300,9 @@ export class ClientComponent implements OnInit {
 
         if(this.contactsObject.length > 0) {
           this._crud
-          .create({
-            collectionsAndDocs: [userData[0]['_data']['userType'],userData[0]['_id'],'clients',res['id'],'clientsContacts'],
-            objectToCreate: {
+          .update({
+            collectionsAndDocs: [userData[0]['_data']['userType'],userData[0]['_id'],'peopleRelated',res['id'],'peopleRelatedContacts',res['id']],
+            objectToUpdate: {
               contactsToParse: JSON.stringify(this.contactsObject)
             }
           })
@@ -334,13 +310,19 @@ export class ClientComponent implements OnInit {
 
         if(this.addressesObject.length > 0) {
           this._crud
-          .create({
-            collectionsAndDocs: [userData[0]['_data']['userType'],userData[0]['_id'],'clients',res['id'],'clientsAddresses'],
-            objectToCreate: {
+          .update({
+            collectionsAndDocs: [userData[0]['_data']['userType'],userData[0]['_id'],'peopleRelated',res['id'],'peopleRelatedAddresses',res['id']],
+            objectToUpdate: {
               addressesToParse: JSON.stringify(this.addressesObject)
             }
           })
         };
+
+        this.documentsObject = [];
+
+        this.contactsObject = [];
+
+        this.addressesObject =[];
       })
     }
   }

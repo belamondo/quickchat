@@ -23,8 +23,12 @@ export class AuthGuard implements CanActivate {
       RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
     this._auth.setUser()
-      .then(res => {
-        if (!res || !res['id']) {
+      .then(resUser => {
+        let userAssigned = true,
+            userType = "";
+
+        //Check if loggedin before get in module
+        if (!resUser || !resUser['id']) {
           this._router.navigate(['/']);
 
           this._snackbar.open('Você precisa logar para entrar.', '', {
@@ -34,21 +38,65 @@ export class AuthGuard implements CanActivate {
           return false;
         }
         
+        //Check if user loggedin is assigned and on what type of user
+        //Case not assigned, sending to profile choice
         this._crud.read({
           collection: 'people',
-          whereId: res['id']
-        }).then(res => { 
-          if (!res[0]) {
-            this._router.navigate(['/main/profile_choice'])
+          whereId: resUser['id']
+        }).then(resPeople => { 
+          if (!resPeople[0]) {
+            this._crud.read({
+              collection: 'companies',
+              whereId: resUser['id']
+            }).then(resCompanies => { 
+              if(!resCompanies[0]) {
+                this._crud.read({
+                  collection: 'animals',
+                  whereId: resUser['id']
+                }).then(resAnimals => { 
+                  if(!resAnimals[0]) {
+                    this._crud.read({
+                      collection: 'entities',
+                      whereId: resUser['id']
+                    }).then(resEntities => { 
+                      if(!resEntities[0]) {    
+                        this._router.navigate(['/main/profile_choice'])
+                      } else {
+                        if(!sessionStorage.getItem('userData')) {
+                          resPeople[0]['_data']['userType'] = "entities";
+                          sessionStorage.setItem('userData', JSON.stringify(resEntities))
+                        }
+                      }
+                    })
+                  } else {
+                    if(!sessionStorage.getItem('userData')) {
+                      resPeople[0]['_data']['userType'] = "animals";
+                      sessionStorage.setItem('userData', JSON.stringify(resAnimals))
+                    }
+                  }
+                })
+              } else {
+                if(!sessionStorage.getItem('userData')) {
+                  resPeople[0]['_data']['userType'] = "companies";
+                  sessionStorage.setItem('userData', JSON.stringify(resCompanies))
+                }
+              }
+            })
+          } else {
+            if(!sessionStorage.getItem('userData')) {
+              resPeople[0]['_data']['userType'] = "people";
+              sessionStorage.setItem('userData', JSON.stringify(resPeople))
+            }
           }
-
+          
           if(!sessionStorage.getItem('companiesDocuments')) {
             this._crud.read({
               collection: 'documents',
               where:[['type','==','companies']]
             }).then(res => {
-              console.log(res)
-              sessionStorage.setItem('companiesDocuments', JSON.stringify(res))
+              let documents = res['filter'](el => el._data.name !== "CPF")
+
+              sessionStorage.setItem('companiesDocuments', JSON.stringify(documents))
             })
           }
 
@@ -57,8 +105,9 @@ export class AuthGuard implements CanActivate {
               collection: 'documents',
               where:[['type','==','people']]
             }).then(res => {
-              console.log(res)
-              sessionStorage.setItem('peopleDocuments', JSON.stringify(res))
+              let documents = res['filter'](el => el._data.name !== "CPF")
+              
+              sessionStorage.setItem('peopleDocuments', JSON.stringify(documents))
             })
           }
 
@@ -66,7 +115,6 @@ export class AuthGuard implements CanActivate {
             this._crud.read({
               collection: 'contacts'
             }).then(res => {
-              console.log(res)
               sessionStorage.setItem('contacts', JSON.stringify(res))
             })
           }

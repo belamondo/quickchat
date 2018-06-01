@@ -1,3 +1,4 @@
+import { DialogRelationshipComponent } from './components/dialog-relationship/dialog-relationship.component';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -48,6 +49,7 @@ import { TopbarMenuComponent } from './components/topbar-menu/topbar-menu.compon
     DialogAddressComponent,
     DialogContactComponent,
     DialogDocumentComponent,
+    DialogRelationshipComponent,
     MaterialModule,
     ReactiveFormsModule,
     RouterModule,
@@ -63,6 +65,7 @@ import { TopbarMenuComponent } from './components/topbar-menu/topbar-menu.compon
     DialogAddressComponent,
     DialogContactComponent,
     DialogDocumentComponent,
+    DialogRelationshipComponent,
     TableDataComponent,
     TopbarMenuComponent
   ], entryComponents: [
@@ -70,6 +73,7 @@ import { TopbarMenuComponent } from './components/topbar-menu/topbar-menu.compon
     DialogAddressComponent,
     DialogContactComponent,
     DialogDocumentComponent,
+    DialogRelationshipComponent,
   ]
 })
 export class SharedModule { }

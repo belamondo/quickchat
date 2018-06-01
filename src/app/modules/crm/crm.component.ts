@@ -37,6 +37,14 @@ export class CrmComponent implements OnInit {
       name: 'Cadastrar cliente',
       icon: 'person',
       link: ['client']
+    }, {
+      name: 'Cadastrar pessoa',
+      icon: 'person',
+      link: ['person']
+    }, {
+      name: 'Cadastrar empresa',
+      icon: 'business',
+      link: ['company']
     }];
   }
 }

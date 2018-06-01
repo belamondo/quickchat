@@ -76,6 +76,7 @@ export class TopbarMenuComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log(sessionStorage.getItem('userData'))
     this._auth.setUser()
       .then(res => {
         if (!res || !res['id']) {

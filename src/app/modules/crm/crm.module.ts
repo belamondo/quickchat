@@ -17,6 +17,8 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
  * Modules
  */
 import { SharedModule } from './../shared/shared.module';
+import { PeopleComponent } from './components/people/people.component';
+import { CompaniesComponent } from './components/companies/companies.component';
 
 @NgModule({
   imports: [
@@ -28,6 +30,8 @@ import { SharedModule } from './../shared/shared.module';
     ClientComponent,
     CrmComponent,
     DashboardComponent,
+    PeopleComponent,
+    CompaniesComponent,
   ]
 })
 export class CrmModule { }

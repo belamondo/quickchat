@@ -1,0 +1,23 @@
+<h2 mat-dialog-title>{{ data.title }}</h2>
+
+<div *ngIf="data.isAGroup">
+    <mat-form-field appearance="outline">
+        <mat-label>{{data.field}}</mat-label>
+        <input matInput type="text" #field>
+    </mat-form-field>
+
+    <button mat-button [mat-dialog-close]="this.field.value">{{ data.buttonDescription }}</button>
+    <button mat-button [mat-dialog-close]="false">Cancelar</button>
+</div>
+
+<div *ngIf="data.isAIncomingOrOutcoming">
+    <mat-form-field appearance="outline">
+        <mat-label>{{data.field}}</mat-label>
+        <mat-select placeholder="Escolha a receita" #field2>
+            <mat-option *ngFor="let value of data.incomingsOrOutcomings" value={{value}}>{{value}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <button mat-button [mat-dialog-close]="this.field2.value">{{ data.buttonDescription }}</button>
+    <button mat-button [mat-dialog-close]="false">Cancelar</button>
+</div>

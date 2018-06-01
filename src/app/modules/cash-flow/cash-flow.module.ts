@@ -8,7 +8,7 @@ import { CashFlowComponent } from './cash-flow.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ExpenseComponent, DialogFormExpenseComponent } from './components/expense/expense.component';
 import { IncomingOutcomingComponent, DialogFormIncomingOutcomingComponent } from './components/incoming-outcoming/incoming-outcoming.component';
-import { ReportComponent } from './components/report/report.component';
+import { ReportComponent, DialogFormReportComponent } from './components/report/report.component';
 
 /**
  * Modules
@@ -27,13 +27,15 @@ import { SharedModule } from './../shared/shared.module';
     DashboardComponent,
     DialogFormExpenseComponent,
     DialogFormIncomingOutcomingComponent,
+    DialogFormReportComponent,
     ExpenseComponent,
     IncomingOutcomingComponent,
     ReportComponent
   ],
   entryComponents: [
     DialogFormExpenseComponent,
-    DialogFormIncomingOutcomingComponent
+    DialogFormIncomingOutcomingComponent,
+    DialogFormReportComponent,
   ]
 })
 export class CashFlowModule { }

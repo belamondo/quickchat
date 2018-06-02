@@ -15,6 +15,8 @@
             <a mat-menu-item routerLink="/cash-flow">Fluxo de caixa</a>
             <a mat-menu-item routerLink="/system">Sistema</a>
           </mat-menu>
+
+          <span style="font-size: small;">{{user?.name}}</span>
   
           <button *ngIf="views" mat-icon-button [matMenuTriggerFor]="appMenu">
             <mat-icon>view_module</mat-icon>
@@ -31,9 +33,9 @@
       <mat-sidenav #snav [opened]="options.opened" [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="options.fixed"
         [fixedTopGap]="options.top" [fixedBottomGap]="options.bottom">
         <mat-nav-list>
+          <!--
           <mat-card *ngIf="options.userCard">
             {{user?.name}}
-            <!--
             <div>
               <a routerLink="/user">
                 <mat-icon mat-list-icon>person</mat-icon>
@@ -48,8 +50,8 @@
                 <mat-icon>settings_power</mat-icon>
               </a>
             </div>
-            -->
           </mat-card>
+          -->
           <ng-template ngFor let-view [ngForOf]="views" let-even="even" let-odd="odd" let-rowIndex="index">
             <a mat-list-item [routerLink]="view.link" routerLinkActive="active-link" (click)="mobile ? snav.close() : {}">
               <mat-icon mat-list-icon>{{view.icon}}</mat-icon>

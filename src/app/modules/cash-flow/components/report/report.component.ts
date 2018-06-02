@@ -75,6 +75,9 @@ export class ReportComponent implements OnInit {
       dailyFixedCosts: new FormControl(null),
       dailyVariableCosts: new FormControl(null),
       dailyFinalValue: new FormControl(null),
+
+      tidate: new FormControl(null),
+      tedate: new FormControl(null),
     });
 
     this.autoCorrectedDatePipe = createAutoCorrectedDatePipe('dd/mm/yyyy');

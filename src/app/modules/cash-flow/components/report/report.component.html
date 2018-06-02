@@ -4,198 +4,217 @@
   </div>
 </mat-card>
 
-<div *ngIf="isStarted" class="container">
-  <button
-    mat-raised-button
-    type="button"
-    (click)="showReport('operational')"
-    style="width: 32%; margin-right: 2%"
-    disabled={{operationalReport}}
-  >
-    Operacional
-  </button>
+<div style="max-width: 800px; margin: auto;">
 
-  <button
-    mat-raised-button
-    type="button"
-    (click)="showReport('tatical')"
-    style="width: 32%; margin-right: 2%"
-    disabled={{taticalReport}}
-  >
-    Tático
-  </button>
-  
-  <button
-    mat-raised-button
-    type="button"
-    (click)="showReport('strategic')"
-    style="width: 32%"
-    disabled={{estrategicReport}}
-  >
-    Estratégico
-  </button>
-</div>
+  <div *ngIf="isStarted" class="container">
+    <button
+      mat-raised-button
+      type="button"
+      (click)="showReport('operational')"
+      style="width: 32%; margin-right: 2%"
+      disabled={{operationalReport}}
+    >
+      Operacional
+    </button>
 
-<mat-card *ngIf="isStarted" class="container">
-  
-  <form [formGroup]="reportForm">
-  
-    <div style="margin: auto; width: 95%;" *ngIf="operationalReport">
-      <mat-card-header>
-        <mat-card-title>Fluxo de caixa | diário</mat-card-title>
-      </mat-card-header>
-      <hr>
-      
-      <mat-card-content>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Data</mat-label>
-          <input matInput [matDatepicker]="picker" placeholder="Data" formControlName="date">
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-          <!--
-            <input matInput placeholder="Data" formControlName="date" [textMask]="{mask: mask.date, pipe: autoCorrectedDatePipe}" >
-          -->
-        </mat-form-field>
-        
-        <mat-form-field appearance="outline">
-          <mat-label>Valor em caixa inicial</mat-label>
-          <input matInput placeholder="Valor em caixa inicial" type="float" formControlName="dailyInitialValue" (blur)="calculateDailyFinalValue($event)">
-        </mat-form-field>
-        
-        <hr>
-        <mat-form-field appearance="outline">
-          <mat-label>Total das vendas</mat-label>
-          <input matInput type="float" formControlName="dailySales" readonly="true">
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" style="width: 90%; margin-left: 10%">
-          <mat-label>Vendas à vista</mat-label>
-          <input matInput type="float" formControlName="dailyCashSales" readonly="true">
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" style="width: 90%; margin-left: 10%">
-          <mat-label>Vendas à prazo</mat-label>
-          <input matInput type="float" formControlName="dailyFinancedSales" readonly="true">
-        </mat-form-field>
-
-        <hr>
-        <mat-form-field appearance="outline">
-          <mat-label>Total das despesas</mat-label>
-          <input matInput type="float" formControlName="dailyExpenses" readonly="true">
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" style="width: 90%; margin-left: 10%">
-          <mat-label>Despesas administrativas</mat-label>
-          <input matInput type="float" formControlName="dailyAdmExpenses" readonly="true">
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" style="width: 90%; margin-left: 10%">
-          <mat-label>Custos fixos</mat-label>
-          <input matInput type="float" formControlName="dailyFixedCosts" readonly="true">
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" style="width: 90%; margin-left: 10%">
-          <mat-label>Custos variáveis</mat-label>
-          <input matInput type="float" formControlName="dailyVariableCosts" readonly="true">
-        </mat-form-field>
-
-        <hr>
-        <mat-form-field appearance="outline">
-          <mat-label>Valor em caixa final</mat-label>
-          <input matInput placeholder="Valor em caixa final" type="float" formControlName="dailyFinalValue" readonly="true">
-        </mat-form-field>
-
-      </mat-card-content>
-    </div>
+    <button
+      mat-raised-button
+      type="button"
+      (click)="showReport('tatical')"
+      style="width: 32%; margin-right: 2%"
+      disabled={{taticalReport}}
+    >
+      Tático
+    </button>
     
-    <div style="margin: auto" *ngIf="taticalReport">
-      
-      <button
-        mat-raised-button
-        type="button"
-        (click)="showIncomingOutcomingReport()"
-        style="width: 49%; margin-right: 2%"
-        disabled={{incomingOutcomingReport}}
-      >
-        Receitas
-      </button>
+    <button
+      mat-raised-button
+      type="button"
+      (click)="showReport('strategic')"
+      style="width: 32%"
+      disabled={{estrategicReport}}
+    >
+      Estratégico
+    </button>
+  </div>
 
-      <button
-        mat-raised-button
-        type="button"
-        (click)="showIncomingOutcomingReport()"
-        style="width: 49%;"
-        disabled={{!incomingOutcomingReport}}
-      >
-        Despesas
-      </button>
-
-      
-      <div *ngIf="incomingOutcomingReport" style="margin-top: 20px;">
+  <mat-card *ngIf="isStarted" class="container">
+    
+    <form [formGroup]="reportForm">
+    
+      <div style="margin: auto; width: 95%;" *ngIf="operationalReport">
+        <mat-card-header>
+          <mat-card-title>Fluxo de caixa | diário</mat-card-title>
+        </mat-card-header>
+        <hr>
         
-        <mat-card *ngFor="let group of report.groupsOfIncomings; let i = index" style="margin-bottom: 10px;">
-          {{group.name}}
-          <span style="float: right">{{group.totalValue}}</span>
+        <mat-card-content>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Data</mat-label>
+            <input matInput [matDatepicker]="picker" placeholder="Data" formControlName="date">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <!--
+              <input matInput placeholder="Data" formControlName="date" [textMask]="{mask: mask.date, pipe: autoCorrectedDatePipe}" >
+            -->
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline">
+            <mat-label>Valor em caixa inicial</mat-label>
+            <input matInput placeholder="Valor em caixa inicial" type="float" formControlName="dailyInitialValue" (blur)="calculateDailyFinalValue($event)">
+          </mat-form-field>
+          
           <hr>
+          <mat-form-field appearance="outline">
+            <mat-label>Total das vendas</mat-label>
+            <input matInput type="float" formControlName="dailySales" readonly="true">
+          </mat-form-field>
 
-          <div style="font-size: small; margin-top: 15px; font-weight: bold;">
-            <div style="float: left; width: 70%;">Receita</div>
-            <div style="float: left; width: 10%; text-align: center;">Qtd</div>
-            <div style="float: left; width: 10%; text-align: center;">Perda</div>
-            <div style="float: left; width: 10%; text-align: center;">Preço</div>
-            <div style="clear: both;"></div>
-          </div>
+          <mat-form-field appearance="outline" style="width: 90%; margin-left: 10%">
+            <mat-label>Vendas à vista</mat-label>
+            <input matInput type="float" formControlName="dailyCashSales" readonly="true">
+          </mat-form-field>
 
-          <div *ngFor="let incoming of report.groupsOfIncomings[i].incomings" style="font-size: small; margin-top: 15px;">
-            <div style="float: left; width: 70%;">{{incoming}}</div>
-            <div style="float: left; width: 10%; text-align: center;">100</div>
-            <div style="float: left; width: 10%; text-align: center;">5</div>
-            <div style="float: left; width: 10%; text-align: center;">1000</div>
-            <div style="clear: both;"></div>
-          </div>
+          <mat-form-field appearance="outline" style="width: 90%; margin-left: 10%">
+            <mat-label>Vendas à prazo</mat-label>
+            <input matInput type="float" formControlName="dailyFinancedSales" readonly="true">
+          </mat-form-field>
 
-          <button mat-raised-button type="button" (click)="addNewIncominginGroup(i)" style="width: 100%; margin-top: 15px;">Adicionar receita</button>  
-        </mat-card>
+          <hr>
+          <mat-form-field appearance="outline">
+            <mat-label>Total das despesas</mat-label>
+            <input matInput type="float" formControlName="dailyExpenses" readonly="true">
+          </mat-form-field>
 
-        <button mat-raised-button type="button" (click)="addNewIncomingGroup()" style="width: 100%;">Adicionar grupo</button>
-        
+          <mat-form-field appearance="outline" style="width: 90%; margin-left: 10%">
+            <mat-label>Despesas administrativas</mat-label>
+            <input matInput type="float" formControlName="dailyAdmExpenses" readonly="true">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" style="width: 90%; margin-left: 10%">
+            <mat-label>Custos fixos</mat-label>
+            <input matInput type="float" formControlName="dailyFixedCosts" readonly="true">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" style="width: 90%; margin-left: 10%">
+            <mat-label>Custos variáveis</mat-label>
+            <input matInput type="float" formControlName="dailyVariableCosts" readonly="true">
+          </mat-form-field>
+
+          <hr>
+          <mat-form-field appearance="outline">
+            <mat-label>Valor em caixa final</mat-label>
+            <input matInput placeholder="Valor em caixa final" type="float" formControlName="dailyFinalValue" readonly="true">
+          </mat-form-field>
+
+        </mat-card-content>
       </div>
       
-      <div *ngIf="!incomingOutcomingReport" style="margin-top: 20px;">
+      <div style="margin: auto; width: 95%;" *ngIf="taticalReport">
         
-          <mat-card *ngFor="let group of report.groupsOfOutcomings ; let i = index" style="margin-bottom: 10px;">
+        <button
+          mat-raised-button
+          type="button"
+          (click)="showIncomingOutcomingReport()"
+          style="width: 49%; margin-right: 2%"
+          disabled={{incomingOutcomingReport}}
+        >
+          Receitas
+        </button>
+
+        <button
+          mat-raised-button
+          type="button"
+          (click)="showIncomingOutcomingReport()"
+          style="width: 49%;"
+          disabled={{!incomingOutcomingReport}}
+        >
+          Despesas
+        </button>
+
+        <div style="text-align: center; margin-top: 20px;">
+          <mat-form-field appearance="outline" style="width: 45%;">
+            <mat-label>Data inicial</mat-label>
+            <input matInput [matDatepicker]="tipicker" placeholder="Data inicial" formControlName="tidate">
+            <mat-datepicker-toggle matSuffix [for]="tipicker"></mat-datepicker-toggle>
+            <mat-datepicker #tipicker></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" style="width: 45%">
+            <mat-label>Data final</mat-label>
+            <input matInput [matDatepicker]="tepicker" placeholder="Data final" formControlName="tedate">
+            <mat-datepicker-toggle matSuffix [for]="tepicker"></mat-datepicker-toggle>
+            <mat-datepicker #tepicker></mat-datepicker>
+          </mat-form-field>
+        </div>
+        
+        <div *ngIf="incomingOutcomingReport">
+          
+          <mat-card *ngFor="let group of report.groupsOfIncomings; let i = index" style="margin-bottom: 10px;">
             {{group.name}}
             <span style="float: right">{{group.totalValue}}</span>
             <hr>
-  
+
             <div style="font-size: small; margin-top: 15px; font-weight: bold;">
-              <div style="float: left; width: 80%;">Despesa</div>
+              <div style="float: left; width: 70%;">Receita</div>
               <div style="float: left; width: 10%; text-align: center;">Qtd</div>
+              <div style="float: left; width: 10%; text-align: center;">Perda</div>
               <div style="float: left; width: 10%; text-align: center;">Preço</div>
               <div style="clear: both;"></div>
             </div>
-  
-            <div *ngFor="let outcoming of report.groupsOfOutcomings[i].outcomings" style="font-size: small; margin-top: 15px;">
-              <div style="float: left; width: 80%;">{{outcoming}}</div>
-              <div style="float: left; width: 10%; text-align: center;">1</div>
+
+            <div *ngFor="let incoming of report.groupsOfIncomings[i].incomings" style="font-size: small; margin-top: 15px;">
+              <div style="float: left; width: 70%;">{{incoming}}</div>
               <div style="float: left; width: 10%; text-align: center;">100</div>
+              <div style="float: left; width: 10%; text-align: center;">5</div>
+              <div style="float: left; width: 10%; text-align: center;">1000</div>
               <div style="clear: both;"></div>
             </div>
-  
-            <button mat-raised-button type="button" (click)="addNewOutcominginGroup(i)" style="width: 100%; margin-top: 15px;">Adicionar despesa</button>  
-          </mat-card>
-  
-          <button mat-raised-button type="button" (click)="addNewOutcomingGroup()" style="width: 100%;">Adicionar grupo</button>
 
+            <button mat-raised-button type="button" (click)="addNewIncominginGroup(i)" style="width: 100%; margin-top: 15px;">Adicionar receita</button>  
+          </mat-card>
+
+          <button mat-raised-button type="button" (click)="addNewIncomingGroup()" style="width: 100%;">Adicionar grupo</button>
+          
+        </div>
+        
+        <div *ngIf="!incomingOutcomingReport">
+          
+            <mat-card *ngFor="let group of report.groupsOfOutcomings ; let i = index" style="margin-bottom: 10px;">
+              {{group.name}}
+              <span style="float: right">{{group.totalValue}}</span>
+              <hr>
+    
+              <div style="font-size: small; margin-top: 15px; font-weight: bold;">
+                <div style="float: left; width: 80%;">Despesa</div>
+                <div style="float: left; width: 10%; text-align: center;">Qtd</div>
+                <div style="float: left; width: 10%; text-align: center;">Preço</div>
+                <div style="clear: both;"></div>
+              </div>
+    
+              <div *ngFor="let outcoming of report.groupsOfOutcomings[i].outcomings" style="font-size: small; margin-top: 15px;">
+                <div style="float: left; width: 80%;">{{outcoming}}</div>
+                <div style="float: left; width: 10%; text-align: center;">1</div>
+                <div style="float: left; width: 10%; text-align: center;">100</div>
+                <div style="clear: both;"></div>
+              </div>
+    
+              <button mat-raised-button type="button" (click)="addNewOutcominginGroup(i)" style="width: 100%; margin-top: 15px;">Adicionar despesa</button>  
+            </mat-card>
+    
+            <button mat-raised-button type="button" (click)="addNewOutcomingGroup()" style="width: 100%;">Adicionar grupo</button>
+
+        </div>
+        
       </div>
       
-    </div>
-    
-    <div style="margin: auto; width: 95%;" *ngIf="estrategicReport">
-      Painel estratégico
-    </div>
+      <div style="margin: auto; width: 95%;" *ngIf="estrategicReport">
+        Painel estratégico
+      </div>
 
-  </form>
+    </form>
 
-</mat-card>
+  </mat-card>
+
+</div>

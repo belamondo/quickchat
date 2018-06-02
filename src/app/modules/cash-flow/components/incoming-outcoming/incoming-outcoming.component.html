@@ -3,127 +3,131 @@
     <mat-spinner></mat-spinner>
   </div>
 </mat-card>
-  
-<mat-card *ngIf="isStarted" class="container">
-  <form [formGroup]="incomingOutcomingForm" (ngSubmit)="onIncomingOutcomingFormSubmit()">
-    <mat-card-header>
-      <mat-card-title>Efetuar lançamentos</mat-card-title>
-    </mat-card-header>
 
-    <hr>
-    <mat-card-content>
-      <mat-form-field appearance="outline">
-        <mat-label>Receita/Despesa</mat-label>
-        <mat-select placeholder="Escolha a modalidade do lançamento" formControlName="modality" required>
-          <mat-option value="outcoming" (click)="getListOfTypes('outcoming')">Despesa</mat-option>
-          <mat-option value="incoming" (click)="getListOfTypes('incoming')">Receita</mat-option>
-        </mat-select>
-      </mat-form-field>
+<div style="max-width: 800px; margin: auto;">
 
-      <mat-form-field appearance="outline">
-        <mat-label>Lançamento</mat-label>
-        <mat-select placeholder="Escolha qual o lançamento" formControlName="type" required>
-          <mat-option *ngFor="let type of types" [value]="type">
-            {{ type.name }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+  <mat-card *ngIf="isStarted" class="container">
+    <form [formGroup]="incomingOutcomingForm" (ngSubmit)="onIncomingOutcomingFormSubmit()">
+      <mat-card-header>
+        <mat-card-title>Efetuar lançamentos</mat-card-title>
+      </mat-card-header>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Cliente/Fornecedor</mat-label>
-        <mat-select placeholder="Qual o cliente/fornecedor" formControlName="receiver" required>
-          <mat-option *ngFor="let receiver of receivers" [value]="receiver">
-            {{ receiver.name }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Qtd</mat-label>
-        <input matInput placeholder="Qtd vendida" type="number" formControlName="salesQtd">
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Perdas</mat-label>
-        <input matInput placeholder="Qtd perdida" type="number" formControlName="lostQtd">
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Valor</mat-label>
-        <input matInput placeholder="Valor do lançamento" type="float" formControlName="price" required>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" style="width: 70%; margin-right: 2%;">
-        <mat-label>Forma de pagamento</mat-label>
-        <mat-select placeholder="Escolha a forma de pagamento" formControlName="payment" required>
-          <mat-option value="cash">À vista</mat-option>
-          <mat-option value="financed">Parcelado</mat-option>
-          <mat-option value="card">Cartão - Parcelado</mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" style="width: 22%">
-        <mat-label>Qtd</mat-label>
-        <input matInput placeholder="Qtd" type="number" formControlName="paymentQtd">
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Data</mat-label>
-        <input matInput [matDatepicker]="picker" placeholder="Data do lançamento" formControlName="date">
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-        <!--
-          <input matInput placeholder="Data do lançamento" formControlName="date" [textMask]="{mask: mask.date, pipe: autoCorrectedDatePipe}"
-            required>
-        -->
-      </mat-form-field>
-
-      <div *ngFor="let field of fields; let i = index">
-        <mat-form-field appearance="outline" style="width: 85%">
-          <mat-label>{{field}}</mat-label>
-          <input matInput placeholder="{{field}}" type="text" formControlName="{{field}}">
+      <hr>
+      <mat-card-content>
+        <mat-form-field appearance="outline">
+          <mat-label>Receita/Despesa</mat-label>
+          <mat-select placeholder="Escolha a modalidade do lançamento" formControlName="modality" required>
+            <mat-option value="outcoming" (click)="getListOfTypes('outcoming')">Despesa</mat-option>
+            <mat-option value="incoming" (click)="getListOfTypes('incoming')">Receita</mat-option>
+          </mat-select>
         </mat-form-field>
-        <i class="material-icons" style="cursor: pointer;" (click)="removeField(i)">
-          remove_circle
-        </i>
-      </div>
 
-      <button mat-raised-button type="button" (click)="addField()" style="width: 100%;">Adicionar campo</button>
-    </mat-card-content>
-    <hr>  
-    
-    <button mat-raised-button [disabled]="incomingOutcomingForm.invalid" style="width: 100%;">{{submitButton}}</button>
-  </form>
-</mat-card>
+        <mat-form-field appearance="outline">
+          <mat-label>Lançamento</mat-label>
+          <mat-select placeholder="Escolha qual o lançamento" formControlName="type" required>
+            <mat-option *ngFor="let type of types" [value]="type">
+              {{ type.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
 
-<mat-card *ngIf="isStarted" class="container mat-elevation-z8">
-  <table mat-table [dataSource]="dataSource">
+        <mat-form-field appearance="outline">
+          <mat-label>Cliente/Fornecedor</mat-label>
+          <mat-select placeholder="Qual o cliente/fornecedor" formControlName="receiver" required>
+            <mat-option *ngFor="let receiver of receivers" [value]="receiver">
+              {{ receiver.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
 
-    <!-- Data Column -->
-    <ng-container matColumnDef="date">
-      <th mat-header-cell *matHeaderCellDef> Data </th>
-      <td mat-cell *matCellDef="let element"> {{element.date}} </td>
-    </ng-container>
+        <mat-form-field appearance="outline">
+          <mat-label>Qtd</mat-label>
+          <input matInput placeholder="Qtd vendida" type="number" formControlName="salesQtd">
+        </mat-form-field>
 
-    <!-- Incoming/Outcoming Column -->
-    <ng-container matColumnDef="modality">
-      <th mat-header-cell *matHeaderCellDef> Modalidade </th>
-      <td mat-cell *matCellDef="let element"> {{element.modality}} </td>
-    </ng-container>
+        <mat-form-field appearance="outline">
+          <mat-label>Perdas</mat-label>
+          <input matInput placeholder="Qtd perdida" type="number" formControlName="lostQtd">
+        </mat-form-field>
 
-    <!-- Type Column -->
-    <ng-container matColumnDef="type">
-      <th mat-header-cell *matHeaderCellDef> Tipo </th>
-      <td mat-cell *matCellDef="let element"> {{element.type}} </td>
-    </ng-container>
+        <mat-form-field appearance="outline">
+          <mat-label>Valor</mat-label>
+          <input matInput placeholder="Valor do lançamento" type="float" formControlName="price" required>
+        </mat-form-field>
 
-    <!-- Price Column -->
-    <ng-container matColumnDef="price">
-      <th mat-header-cell *matHeaderCellDef> Preço </th>
-      <td mat-cell *matCellDef="let element"> {{element.price}} </td>
-    </ng-container>
+        <mat-form-field appearance="outline" style="width: 70%; margin-right: 2%;">
+          <mat-label>Forma de pagamento</mat-label>
+          <mat-select placeholder="Escolha a forma de pagamento" formControlName="payment" required>
+            <mat-option value="cash">À vista</mat-option>
+            <mat-option value="financed">Parcelado</mat-option>
+            <mat-option value="card">Cartão - Parcelado</mat-option>
+          </mat-select>
+        </mat-form-field>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
-</mat-card>
+        <mat-form-field appearance="outline" style="width: 22%">
+          <mat-label>Qtd</mat-label>
+          <input matInput placeholder="Qtd" type="number" formControlName="paymentQtd">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Data</mat-label>
+          <input matInput [matDatepicker]="picker" placeholder="Data do lançamento" formControlName="date">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <!--
+            <input matInput placeholder="Data do lançamento" formControlName="date" [textMask]="{mask: mask.date, pipe: autoCorrectedDatePipe}"
+              required>
+          -->
+        </mat-form-field>
+
+        <div *ngFor="let field of fields; let i = index">
+          <mat-form-field appearance="outline" style="width: 85%">
+            <mat-label>{{field}}</mat-label>
+            <input matInput placeholder="{{field}}" type="text" formControlName="{{field}}">
+          </mat-form-field>
+          <i class="material-icons" style="cursor: pointer;" (click)="removeField(i)">
+            remove_circle
+          </i>
+        </div>
+
+        <button mat-raised-button type="button" (click)="addField()" style="width: 100%;">Adicionar campo</button>
+      </mat-card-content>
+      <hr>  
+      
+      <button mat-raised-button [disabled]="incomingOutcomingForm.invalid" style="width: 100%;">{{submitButton}}</button>
+    </form>
+  </mat-card>
+
+  <mat-card *ngIf="isStarted" class="container mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource">
+
+      <!-- Data Column -->
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef> Data </th>
+        <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+      </ng-container>
+
+      <!-- Incoming/Outcoming Column -->
+      <ng-container matColumnDef="modality">
+        <th mat-header-cell *matHeaderCellDef> Modalidade </th>
+        <td mat-cell *matCellDef="let element"> {{element.modality}} </td>
+      </ng-container>
+
+      <!-- Type Column -->
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef> Tipo </th>
+        <td mat-cell *matCellDef="let element"> {{element.type}} </td>
+      </ng-container>
+
+      <!-- Price Column -->
+      <ng-container matColumnDef="price">
+        <th mat-header-cell *matHeaderCellDef> Preço </th>
+        <td mat-cell *matCellDef="let element"> {{element.price}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </mat-card>
+
+</div>

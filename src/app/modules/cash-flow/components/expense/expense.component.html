@@ -5,7 +5,7 @@
 </mat-card>
 
 <mat-card *ngIf="isStarted" class="container">
-  <form [formGroup]="expenseForm" (ngSubmit)="onExpenseFormSubmit()">
+  <form [formGroup]="expenseForm" #formDirective="ngForm" (ngSubmit)="onExpenseFormSubmit(this.formDirective)">
     <mat-card-header>
       <mat-card-title>Cadastro de tipo de despesa</mat-card-title>
     </mat-card-header>

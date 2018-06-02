@@ -134,8 +134,7 @@ export class CompaniesComponent implements OnInit {
 
         this._crud
           .read({
-            collection: "",
-            whereId: param
+            collectionsAndDocs: ['companies', param]
           }).then(res => {
             this.companyForm.patchValue(res['obj'][0]);
 

@@ -3,21 +3,21 @@
     <mat-card-title>Tipo de usuário</mat-card-title>
 
     <mat-radio-group formControlName="description">
-      <mat-radio-button value="animal">Animal</mat-radio-button>
-      <mat-radio-button value="business">Empresa</mat-radio-button>
-      <mat-radio-button value="entity">Entidade</mat-radio-button>
-      <mat-radio-button value="person">Pessoa</mat-radio-button>
+      <mat-radio-button value="animals">Animal</mat-radio-button>
+      <mat-radio-button value="companies">Empresa</mat-radio-button>
+      <mat-radio-button value="entities">Entidade</mat-radio-button>
+      <mat-radio-button value="people">Pessoa</mat-radio-button>
     </mat-radio-group>
   </form>
 </mat-card>
 <!--FORM DE PESSOA-->
-<mat-card class="container" *ngIf="profileChoiceForm.get('description').value === 'person'">
+<mat-card class="container" *ngIf="profileChoiceForm.get('description').value === 'people'">
   <form [formGroup]="peopleForm" (ngSubmit)="onPeopleFormSubmit()">
     <mat-card-title>Perfil de pessoa</mat-card-title>
 
     <mat-form-field appearance="outline">
       <mat-label>Nome</mat-label>
-      <mat-icon matPrefix>person</mat-icon>
+      <mat-icon matPrefix>people</mat-icon>
       <input matInput placeholder="Digite seu nome" type="text" formControlName="name" required>
     </mat-form-field>
 
@@ -39,13 +39,19 @@
   </form>
 </mat-card>
 <!--FORM DE ANIMAL-->
-<mat-card class="container" *ngIf="profileChoiceForm.get('description').value === 'animal'">
+<mat-card class="container" *ngIf="profileChoiceForm.get('description').value === 'animals'">
   Formulário de animal
 </mat-card>
 <!--FORM DE EMPRESA-->
-<mat-card class="container" *ngIf="profileChoiceForm.get('description').value === 'business'">
-  <form [formGroup]="peopleForm" (ngSubmit)="onPeopleFormSubmit()">
+<mat-card class="container" *ngIf="profileChoiceForm.get('description').value === 'companies'">
+  <form [formGroup]="companiesForm" (ngSubmit)="onCompaniesFormSubmit()">
     <mat-card-title>Perfil de empresa</mat-card-title>
+
+    <mat-form-field appearance="outline" id="cpf">
+      <mat-label>CNPJ</mat-label>
+      <input matInput placeholder="Digite ser CNPJ" type="text" formControlName="cnpj" (keyup)="checkCompanyExistence(companiesForm.value.cnpj)"
+        [textMask]="{mask: mask.cnpj}" required>
+    </mat-form-field>
 
     <mat-form-field appearance="outline">
       <mat-label>Nome fantasia</mat-label>
@@ -145,6 +151,6 @@
   </form>
 </mat-card>
 <!--FORM DE ENTIDADE-->
-<mat-card class="container" *ngIf="profileChoiceForm.get('description').value === 'entity'">
+<mat-card class="container" *ngIf="profileChoiceForm.get('description').value === 'entities'">
   Formulário de entidade
 </mat-card>

@@ -12,6 +12,7 @@ import { CrudService } from '../../../shared/services/firebase/crud.service';
 })
 export class DashboardComponent implements OnInit {
   public isStarted: boolean;
+  public userData: any;
 
   constructor(
     private _crud: CrudService
@@ -19,5 +20,6 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.isStarted = false;
+    
   }
 }

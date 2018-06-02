@@ -36,27 +36,6 @@ export class CashFlowGuard implements CanActivate {
 
           return false;
         }
-        
-        this._crud.read({
-          collection: 'people',
-          whereId: res['id']
-        }).then(res => { 
-          if (!res[0]) {
-            this._router.navigate(['/main/profile_choice']);
-
-            return false;
-          }
-
-          //Populate clients item on sessionStorage
-          if(!sessionStorage.getItem('clients')) {
-            this._crud.read({
-              collection: 'clients',
-              whereId: res['id']
-            }).then(resClients => {
-              sessionStorage.setItem('clients', JSON.stringify(resClients))
-            })
-          }
-        })
       })
 
     return true;

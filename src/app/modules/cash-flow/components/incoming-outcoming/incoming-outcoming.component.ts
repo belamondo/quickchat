@@ -105,6 +105,8 @@ export class IncomingOutcomingComponent implements OnInit {
       modality: new FormControl(null, Validators.required),
       type: new FormControl(null, Validators.required),
       receiver: new FormControl(null, Validators.required),
+      salesQtd: new FormControl(null),
+      lostQtd: new FormControl(null),
       price: new FormControl(null, Validators.required),
       payment: new FormControl(null, Validators.required),
       paymentQtd: new FormControl(null),

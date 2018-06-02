@@ -6,7 +6,7 @@
 
 <div style="max-width: 800px; margin: auto;">
   <mat-card *ngIf="isStarted" class="container">
-    <form [formGroup]="expenseForm" (ngSubmit)="onExpenseFormSubmit()">
+    <form [formGroup]="expenseForm" #formDirective="ngForm" (ngSubmit)="onExpenseFormSubmit(this.formDirective)">
       <mat-card-header>
         <mat-card-title>Cadastro de tipo de despesa</mat-card-title>
       </mat-card-header>
@@ -44,4 +44,5 @@
       <button mat-raised-button [disabled]="expenseForm.invalid" style="width: 100%;">{{submitButton}}</button>
     </form>
   </mat-card>
+
 </div>

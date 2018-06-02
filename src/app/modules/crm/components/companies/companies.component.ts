@@ -31,6 +31,7 @@ import {
 import {
   DialogDocumentComponent
 } from '../../../shared/components/dialog-document/dialog-document.component';
+import { DialogRelationshipComponent } from '../../../shared/components/dialog-relationship/dialog-relationship.component';
 
 /**
  * Services
@@ -59,13 +60,12 @@ import { ValidateCnpj } from '../../../shared/validators/cnpj.validator';
 import { ValidateCpf } from '../../../shared/validators/cpf.validator';
 
 @Component({
-  selector: 'app-client',
-  templateUrl: './client.component.html',
-  styleUrls: ['./client.component.css']
+  selector: 'app-companies',
+  templateUrl: './companies.component.html',
+  styleUrls: ['./companies.component.css']
 })
-export class ClientComponent implements OnInit {
+export class CompaniesComponent implements OnInit {
   //Common properties: start
-  public personForm: FormGroup;
   public companyForm: FormGroup;
   public isStarted: boolean;
   public mask: any;
@@ -84,6 +84,8 @@ export class ClientComponent implements OnInit {
   public contacts: any;
   public documentsObject: any;
   public documents: any;
+  public relationships: any;
+  public relationshipsObject: any;
 
   constructor(
     private _crud: CrudService,
@@ -94,15 +96,8 @@ export class ClientComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.personForm = new FormGroup({
-      cpf: new FormControl(null, [Validators.required, ValidateCpf]),
-      name: new FormControl(null, Validators.required),
-      birthday: new FormControl(null),
-      gender: new FormControl(null, Validators.required),
-    });
-
     this.companyForm = new FormGroup({
-      cnpj: new FormControl(null, [Validators.required,ValidateCnpj]),
+      //cnpj: new FormControl(null, [Validators.required,ValidateCnpj]),
       business_name: new FormControl(null, Validators.required),
       company_name: new FormControl(null, Validators.required)
     });
@@ -114,11 +109,12 @@ export class ClientComponent implements OnInit {
     this.documentsObject = [];
 
     this.contactsObject = [];
-    this.contacts = JSON.parse(sessionStorage.getItem('contacts'));
+
+    this.relationshipsObject = [];
 
     this.isStarted = false;
     this.mask = {
-      cpf: [/\d/, /\d/, /\d/,'.', /\d/, /\d/, /\d/,'.', /\d/, /\d/, /\d/,'-', /\d/,/\d/ ],
+      cnpj: [/\d/, /\d/,'.', /\d/, /\d/, /\d/,'.', /\d/, /\d/, /\d/,'/', /\d/,/\d/,/\d/,/\d/,'-',/\d/,/\d/],
       date: [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]
     };
 
@@ -131,36 +127,23 @@ export class ClientComponent implements OnInit {
         this.paramToSearch = params.id;
         this.submitToCreate = false;
         this.submitToUpdate = true;
-        this.title = "Atualizar cliente";
+        this.title = "Atualizar empresa";
         this.submitButton = "Atualizar";
 
         let param = this.paramToSearch.replace(':', '');
 
-        if (this.clientType === 'person') {
-          this._crud
-            .read({
-              collection: "clientsPeople",
-              whereId: param
-            }).then(res => {
-              this.personForm.patchValue(res['obj'][0]);
-  
-              this.isStarted = true;
-            })
-        } else {
-          this._crud
-            .read({
-              collection: "clientsCompanies",
-              whereId: param
-            }).then(res => {
-              this.companyForm.patchValue(res['obj'][0]);
-  
-              this.isStarted = true;
-            })
-        }
+        this._crud
+          .read({
+            collectionsAndDocs: ['companies', param]
+          }).then(res => {
+            this.companyForm.patchValue(res['obj'][0]);
+
+            this.isStarted = true;
+          })
       } else {
         this.submitToCreate = true;
         this.submitToUpdate = false;
-        this.title = "Cadastrar cliente";
+        this.title = "Cadastrar empresa";
         this.submitButton = "Cadastrar";
 
         this.isStarted = true;
@@ -256,92 +239,45 @@ export class ClientComponent implements OnInit {
     this.documentsObject.splice(i, 1);
   }
 
-  checkPersonExistence = (cpf) =>{
-    if(!this.personForm.get('cpf').errors) {
-      //Check existence of client by cpf, first on sessionStorage, then, if there are at least 400 clients in the sesionStorage (populated on crm.guard || cash-flow.guard) and none of then are related to the cpf, look on firestore clients collection
+  addRelationship = () => {
+    let dialogRef = this._dialog.open(DialogRelationshipComponent, {
+      height: '320px',
+      width: '800px',
+      data: {
+        relationships: this.relationships,
+        mask: this.mask,
+        autoCorrectedDatePipe: this.autoCorrectedDatePipe
+      }
+    });
 
-      console.log(sessionStorage.getItem('clients'))
-    }
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.relationships.forEach(element => {
+          if (element._data.mask === result.type) {
+            result.type = element._data.name;
+          }
+        });
+
+        this.relationshipsObject.push(result);
+      }
+    });
+  }
+
+  deleteRelationship = (i) => {
+    this.relationshipsObject.splice(i, 1);
   }
 
   onCompanyFormSubmit = () => {
-    console.log(this.companyForm.value)  
-  }
-
-  onPersonFormSubmit = () => {
     let userData = JSON.parse(sessionStorage.getItem('userData'));
-    if(this.submitToUpdate) {
-      this._crud
-      .update({
-        collectionsAndDocs: ['clientsPeople', this.paramToSearch.replace(':', '')],
-        objectToUpdate: this.personForm.value
-      });
+    console.log(userData[0]['_data']['userType']+'/'+userData[0]['_id'])
+    // if(this.submitToUpdate) {
+    // } 
 
-      if(this.documentsObject.length > 0) {
-        this._crud
-        .update({
-          collectionsAndDocs: ['clientsPeople', this.paramToSearch.replace(':', '')],
-          objectToUpdate: JSON.stringify(this.documentsObject)
-        });
-      }
-
-      if(this.contactsObject.length > 0) {
-        this._crud
-        .update({
-          collectionsAndDocs: ['clientsPeopleContacts', this.paramToSearch.replace(':', '')],
-          objectToUpdate: JSON.stringify(this.contactsObject)
-        });
-      }
-
-      if(this.addressesObject.length > 0) {
-        this._crud
-        .update({
-          collectionsAndDocs: 'clientsPeopleAddresses',
-          whereId: this.paramToSearch.id,
-          objectToUpdate: {
-            addressesToParse: JSON.stringify(this.addressesObject)
-          }
-        });
-      }
-    }
-
-    if(this.submitToCreate) {
-      this._crud
-      .create({
-        collectionsAndDocs: [userData[0]['_data']['userType'],userData[0]['_id'],'clients'],
-        objectToCreate: this.personForm.value
-      }).then(res => {
-        console.log(this.contactsObject)
-        if(this.documentsObject.length > 0) {
-          this._crud
-          .create({
-            collectionsAndDocs: [userData[0]['_data']['userType'],userData[0]['_id'],'clients',res['id'],'clientsDocuments'],
-            objectToCreate: {
-              documentsToParse: JSON.stringify(this.documentsObject)
-            }
-          })
-        };
-
-        if(this.contactsObject.length > 0) {
-          this._crud
-          .create({
-            collectionsAndDocs: [userData[0]['_data']['userType'],userData[0]['_id'],'clients',res['id'],'clientsContacts'],
-            objectToCreate: {
-              contactsToParse: JSON.stringify(this.contactsObject)
-            }
-          })
-        };
-
-        if(this.addressesObject.length > 0) {
-          this._crud
-          .create({
-            collectionsAndDocs: [userData[0]['_data']['userType'],userData[0]['_id'],'clients',res['id'],'clientsAddresses'],
-            objectToCreate: {
-              addressesToParse: JSON.stringify(this.addressesObject)
-            }
-          })
-        };
-      })
-    }
+    // if(this.submitToCreate) {
+    //   this._crud
+    //   .create({
+    //     collection: 
+    //   })
+    // }
   }
 }

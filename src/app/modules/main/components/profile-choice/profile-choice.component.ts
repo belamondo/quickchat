@@ -16,6 +16,21 @@ import { AuthenticationService } from '../../../shared/services/firebase/authent
 import { CrudService } from '../../../shared/services/firebase/crud.service';
 import { Router } from '@angular/router';
 
+/**
+ * Third party
+ */
+import createAutoCorrectedDatePipe from 'text-mask-addons/dist/createAutoCorrectedDatePipe';
+
+/**
+ * Validators
+ */
+import {
+  ValidateCnpj
+} from '../../../shared/validators/cnpj.validator';
+import {
+  ValidateCpf
+} from '../../../shared/validators/cpf.validator';
+
 @Component({
   selector: 'app-profile-choice',
   templateUrl: './profile-choice.component.html',
@@ -23,7 +38,9 @@ import { Router } from '@angular/router';
 })
 export class ProfileChoiceComponent implements OnInit {
   public peopleForm: FormGroup;
+  public companiesForm: FormGroup;
   public profileChoiceForm: FormGroup;
+  public isStarted: boolean;
   
   public mask: any;
 
@@ -35,6 +52,7 @@ export class ProfileChoiceComponent implements OnInit {
   public contacts: any;
   public documentsObject: any;
   public documents: any;
+  public user: any;
 
   constructor(
     private _auth: AuthenticationService,
@@ -54,6 +72,23 @@ export class ProfileChoiceComponent implements OnInit {
       cell_phone: ['(', /\d/, /\d/, ')',' ' , /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/],
       cnpj: [/\d/, /\d/,'.', /\d/, /\d/, /\d/,'.', /\d/, /\d/, /\d/,'/', /\d/,/\d/,/\d/,/\d/,'-',/\d/,/\d/]
     };
+
+    this.autoCorrectedDatePipe = createAutoCorrectedDatePipe('dd/mm/yyyy');
+
+    this.addressesObject = [];
+
+    this.documentsObject = [];
+
+    this.contactsObject = [];
+    this.contacts = JSON.parse(sessionStorage.getItem('contacts'));
+
+    this.isStarted = false;
+
+    this.mask = {
+      cpf: [/\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '-', /\d/, /\d/],
+      date: [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/],
+      cnpj: [/\d/, /\d/,'.', /\d/, /\d/, /\d/,'.', /\d/, /\d/, /\d/,'/', /\d/,/\d/,/\d/,/\d/,'-',/\d/,/\d/]
+    };
     
     this.profileChoiceForm = new FormGroup({
       description: new FormControl(null)
@@ -64,6 +99,14 @@ export class ProfileChoiceComponent implements OnInit {
       gender: new FormControl(null, Validators.required),
       birthday: new FormControl(null, Validators.required)
     });
+
+    this.companiesForm = new FormGroup({
+      cnpj: new FormControl(null, [Validators.required, ValidateCnpj]),
+      business_name: new FormControl(null, Validators.required),
+      company_name: new FormControl(null)
+    });
+
+    this.user = JSON.parse(sessionStorage.getItem('user'));
   }
 
   addAddress = () => {
@@ -144,41 +187,77 @@ export class ProfileChoiceComponent implements OnInit {
     this.documentsObject.splice(i, 1);
   }
 
+  checkCompanyExistence = (cnpj) => {
+    if (!this.companiesForm.get('cnpj').errors) {
+      this._crud.read({
+        collectionsAndDocs: [this.profileChoiceForm.get('description').value,this.user['user']['uid']],
+        where: ['cnpj','==',cnpj]
+      }).then(res => {
+        console.log(res)
+      })
+    }
+  }
+
   onBirthdayChange = (event) => {
     this.peopleForm.get('birthday').setValue(event.targetElement.value);
   }
 
   onPeopleFormSubmit = () => {
-    this._auth.setUser()
-      .then(res => {
-        this._crud.read({
-          collection: 'people',
-          whereId: res['id']
-        }).then(resPeople => {
-          if (resPeople['length'] > 0) {
-            this._router.navigate(['/main/dashboard'])
 
-            this._snackbar.open('Você já escolheu seu tipo de perfil e não pode alterá-lo.', '', {
-              duration: 4000
-            })
+    this._crud.read({
+      collectionsAndDocs: [this.profileChoiceForm.get('description').value,this.user['user']['uid']]
+    }).then(resPeople => {
+      if (resPeople['length'] > 0) {
+        this._router.navigate(['/main/dashboard'])
   
-            return false;
-          } else {
-            this._crud.update({
-              collection: 'people',
-              whereId: res['id'],
-              objectToUpdate: this.peopleForm.value
-            }).then(res => {
-              this._router.navigate(['/main/dashboard'])
-
-              this._snackbar.open('Perfil cadastrado. Bem vindo.', '', {
-                duration: 4000
-              })
-    
-              return true;
-            })
-          }
+        this._snackbar.open('Você já escolheu seu tipo de perfil e não pode alterá-lo.', '', {
+          duration: 4000
         })
-      })
+  
+        return false;
+      } else {
+        this._crud.update({
+          collectionsAndDocs: [this.profileChoiceForm.get('description').value,this.user['user']['uid']],
+          objectToUpdate: this.peopleForm.value
+        }).then(res => {
+          this._router.navigate(['/main/dashboard'])
+  
+          this._snackbar.open('Perfil cadastrado. Bem vindo.', '', {
+            duration: 4000
+          })
+  
+          return true;
+        })
+      }
+    })
+  }
+
+  onCompaniesFormSubmit = () => {
+    this._crud.read({
+      collectionsAndDocs: [this.profileChoiceForm.get('description').value,this.user['user']['uid']]
+    }).then(resCompanies => {
+      if (resCompanies && resCompanies['length'] > 0) {
+        this._router.navigate(['/main/dashboard'])
+  
+        this._snackbar.open('Você já escolheu seu tipo de perfil e não pode alterá-lo.', '', {
+          duration: 4000
+        })
+  
+        return false;
+      } else {
+        this._crud.update({
+          collectionsAndDocs: [this.profileChoiceForm.get('description').value,this.user['user']['uid']],
+          objectToUpdate: this.companiesForm.value
+        }).then(res => {
+          this._router.navigate(['/main/dashboard'])
+  
+          this._snackbar.open('Perfil cadastrado. Bem vindo.', '', {
+            duration: 4000
+          })
+  
+          return true;
+        })
+      }
+    })
   }
 }

@@ -22,6 +22,11 @@ import { MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
 
 /**
+ * Services
+ */
+import { CrudService } from './crud.service';
+
+/**
  * Third party class
  */
 import { initializeApp } from 'firebase';
@@ -38,6 +43,7 @@ const _authentication = initializeApp({
 @Injectable()
 export class AuthenticationService {
   constructor(
+    private _crud: CrudService,
     private _router: Router,
     public _snackbar: MatSnackBar
   ) {}
@@ -96,12 +102,101 @@ export class AuthenticationService {
           
           sessionStorage.clear();
           
-          this._router.navigate([params.navigateTo]);
-          
           this._snackbar.open(fbRes['message'],'',{
             duration: 4000
           })
 
+          sessionStorage.setItem('user', JSON.stringify(fbRes))
+          //Check if user loggedin is assigned and on what type of user
+          //Case not assigned, sending to profile choice
+          this._crud.read({
+            collectionsAndDocs: ['people', fbRes['user']['uid']]
+          }).then(resPeople => {
+            if (!resPeople[0]) {
+              this._crud.read({
+                collectionsAndDocs: ['companies', fbRes['user']['uid']]
+              }).then(resCompanies => {
+                if (!resCompanies[0]) {
+                  this._crud.read({
+                    collectionsAndDocs: ['animals', fbRes['user']['uid']]
+                  }).then(resAnimals => {
+                    if (!resAnimals[0]) {
+                      this._crud.read({
+                        collectionsAndDocs: ['entities', fbRes['user']['uid']]
+                      }).then(resEntities => {
+                        if (!resEntities[0]) {
+                          this._router.navigate(['/main/profile_choice'])
+                        } else {
+                          if (!sessionStorage.getItem('userData')) {
+                            resAnimals[0]['_data']['userType'] = "entities";
+                            sessionStorage.setItem('userData', JSON.stringify(resEntities))
+                          }
+
+                          this._router.navigate([params.navigateTo]);
+                        }
+                      })
+                    } else {
+                      if (!sessionStorage.getItem('userData')) {
+                        resAnimals[0]['_data']['userType'] = "animals";
+                        sessionStorage.setItem('userData', JSON.stringify(resAnimals))
+                      }
+
+                      this._router.navigate([params.navigateTo]);
+                    }
+                  })
+                } else {
+                  if (!sessionStorage.getItem('userData')) {
+                    resCompanies[0]['_data']['userType'] = "companies";
+                    sessionStorage.setItem('userData', JSON.stringify(resCompanies))
+                  }
+
+                  this._router.navigate([params.navigateTo]);
+                }
+              })
+            } else {
+              if (!sessionStorage.getItem('userData')) {
+                resPeople[0]['_data']['userType'] = "people";
+                sessionStorage.setItem('userData', JSON.stringify(resPeople))
+              }
+
+              this._router.navigate([params.navigateTo]);
+            }
+
+            if (!sessionStorage.getItem('companiesDocuments')) {
+              this._crud.read({
+                collectionsAndDocs: ['documents'],
+                where: [
+                  ['type', '==', 'companies']
+                ]
+              }).then(res => {
+                let documents = res['filter'](el => el._data.name !== "CNPJ")
+
+                sessionStorage.setItem('companiesDocuments', JSON.stringify(documents))
+              })
+            }
+
+            if (!sessionStorage.getItem('peopleDocuments')) {
+              this._crud.read({
+                collectionsAndDocs: ['documents'],
+                where: [
+                  ['type', '==', 'people']
+                ]
+              }).then(res => {
+                let documents = res['filter'](el => el._data.name !== "CPF")
+
+                sessionStorage.setItem('peopleDocuments', JSON.stringify(documents))
+              })
+            }
+
+            if (!sessionStorage.getItem('contacts')) {
+              this._crud.read({
+                collectionsAndDocs: ['contacts'],
+              }).then(res => {
+                sessionStorage.setItem('contacts', JSON.stringify(res))
+              })
+            }
+          })
+          
           res(fbRes);
         } else {
           res(fbRes);

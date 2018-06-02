@@ -27,7 +27,7 @@ export class CrudService {
         message: 'Minimum params required'
       })
     } else {
-      if(!params.collection) {
+      if(!params.collectionsAndDocs) {
         resolve({
           code: 'c-error-02',
           message: 'Required param: collection'
@@ -41,7 +41,30 @@ export class CrudService {
         })
       }
 
-      _firestore.collection(params.collection).add(params.objectToCreate)
+      let key, obj, ref, res, objFiltered, stringToFilter, stringCreatingFilter, functionToFilter;
+
+      stringToFilter = "_firestore";
+      stringCreatingFilter = "";
+
+      for(let lim = params.collectionsAndDocs.length, i = 0; i < lim; i++) {
+        if((i == 0) || (i%2 == 0)) {
+          stringCreatingFilter += ".collection('"+params.collectionsAndDocs[i]+"')";
+        } else {
+          stringCreatingFilter += ".doc('"+params.collectionsAndDocs[i]+"')";
+        }
+      }
+
+      if(params.where) {
+        for(let lim = params.where.length, i = 0; i < lim; i++) {
+          stringCreatingFilter += ".where('"+params.where[i][0]+"', '"+params.where[i][1]+"', '"+params.where[i][2]+"')";
+        }
+      }
+
+      stringToFilter += stringCreatingFilter;
+      functionToFilter = eval(stringToFilter);
+
+      functionToFilter
+      .add(params.objectToCreate)
       .catch(err => {
         return err;
       })
@@ -64,10 +87,10 @@ export class CrudService {
     } else {
       let key, obj, ref, res, objFiltered, stringToFilter, stringCreatingFilter, functionToFilter;
     
-      if(!params.collection) {
+      if(!params.collectionsAndDocs) {
         resolve({
           code: 'r-error-02',
-          message: 'Required param: collection'
+          message: 'Required param: collectionsAndDocs'
         })
       }
 
@@ -78,11 +101,15 @@ export class CrudService {
         })
       }
 
-      stringToFilter = "_firestore.collection(params.collection)";
+      stringToFilter = "_firestore";
       stringCreatingFilter = "";
 
-      if(params.whereId) {
-        stringCreatingFilter += ".doc('"+params.whereId+"')";
+      for(let lim = params.collectionsAndDocs.length, i = 0; i < lim; i++) {
+        if((i == 0) || (i%2 == 0)) {
+          stringCreatingFilter += ".collection('"+params.collectionsAndDocs[i]+"')";
+        } else {
+          stringCreatingFilter += ".doc('"+params.collectionsAndDocs[i]+"')";
+        }
       }
 
       if(params.where) {
@@ -92,7 +119,6 @@ export class CrudService {
       }
 
       stringToFilter += stringCreatingFilter;
-
       functionToFilter = eval(stringToFilter);
 
       functionToFilter
@@ -100,15 +126,15 @@ export class CrudService {
       .then((querySnapshot) => {
         let result = [];
         
-        if((querySnapshot.exists && params.whereId) || (querySnapshot.docs && querySnapshot.docs.length > 0)) {
-          if(querySnapshot.docs) {
+        if(querySnapshot.exists) { 
+          if(querySnapshot.docs) { 
             querySnapshot.forEach((doc) => {
               result.push({
                 _id: doc.id,
                 _data: doc.data()
               })
             });
-          } else {
+          } else { 
             result.push({
               _id: querySnapshot.id,
               _data: querySnapshot.data()
@@ -130,7 +156,7 @@ export class CrudService {
     } else {
       let key, obj, ref, res, objFiltered, stringToFilter, stringCreatingFilter, functionToFilter;
     
-      if(!params.collection) {
+      if(!params.collectionsAndDocs) {
         resolve({
           code: 'u-error-02',
           message: 'Required param: collection'
@@ -151,11 +177,15 @@ export class CrudService {
         })
       }
 
-      stringToFilter = "_firestore.collection(params.collection)";
+      stringToFilter = "_firestore";
       stringCreatingFilter = "";
-      
-      if(params.whereId) { 
-        stringCreatingFilter += ".doc('"+params.whereId+"')";
+
+      for(let lim = params.collectionsAndDocs.length, i = 0; i < lim; i++) {
+        if((i == 0) || (i%2 == 0)) {
+          stringCreatingFilter += ".collection('"+params.collectionsAndDocs[i]+"')";
+        } else {
+          stringCreatingFilter += ".doc('"+params.collectionsAndDocs[i]+"')";
+        }
       }
       
       if(params.where) {
@@ -170,7 +200,6 @@ export class CrudService {
       functionToFilter
       .set(params.objectToUpdate)
       .then(res => {
-        console.log(res);
         resolve({
           code: 'u-success-01',
           message: 'Update successful'

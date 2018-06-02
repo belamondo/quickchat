@@ -32,6 +32,7 @@ export class TopbarMenuComponent implements OnInit {
   
   public options: any;
   public user: any;
+  public userData: any;
   
   @Input() views;
 
@@ -76,31 +77,13 @@ export class TopbarMenuComponent implements OnInit {
   }
 
   ngOnInit() {
-    this._auth.setUser()
-      .then(res => {
-        if (!res || !res['id']) {
-          this._router.navigate(['/']);
+    this.userData = JSON.parse(sessionStorage.getItem('userData'));
 
-          this._snackbar.open('Você precisa logar para entrar.', '', {
-            duration: 4000
-          })
-
-          return false;
-        }
-        
-        this._crud.read({
-          collection: 'people',
-          whereId: res['id']
-        }).then(res => { 
-          if (res[0]) {
-            this.user = {
-              name: res[0]['_data']['name'].split(' ')[0]
-            }
-          } else {
-            this._router.navigate(['/main/profile_choice'])
-          }
-        })
-      })
+    this._crud.read({
+      collectionsAndDocs: [this.userData[0]['_data']['userType'],this.userData[0]['_id']]
+    }).then(res => { 
+      this.user = res[0];
+    })
   }
 
   logout = () => {

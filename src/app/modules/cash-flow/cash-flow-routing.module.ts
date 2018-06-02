@@ -22,6 +22,9 @@ const routes: Routes = [{
     path: 'expense',
     component: ExpenseComponent
   }, {
+    path: 'expense/:id',
+    component: ExpenseComponent
+  }, {
     path: 'incoming-outcoming',
     component: IncomingOutcomingComponent
   }, {

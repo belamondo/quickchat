@@ -1,14 +1,29 @@
-import { Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import {
+  Injectable
+} from '@angular/core';
+import {
+  MatSnackBar
+} from '@angular/material';
+import {
+  CanActivate,
+  ActivatedRouteSnapshot,
+  RouterStateSnapshot,
+  Router
+} from '@angular/router';
 
-import { Observable } from 'rxjs';
+import {
+  Observable
+} from 'rxjs';
 
 /**
  * Services
  */
-import { AuthenticationService } from './../services/firebase/authentication.service';
-import { CrudService } from '../services/firebase/crud.service';
+import {
+  AuthenticationService
+} from './../services/firebase/authentication.service';
+import {
+  CrudService
+} from '../services/firebase/crud.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,12 +34,12 @@ export class SystemGuard implements CanActivate {
     private _crud: CrudService,
     private _router: Router,
     public _snackbar: MatSnackBar
-  ) { }
+  ) {}
 
   canActivate(
     next: ActivatedRouteSnapshot, state:
-      RouterStateSnapshot
-  ): Observable<boolean> | Promise<boolean> | boolean {
+    RouterStateSnapshot
+  ): Observable < boolean > | Promise < boolean > | boolean {
     this._auth.setUser()
       .then(res => {
         if (!res || !res['id']) {
@@ -36,15 +51,6 @@ export class SystemGuard implements CanActivate {
 
           return false;
         }
-        
-        this._crud.read({
-          collection: 'people',
-          whereId: res['id']
-        }).then(res => { 
-          if (!res[0]) {
-            this._router.navigate(['/main/profile_choice'])
-          }
-        })
       })
 
     return true;

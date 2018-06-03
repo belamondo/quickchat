@@ -34,7 +34,7 @@ export class TopbarMenuComponent implements OnInit {
   public user: any;
   public userData: any;
   
-  @Input() views;
+  @Input() params;
 
   constructor(
     private _auth: AuthenticationService,

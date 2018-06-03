@@ -23,19 +23,21 @@ import { CrudService } from './../shared/services/firebase/crud.service';
   styleUrls: ['./main.component.css']
 })
 export class MainComponent implements OnInit {
-  public views: Object[];
+  public paramsToTopbarMenu: any;
 
   constructor() {}
   
   ngOnInit() {
-    this.views = [{
-      name: 'Painel inicial',
-      icon: 'home',
-      link: ['dashboard']
-    }, {
-      name: 'Fazer convite',
-      icon: 'email',
-      link: ['invitation']
-    }];
+    this.paramsToTopbarMenu = {
+      views: [{
+        name: 'Painel inicial',
+        icon: 'home',
+        link: ['dashboard']
+      }, {
+        name: 'Fazer convite',
+        icon: 'email',
+        link: ['invitation']
+      }]
+    }
   }
 }

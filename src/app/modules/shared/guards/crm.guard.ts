@@ -1,13 +1,28 @@
-import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import {
+  Injectable
+} from '@angular/core';
+import {
+  CanActivate,
+  ActivatedRouteSnapshot,
+  RouterStateSnapshot,
+  Router
+} from '@angular/router';
+import {
+  Observable
+} from 'rxjs';
 
 /**
  * Services
  */
-import { AuthenticationService } from './../services/firebase/authentication.service';
-import { CrudService } from '../services/firebase/crud.service';
-import { MatSnackBar } from '@angular/material';
+import {
+  AuthenticationService
+} from './../services/firebase/authentication.service';
+import {
+  CrudService
+} from '../services/firebase/crud.service';
+import {
+  MatSnackBar
+} from '@angular/material';
 
 @Injectable({
   providedIn: 'root'
@@ -18,11 +33,11 @@ export class CrmGuard implements CanActivate {
     private _crud: CrudService,
     private _router: Router,
     public _snackbar: MatSnackBar
-  ) { }
+  ) {}
   canActivate(
     next: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-      this._auth.setUser()
+    state: RouterStateSnapshot): Observable < boolean > | Promise < boolean > | boolean {
+    this._auth.setUser()
       .then(res => {
         if (!res || !res['id']) {
           this._router.navigate(['/']);

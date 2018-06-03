@@ -24,7 +24,7 @@
           <a mat-menu-item routerLink="/system">Sistema</a>
         </mat-menu>
 
-        <button *ngIf="views" mat-icon-button [matMenuTriggerFor]="appMenu">
+        <button *ngIf="params.views" mat-icon-button [matMenuTriggerFor]="appMenu">
           <mat-icon>view_module</mat-icon>
         </button>
 
@@ -64,7 +64,7 @@
           </div>
         </mat-card>
         -->
-        <ng-template ngFor let-view [ngForOf]="views" let-even="even" let-odd="odd" let-rowIndex="index">
+        <ng-template ngFor let-view [ngForOf]="params.views" let-even="even" let-odd="odd" let-rowIndex="index">
           <a mat-list-item [routerLink]="view.link" routerLinkActive="active-link" (click)="mobile ? snav.close() : {}">
             <mat-icon mat-list-icon>{{view.icon}}</mat-icon>
             <span mat-line>{{view.name}}</span>

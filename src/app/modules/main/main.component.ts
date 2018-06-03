@@ -32,6 +32,10 @@ export class MainComponent implements OnInit {
       name: 'Painel inicial',
       icon: 'home',
       link: ['dashboard']
+    }, {
+      name: 'Fazer convite',
+      icon: 'email',
+      link: ['invitation']
     }];
   }
 }

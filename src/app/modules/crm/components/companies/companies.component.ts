@@ -74,6 +74,7 @@ export class CompaniesComponent implements OnInit {
   public submitToCreate: boolean;
   public submitToUpdate: boolean;
   public title: string;
+  public userData: any;
   //Common properties: end
 
   public autoCorrectedDatePipe: any;
@@ -101,6 +102,8 @@ export class CompaniesComponent implements OnInit {
       business_name: new FormControl(null, Validators.required),
       company_name: new FormControl(null, Validators.required)
     });
+
+    this.userData = JSON.parse(sessionStorage.getItem('userData'))
 
     this.autoCorrectedDatePipe = createAutoCorrectedDatePipe('dd/mm/yyyy');
 
@@ -154,7 +157,7 @@ export class CompaniesComponent implements OnInit {
   clientTypeChoice = (event) => {
     this.clientType = event.value;
 
-    if (this.clientType === 'person') {
+    if (this.clientType === 'company') {
       this.documents = JSON.parse(sessionStorage.getItem('peopleDocuments'));
     } else {
       this.documents = JSON.parse(sessionStorage.getItem('companiesDocuments'));
@@ -268,16 +271,78 @@ export class CompaniesComponent implements OnInit {
   }
 
   onCompanyFormSubmit = () => {
-    let userData = JSON.parse(sessionStorage.getItem('userData'));
-    console.log(userData[0]['_data']['userType']+'/'+userData[0]['_id'])
-    // if(this.submitToUpdate) {
-    // } 
+    if(this.submitToUpdate) {
+      this._crud
+      .update({
+        collectionsAndDocs: ['clientsPeople', this.paramToSearch.replace(':', '')],
+        objectToUpdate: this.companyForm.value
+      });
 
-    // if(this.submitToCreate) {
-    //   this._crud
-    //   .create({
-    //     collection: 
-    //   })
-    // }
+      if(this.documentsObject.length > 0) {
+        this._crud
+        .update({
+          collectionsAndDocs: ['clientsPeople', this.paramToSearch.replace(':', '')],
+          objectToUpdate: JSON.stringify(this.documentsObject)
+        });
+      }
+
+      if(this.contactsObject.length > 0) {
+        this._crud
+        .update({
+          collectionsAndDocs: ['clientsPeopleContacts', this.paramToSearch.replace(':', '')],
+          objectToUpdate: JSON.stringify(this.contactsObject)
+        });
+      }
+
+      if(this.addressesObject.length > 0) {
+        this._crud
+        .update({
+          collectionsAndDocs: 'clientsPeopleAddresses',
+          whereId: this.paramToSearch.id,
+          objectToUpdate: {
+            addressesToParse: JSON.stringify(this.addressesObject)
+          }
+        });
+      }
+    }
+
+    if(this.submitToCreate) {
+      this._crud
+      .create({
+        collectionsAndDocs: [this.userData[0]['_data']['userType'],this.userData[0]['_id'],'userCompanies'],
+        objectToCreate: this.companyForm.value
+      }).then(res => {
+        console.log(this.contactsObject)
+        if(this.documentsObject.length > 0) {
+          this._crud
+          .create({
+            collectionsAndDocs: [this.userData[0]['_data']['userType'],this.userData[0]['_id'],'userCompanies',res['id'],'userCompaniesDocuments'],
+            objectToCreate: {
+              documentsToParse: JSON.stringify(this.documentsObject)
+            }
+          })
+        };
+
+        if(this.contactsObject.length > 0) {
+          this._crud
+          .create({
+            collectionsAndDocs: [this.userData[0]['_data']['userType'],this.userData[0]['_id'],'userCompanies',res['id'],'userCompaniesContacts'],
+            objectToCreate: {
+              contactsToParse: JSON.stringify(this.contactsObject)
+            }
+          })
+        };
+
+        if(this.addressesObject.length > 0) {
+          this._crud
+          .create({
+            collectionsAndDocs: [this.userData[0]['_data']['userType'],this.userData[0]['_id'],'userCompanies',res['id'],'userCompaniesAddresses'],
+            objectToCreate: {
+              addressesToParse: JSON.stringify(this.addressesObject)
+            }
+          })
+        };
+      })
+    }
   }
 }

@@ -5,6 +5,7 @@ import { Routes, RouterModule } from '@angular/router';
  * Components
  */
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { InvitationComponent } from './components/invitation/invitation.component';
 import { MainComponent } from './main.component';
 import { ProfileChoiceComponent } from './components/profile-choice/profile-choice.component';
 
@@ -16,6 +17,9 @@ const routes: Routes = [{
   }, {
     path: 'dashboard',
     component: DashboardComponent
+  }, {
+    path: 'invitation',
+    component: InvitationComponent
   }, {
     path: 'profile_choice',
     component: ProfileChoiceComponent

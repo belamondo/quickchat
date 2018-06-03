@@ -11,6 +11,7 @@ import { SharedModule } from '../shared/shared.module';
  * Components
  */
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { InvitationComponent } from './components/invitation/invitation.component';
 import { MainComponent } from './main.component';
 import { ProfileChoiceComponent } from './components/profile-choice/profile-choice.component';
 
@@ -22,8 +23,9 @@ import { ProfileChoiceComponent } from './components/profile-choice/profile-choi
   ],
   declarations: [
     DashboardComponent,
+    InvitationComponent,
     MainComponent, 
-    ProfileChoiceComponent,
+    ProfileChoiceComponent, 
   ]
 })
 export class MainModule { }

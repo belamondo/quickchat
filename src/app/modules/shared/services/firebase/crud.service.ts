@@ -126,20 +126,18 @@ export class CrudService {
       .then((querySnapshot) => {
         let result = [];
         
-        if(querySnapshot.exists) { 
-          if(querySnapshot.docs) { 
-            querySnapshot.forEach((doc) => {
-              result.push({
-                _id: doc.id,
-                _data: doc.data()
-              })
-            });
-          } else { 
+        if(querySnapshot.docs) { 
+          querySnapshot.forEach((doc) => {
             result.push({
-              _id: querySnapshot.id,
-              _data: querySnapshot.data()
+              _id: doc.id,
+              _data: doc.data()
             })
-          }
+          });
+        } else { 
+          result.push({
+            _id: querySnapshot.id,
+            _data: querySnapshot.data()
+          })
         }
 
         resolve(result);

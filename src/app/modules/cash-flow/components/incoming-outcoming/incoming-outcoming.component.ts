@@ -7,14 +7,14 @@ import {
 import {
   FormGroup,
   FormControl,
-  Validators
+  Validators,
+  FormGroupDirective
 } from '@angular/forms';
 import {
   MatDialog,
   MatDialogRef,
   MAT_DIALOG_DATA,
-  MatSnackBar,
-  MatTableDataSource
+  MatSnackBar
 } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -50,31 +50,13 @@ export class IncomingOutcomingComponent implements OnInit {
   public fields: any = [];
   public types: any = [];
   public receivers: any = [];
-  public incomingsAndOutcomings: any = [
-    /* Mock - start */
-    { date: '27/05/2018', modality: 'Despesa', type: 'Salário administração', price: 3000},
-    { date: '27/05/2018', modality: 'Receita', type: 'Impressão A4 PB', price: 20},
-    { date: '27/05/2018', modality: 'Despesa', type: 'Aluguel', price: 800},
-    { date: '27/05/2018', modality: 'Receita', type: 'Plotagem', price: 50},
-    { date: '27/05/2018', modality: 'Despesa', type: 'Energia', price: 150},
-    { date: '27/05/2018', modality: 'Receita', type: 'Caderno personalizado', price: 40}
-    /* Mock - end */
-  ];
+  public userData: any;
+  public outcomingsTypes: any;
+  public inAndOut: any = { arrayOfOutcoming: [], arrayOfIncoming: [] };
   //Common properties: end
 
-  /* Table stuffs: start */
-  public displayedColumns = ['date', 'modality', 'type', 'price'];
-  public dataSource = new MatTableDataSource<IncomingOutcoming>(this.incomingsAndOutcomings);
-  /* Table stuffs: end */
-
   /* Mock - start */
-  public outcomings: any = [
-    { name: 'Salário administração', type: 'expense' },
-    { name: 'Aluguel', type: 'fixed-cost' },
-    { name: 'Energia', type: 'variable-cost' },
-  ]
-
-  public incomings: any = [
+  public incomingsTypes: any = [
     { name: 'Impressão A4 PB' },
     { name: 'Plotagem' },
     { name: 'Caderno personalizado' },
@@ -92,6 +74,7 @@ export class IncomingOutcomingComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.userData = JSON.parse(sessionStorage.getItem('userData'));
 
     /* Mock - start */
     this.receivers = [
@@ -104,8 +87,8 @@ export class IncomingOutcomingComponent implements OnInit {
     this.incomingOutcomingForm = new FormGroup({
       modality: new FormControl(null, Validators.required),
       type: new FormControl(null, Validators.required),
-      receiver: new FormControl(null, Validators.required),
-      salesQtd: new FormControl(null),
+      receiver: new FormControl(null),
+      qtd: new FormControl(null),
       lostQtd: new FormControl(null),
       price: new FormControl(null, Validators.required),
       payment: new FormControl(null, Validators.required),
@@ -125,6 +108,25 @@ export class IncomingOutcomingComponent implements OnInit {
     };
 
     this.incomingOutcomingFormInit();
+
+    /* Get expenses types from database */
+    this._crud.read({
+      collectionsAndDocs: [this.userData[0]['_data']['userType'],this.userData[0]['_id'],'expensesTypes'],
+    }).then(res => {
+      this.outcomingsTypes = res;
+    })
+
+    /* Get incomings and outcomings of the actual month from database */
+    this._crud.read({
+      collectionsAndDocs: [this.userData[0]['_data']['userType'],this.userData[0]['_id'],'inAndOut','201806']  // TODO: pegar ano e mês atual
+    }).then(res => {
+      if(res[0]['_data'] !== undefined){
+        this.inAndOut = {
+          arrayOfOutcoming: res[0]['_data']['arrayOfOutcoming'],
+          arrayOfIncoming: res[0]['_data']['arrayOfIncoming']
+        }
+      }
+    })
 
   }
 
@@ -150,13 +152,35 @@ export class IncomingOutcomingComponent implements OnInit {
     })
   }
 
-  onIncomingOutcomingFormSubmit = () => { }
+  onIncomingOutcomingFormSubmit = (formDirective: FormGroupDirective) => {
+    
+    /* Set the object to update in database */
+    if(this.incomingOutcomingForm.controls['modality'].value === 'outcoming'){
+      this.inAndOut['arrayOfOutcoming'].push(this.incomingOutcomingForm.value)
+    } else {
+      this.inAndOut['arrayOfIncoming'].push(this.incomingOutcomingForm.value)
+    }
+
+    if (this.submitToCreate) {
+      this._crud
+      .update({
+        collectionsAndDocs: [this.userData[0]['_data']['userType'],this.userData[0]['_id'],'inAndOut', '201806'], // TODO: pegar ano e mês atual
+        objectToUpdate: this.inAndOut
+      }).then(res => { 
+        formDirective.resetForm();
+        
+        this._snackbar.open('Cadastro feito com sucesso', '', {
+          duration: 4000
+        })
+      })
+    }
+  }
 
   getListOfTypes = (value) => {
     if(value === 'outcoming'){
-      this.types = this.outcomings
+      this.types = this.outcomingsTypes
     } else if(value === 'incoming'){
-      this.types = this.incomings
+      this.types = this.incomingsTypes
     }
   }
 
@@ -200,12 +224,3 @@ export class DialogFormIncomingOutcomingComponent {
   }
 
 }
-
-/* Table stuffs: continuation */
-export interface IncomingOutcoming {
-  date: string;
-  modality: string;
-  type: string;
-  price: number;
-}
-/* Table stuffs: end */

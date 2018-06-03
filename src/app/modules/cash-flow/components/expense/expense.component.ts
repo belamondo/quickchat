@@ -80,6 +80,17 @@ export class ExpenseComponent implements OnInit {
         }).then(res => {
           this.expenseForm.patchValue(res[0]['_data'])
 
+          /* Check if has additionals fields */
+          if(Object.keys(res[0]['_data']).length > 2){
+            for (var key in res[0]['_data']) {
+              /* Create form control if it is a additional field */
+              if(key !== 'name' && key !== 'type'){
+                this.expenseForm.addControl(key, new FormControl(res[0]['_data'][key]));
+                this.fields.push(key);
+              };
+            }
+          }
+
           this.isStarted = true;
         })
       } else {

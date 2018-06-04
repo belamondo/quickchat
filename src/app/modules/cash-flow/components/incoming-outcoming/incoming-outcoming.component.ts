@@ -49,19 +49,17 @@ export class IncomingOutcomingComponent implements OnInit {
   public title: string;
   public fields: any = [];
   public types: any = [];
+  public typesServ: any = [];
   public receivers: any = [];
   public userData: any;
-  public outcomingsTypes: any;
-  public inAndOut: any = { arrayOfOutcoming: [], arrayOfIncoming: [] };
-  //Common properties: end
 
-  /* Mock - start */
-  public incomingsTypes: any = [
-    { name: 'Impressão A4 PB' },
-    { name: 'Plotagem' },
-    { name: 'Caderno personalizado' },
-  ]
-  /* Mock - end */
+  public outcomingsTypes: any = [];
+  public incomingsTypes01: any = [];
+  public incomingsTypes02: any = [];
+  public inAndOut: any = { arrayOfOutcoming: [], arrayOfIncoming: [] };
+  public monthAndYear: string;
+  public indexOfRegister: number;
+  //Common properties: end
 
   public autoCorrectedDatePipe: any;
 
@@ -97,6 +95,7 @@ export class IncomingOutcomingComponent implements OnInit {
     });
 
     this.autoCorrectedDatePipe = createAutoCorrectedDatePipe('dd/mm/yyyy');
+    this.monthAndYear = (this.getMonthAndYear(new Date()).year).toString() + (this.getMonthAndYear(new Date()).month).toString();
 
     this.mask = {
       cpf: [/\d/, /\d/, /\d/,'.', /\d/, /\d/, /\d/,'.', /\d/, /\d/, /\d/,'-', /\d/,/\d/ ],
@@ -107,8 +106,6 @@ export class IncomingOutcomingComponent implements OnInit {
       cnpj: [/\d/, /\d/,'.', /\d/, /\d/, /\d/,'.', /\d/, /\d/, /\d/,'/', /\d/,/\d/,/\d/,/\d/,'-',/\d/,/\d/]
     };
 
-    this.incomingOutcomingFormInit();
-
     /* Get expenses types from database */
     this._crud.read({
       collectionsAndDocs: [this.userData[0]['_data']['userType'],this.userData[0]['_id'],'expensesTypes'],
@@ -116,9 +113,23 @@ export class IncomingOutcomingComponent implements OnInit {
       this.outcomingsTypes = res;
     })
 
+    /* Get products and services from database */
+    this._crud.read({
+      collectionsAndDocs: [this.userData[0]['_data']['userType'],this.userData[0]['_id'],'products'],
+    }).then(res => {
+      this.incomingsTypes01 = res;
+    })
+
+    /* Get services from database */
+    this._crud.read({
+      collectionsAndDocs: [this.userData[0]['_data']['userType'],this.userData[0]['_id'],'services'],
+    }).then(res => {
+      this.incomingsTypes02 = res;
+    })
+
     /* Get incomings and outcomings of the actual month from database */
     this._crud.read({
-      collectionsAndDocs: [this.userData[0]['_data']['userType'],this.userData[0]['_id'],'inAndOut','201806']  // TODO: pegar ano e mês atual
+      collectionsAndDocs: [this.userData[0]['_data']['userType'],this.userData[0]['_id'],'inAndOut',this.monthAndYear]
     }).then(res => {
       if(res[0]['_data'] !== undefined){
         this.inAndOut = {
@@ -128,10 +139,13 @@ export class IncomingOutcomingComponent implements OnInit {
       }
     })
 
+    this.incomingOutcomingFormInit();
+
   }
 
   incomingOutcomingFormInit = () => {
     this._route.params.subscribe(params => {
+      
       if (params.id) {
         this.paramToSearch = params.id;
         this.submitToCreate = false;
@@ -140,6 +154,44 @@ export class IncomingOutcomingComponent implements OnInit {
         this.submitButton = "Atualizar";
 
         let param = this.paramToSearch.replace(':', '');
+
+        let paramId = param.substring(0, param.indexOf('-'));
+        let paramModality = param.substring((param.indexOf('-')+1), (param.indexOf('-')+2));
+        let paramArrayIndex = param.substring((param.indexOf('-')+2), param.lenght);
+
+        /* Get index to update if necessary */
+        this.indexOfRegister = paramArrayIndex;
+        
+        this._crud.read({
+          collectionsAndDocs: [this.userData[0]['_data']['userType'],this.userData[0]['_id'],'inAndOut',paramId],
+        }).then(res => {
+          
+          let modality;
+          if(paramModality === 'i'){
+            modality = 'arrayOfIncoming';
+            this.getListOfTypes('incoming');
+          } else {
+            modality = 'arrayOfOutcoming';
+            this.getListOfTypes('outcoming');
+          }
+          
+          this.incomingOutcomingForm.patchValue(res[0]['_data'][modality][paramArrayIndex])
+
+          /* Check if has additionals fields */
+          if(Object.keys(res[0]['_data'][modality][paramArrayIndex]).length > 9){
+            for (var key in res[0]['_data'][modality][paramArrayIndex]) {
+              /* Create form control if it is a additional field */
+              if(key !== 'modality' && key !== 'type' && key !== 'receiver' && key !== 'qtd' && key !== 'lostQtd' &&
+                 key !== 'price' && key !== 'payment' && key !== 'paymentQtd' && key !== 'date'
+              ){
+                this.incomingOutcomingForm.addControl(key, new FormControl(res[0]['_data'][modality][paramArrayIndex][key]));
+                this.fields.push(key);
+              };
+            }
+          }
+
+          this.isStarted = true;
+        })
 
       } else {
         this.submitToCreate = true;
@@ -154,20 +206,43 @@ export class IncomingOutcomingComponent implements OnInit {
 
   onIncomingOutcomingFormSubmit = (formDirective: FormGroupDirective) => {
     
-    /* Set the object to update in database */
-    if(this.incomingOutcomingForm.controls['modality'].value === 'outcoming'){
-      this.inAndOut['arrayOfOutcoming'].push(this.incomingOutcomingForm.value)
-    } else {
-      this.inAndOut['arrayOfIncoming'].push(this.incomingOutcomingForm.value)
+    if (this.submitToUpdate) {
+      /* Set the object to update in database */
+      if(this.incomingOutcomingForm.controls['modality'].value === 'outcoming'){
+        this.inAndOut['arrayOfOutcoming'][this.indexOfRegister] = this.incomingOutcomingForm.value
+      } else {
+        this.inAndOut['arrayOfIncoming'][this.indexOfRegister] = this.incomingOutcomingForm.value
+      }
+
+      this._crud
+      .update({
+        collectionsAndDocs: [this.userData[0]['_data']['userType'],this.userData[0]['_id'],'inAndOut',this.monthAndYear],
+        objectToUpdate: this.inAndOut
+      }).then(res => {
+        formDirective.resetForm();
+        this.fields = [];
+        
+        this._snackbar.open('Atualização feita com sucesso', '', {
+          duration: 4000
+        })
+      })
     }
 
     if (this.submitToCreate) {
+      /* Set the object to update in database */
+      if(this.incomingOutcomingForm.controls['modality'].value === 'outcoming'){
+        this.inAndOut['arrayOfOutcoming'].push(this.incomingOutcomingForm.value)
+      } else {
+        this.inAndOut['arrayOfIncoming'].push(this.incomingOutcomingForm.value)
+      }
+
       this._crud
       .update({
-        collectionsAndDocs: [this.userData[0]['_data']['userType'],this.userData[0]['_id'],'inAndOut', '201806'], // TODO: pegar ano e mês atual
+        collectionsAndDocs: [this.userData[0]['_data']['userType'],this.userData[0]['_id'],'inAndOut', this.monthAndYear],
         objectToUpdate: this.inAndOut
       }).then(res => { 
         formDirective.resetForm();
+        this.fields = [];
         
         this._snackbar.open('Cadastro feito com sucesso', '', {
           duration: 4000
@@ -178,9 +253,20 @@ export class IncomingOutcomingComponent implements OnInit {
 
   getListOfTypes = (value) => {
     if(value === 'outcoming'){
-      this.types = this.outcomingsTypes
+      this.types = this.outcomingsTypes;
+      this.typesServ = [];
     } else if(value === 'incoming'){
-      this.types = this.incomingsTypes
+      this.types = this.incomingsTypes01;
+      this.typesServ = this.incomingsTypes02;
+    }
+  }
+
+  getMonthAndYear = (date) => {
+    let finalDate = new Date(date);
+
+    return {
+      month: (finalDate.getMonth() + 1),
+      year: finalDate.getFullYear() 
     }
   }
 

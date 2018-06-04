@@ -8,6 +8,7 @@ import { CashFlowComponent } from './cash-flow.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ExpenseComponent, DialogFormExpenseComponent } from './components/expense/expense.component';
 import { IncomingOutcomingComponent, DialogFormIncomingOutcomingComponent } from './components/incoming-outcoming/incoming-outcoming.component';
+import { PayableReceivableComponent } from './components/payable-receivable/payable-receivable.component';
 import { ReportComponent, DialogFormReportComponent } from './components/report/report.component';
 
 /**
@@ -30,6 +31,7 @@ import { SharedModule } from './../shared/shared.module';
     DialogFormReportComponent,
     ExpenseComponent,
     IncomingOutcomingComponent,
+    PayableReceivableComponent,
     ReportComponent
   ],
   entryComponents: [

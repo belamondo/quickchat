@@ -111,6 +111,9 @@ export class ExpenseComponent implements OnInit {
           collectionsAndDocs: [this.userData[0]['_data']['userType'],this.userData[0]['_id'],'expensesTypes',this.paramToSearch.replace(':', '')],
           objectToUpdate: this.expenseForm.value
         }).then(res => {
+          formDirective.resetForm();
+          this.fields = [];
+          
           this._snackbar.open('Atualização feita com sucesso', '', {
             duration: 4000
           })
@@ -124,6 +127,7 @@ export class ExpenseComponent implements OnInit {
         objectToCreate: this.expenseForm.value
       }).then(res => { 
         formDirective.resetForm();
+        this.fields = [];
         
         this._snackbar.open('Cadastro feito com sucesso', '', {
           duration: 4000

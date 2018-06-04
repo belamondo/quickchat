@@ -4,43 +4,45 @@
   </div>
 </mat-card>
 
-<mat-card *ngIf="isStarted" class="container">
-  <form [formGroup]="productForm" (ngSubmit)="onProductFormSubmit()">
-    <mat-card-header>
-      <mat-card-title>Cadastro de produto</mat-card-title>
-    </mat-card-header>
+<div style="max-width: 800px; margin: auto;">
+  <mat-card *ngIf="isStarted" class="container">
+    <form [formGroup]="productForm" #formDirective="ngForm" (ngSubmit)="onProductFormSubmit(this.formDirective)">
+      <mat-card-header>
+        <mat-card-title>Cadastro de produto</mat-card-title>
+      </mat-card-header>
 
-    <hr>
-    <mat-card-content>
-      <mat-form-field appearance="outline">
-        <mat-label>Nome</mat-label>
-        <input matInput placeholder="Nome do produto" type="text" formControlName="name" required>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Código de barras</mat-label>
-        <input matInput placeholder="Código de barras" type="text" formControlName="barcode">
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Unidade de medida</mat-label>
-        <input matInput placeholder="Unidade de medida" type="text" formControlName="unit">
-      </mat-form-field>
-
-      <div *ngFor="let field of fields; let i = index">
-        <mat-form-field appearance="outline" style="width: 85%">
-          <mat-label>{{field}}</mat-label>
-          <input matInput placeholder="{{field}}" type="text" formControlName="{{field}}">
+      <hr>
+      <mat-card-content>
+        <mat-form-field appearance="outline">
+          <mat-label>Nome</mat-label>
+          <input matInput placeholder="Nome do produto" type="text" formControlName="name" required>
         </mat-form-field>
-        <i class="material-icons" style="cursor: pointer;" (click)="removeField(i)">
-          remove_circle
-        </i>
-      </div>
 
-      <button mat-raised-button type="button" (click)="addField()">Adicionar campo</button>
-    </mat-card-content>
-    <hr>
-    
-    <button mat-raised-button [disabled]="productForm.invalid">{{submitButton}}</button>
-  </form>
-</mat-card>
+        <mat-form-field appearance="outline">
+          <mat-label>Código de barras</mat-label>
+          <input matInput placeholder="Código de barras" type="text" formControlName="barcode">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Unidade de medida</mat-label>
+          <input matInput placeholder="Unidade de medida" type="text" formControlName="unit">
+        </mat-form-field>
+
+        <div *ngFor="let field of fields; let i = index">
+          <mat-form-field appearance="outline" style="width: 85%">
+            <mat-label>{{field}}</mat-label>
+            <input matInput placeholder="{{field}}" type="text" formControlName="{{field}}">
+          </mat-form-field>
+          <i class="material-icons" style="cursor: pointer;" (click)="removeField(i)">
+            remove_circle
+          </i>
+        </div>
+
+        <button mat-raised-button type="button" (click)="addField()" style="width: 100%;">Adicionar campo</button>
+      </mat-card-content>
+      <hr>
+      
+      <button mat-raised-button [disabled]="productForm.invalid" style="width: 100%;">{{submitButton}}</button>
+    </form>
+  </mat-card>
+</div>

@@ -6,7 +6,8 @@ import {
 import {
   FormGroup,
   FormControl,
-  Validators
+  Validators,
+  FormGroupDirective
 } from '@angular/forms';
 import {
   MatDialog,
@@ -40,6 +41,7 @@ export class ServiceComponent implements OnInit {
   public submitToUpdate: boolean;
   public title: string;
   public fields: any = [];
+  public userData: any;
   //Common properties: end
 
   constructor(
@@ -51,6 +53,7 @@ export class ServiceComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.userData = JSON.parse(sessionStorage.getItem('userData'));
 
     this.serviceForm = new FormGroup({
       name: new FormControl(null, Validators.required),
@@ -70,6 +73,25 @@ export class ServiceComponent implements OnInit {
 
         let param = this.paramToSearch.replace(':', '');
 
+        this._crud.read({
+          collectionsAndDocs: [this.userData[0]['_data']['userType'],this.userData[0]['_id'],'services',param],
+        }).then(res => {
+          this.serviceForm.patchValue(res[0]['_data'])
+
+          /* Check if has additionals fields */
+          if(Object.keys(res[0]['_data']).length > 1){
+            for (var key in res[0]['_data']) {
+              /* Create form control if it is a additional field */
+              if(key !== 'name'){
+                this.serviceForm.addControl(key, new FormControl(res[0]['_data'][key]));
+                this.fields.push(key);
+              };
+            }
+          }
+
+          this.isStarted = true;
+        })
+
       } else {
         this.submitToCreate = true;
         this.submitToUpdate = false;
@@ -81,7 +103,37 @@ export class ServiceComponent implements OnInit {
     })
   }
 
-  onServiceFormSubmit = () => {}
+  onServiceFormSubmit = (formDirective: FormGroupDirective) => {
+    if (this.submitToUpdate) {
+      this._crud
+        .update({
+          collectionsAndDocs: [this.userData[0]['_data']['userType'],this.userData[0]['_id'],'services',this.paramToSearch.replace(':', '')],
+          objectToUpdate: this.serviceForm.value
+        }).then(res => {
+          formDirective.resetForm();
+          this.fields = [];
+          
+          this._snackbar.open('Atualização feita com sucesso', '', {
+            duration: 4000
+          })
+        })
+    }
+
+    if (this.submitToCreate) {
+      this._crud
+      .create({
+        collectionsAndDocs: [this.userData[0]['_data']['userType'],this.userData[0]['_id'],'services'],
+        objectToCreate: this.serviceForm.value
+      }).then(res => { 
+        formDirective.resetForm();
+        this.fields = [];
+        
+        this._snackbar.open('Cadastro feito com sucesso', '', {
+          duration: 4000
+        })
+      })
+    }
+  }
 
   addField = () => {
     let dialogRef = this.dialog.open(DialogFormServiceComponent, {

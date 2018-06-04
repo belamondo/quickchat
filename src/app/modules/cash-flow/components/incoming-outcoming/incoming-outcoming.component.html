@@ -25,7 +25,11 @@
         <mat-form-field appearance="outline">
           <mat-label>Lançamento</mat-label>
           <mat-select placeholder="Escolha qual o lançamento" formControlName="type" required>
-            <mat-option *ngFor="let type of types" [value]="type._id">
+            <mat-option *ngFor="let type of types" [value]="type['_id']">
+              {{ type['_data'].name }}
+            </mat-option>
+
+            <mat-option *ngFor="let type of typesServ" [value]="type['_id']">
               {{ type['_data'].name }}
             </mat-option>
           </mat-select>

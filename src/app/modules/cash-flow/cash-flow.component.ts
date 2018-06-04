@@ -28,6 +28,10 @@ export class CashFlowComponent implements OnInit {
         icon: 'attach_money',
         link: ['incoming-outcoming']
       },{
+        name: 'Contas a pagar/receber',
+        icon: 'attach_money',
+        link: ['payable-receivable']
+      },{
         name: 'Relatórios',
         icon: 'assessment',
         link: ['report']

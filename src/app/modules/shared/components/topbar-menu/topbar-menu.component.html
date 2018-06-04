@@ -5,7 +5,6 @@
         <button mat-icon-button (click)="snav.toggle()">
           <mat-icon>menu</mat-icon>
         </button>
-        <h1 class="app-name" (click)="_router.navigate(['/main'])">BelaMondo</h1>
       </div>
       
       <div>
@@ -39,6 +38,7 @@
     <mat-sidenav #snav [opened]="options.opened" [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="options.fixed"
       [fixedTopGap]="options.top" [fixedBottomGap]="options.bottom">
       <mat-nav-list>
+        <span class="app-name" (click)="_router.navigate(['/main'])">{{params.title}}</span>
         <!--
         <mat-card *ngIf="options.userCard">
           <span *ngIf="userData[0]['_data']['userType'] == 'people'">

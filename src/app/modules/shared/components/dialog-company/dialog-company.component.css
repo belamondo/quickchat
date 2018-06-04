@@ -1,4 +1,4 @@
-#cpf {
+#cnpj {
     width: 50%;
 }
 
@@ -17,7 +17,7 @@ section button {
 }
 
 @media screen and (max-width:480px){
-	#cpf {
+	#cnpj {
         width: 100%;
     }
 }

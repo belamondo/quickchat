@@ -29,6 +29,7 @@ export class MainComponent implements OnInit {
   
   ngOnInit() {
     this.paramsToTopbarMenu = {
+      title: 'BelaMondo',
       views: [{
         name: 'Painel inicial',
         icon: 'home',

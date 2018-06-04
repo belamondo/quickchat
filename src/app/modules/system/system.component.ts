@@ -16,6 +16,7 @@ export class SystemComponent implements OnInit {
 
   ngOnInit() {
     this.paramsToTopbarMenu = {
+      title: 'BelaMondo Área de Administração',
       views: [{
         name: 'Painel inicial',
         icon: 'home',

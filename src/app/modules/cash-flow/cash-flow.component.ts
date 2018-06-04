@@ -15,6 +15,7 @@ export class CashFlowComponent implements OnInit {
 
     /* Options to show in side nav menu */
     this.paramsToTopbarMenu = {
+      title: "BelaMondo Fluxo de Caixa",
       views: [{
         name: 'Painel inicial',
         icon: 'home',

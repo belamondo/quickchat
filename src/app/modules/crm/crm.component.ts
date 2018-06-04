@@ -30,14 +30,11 @@ export class CrmComponent implements OnInit {
 
   ngOnInit() {
     this.paramsToTopbarMenu = {
+      title: 'BelaMondo CRM',
       views: [{
         name: 'Painel inicial',
         icon: 'home',
         link: ['dashboard']
-      }, {
-        name: 'Cadastrar cliente',
-        icon: 'person',
-        link: ['client']
       }, {
         name: 'Cadastrar pessoa',
         icon: 'person',

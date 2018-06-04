@@ -9,7 +9,6 @@ import { CrmComponent } from './crm.component';
 /**
  * Modules
  */
-import { ClientComponent } from './components/client/client.component';
 import { CrmRoutingModule } from './crm-routing.module';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 
@@ -27,7 +26,6 @@ import { CompaniesComponent } from './components/companies/companies.component';
     SharedModule
   ],
   declarations: [
-    ClientComponent,
     CrmComponent,
     DashboardComponent,
     PeopleComponent,

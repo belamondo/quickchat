@@ -111,25 +111,41 @@ export class AuthenticationService {
           //Case not assigned, sending to profile choice
           this._crud.read({
             collectionsAndDocs: ['people', fbRes['user']['uid']]
-          }).then(resPeople => {
-            if (!resPeople[0]) {
+          }).then(resPeople => { console.log(resPeople)
+            if (!resPeople[0]['_data']) {
               this._crud.read({
                 collectionsAndDocs: ['companies', fbRes['user']['uid']]
               }).then(resCompanies => {
-                if (!resCompanies[0]) {
+                if (!resCompanies[0]['_data']) {
                   this._crud.read({
                     collectionsAndDocs: ['animals', fbRes['user']['uid']]
                   }).then(resAnimals => {
-                    if (!resAnimals[0]) {
+                    if (!resAnimals[0]['_data']) {
                       this._crud.read({
                         collectionsAndDocs: ['entities', fbRes['user']['uid']]
                       }).then(resEntities => {
-                        if (!resEntities[0]) {
+                        if (!resEntities[0]['_data']) {
                           this._router.navigate(['/main/profile_choice'])
                         } else {
                           if (!sessionStorage.getItem('userData')) {
-                            resAnimals[0]['_data']['userType'] = "entities";
+                            resEntities[0]['_data']['userType'] = "entities";
                             sessionStorage.setItem('userData', JSON.stringify(resEntities))
+                          }
+
+                          if (!sessionStorage.getItem('userCompanies')) {
+                            this._crud.read({
+                              collectionsAndDocs: ['entities', fbRes['user']['uid'],'userCompanies']
+                            }).then(resUserCompanies => {
+                              sessionStorage.setItem('userCompanies', JSON.stringify(resUserCompanies))
+                            })
+                          }
+                
+                          if (!sessionStorage.getItem('userPeople')) {
+                            this._crud.read({
+                              collectionsAndDocs: ['entities', fbRes['user']['uid'],'userPeople']
+                            }).then(resUserPeople => {
+                              sessionStorage.setItem('userPeople', JSON.stringify(resUserPeople))
+                            })
                           }
 
                           this._router.navigate([params.navigateTo]);
@@ -141,6 +157,22 @@ export class AuthenticationService {
                         sessionStorage.setItem('userData', JSON.stringify(resAnimals))
                       }
 
+                      if (!sessionStorage.getItem('userCompanies')) {
+                        this._crud.read({
+                          collectionsAndDocs: ['animals', fbRes['user']['uid'],'userCompanies']
+                        }).then(resUserCompanies => {
+                          sessionStorage.setItem('userCompanies', JSON.stringify(resUserCompanies))
+                        })
+                      }
+            
+                      if (!sessionStorage.getItem('userPeople')) {
+                        this._crud.read({
+                          collectionsAndDocs: ['animals', fbRes['user']['uid'],'userPeople']
+                        }).then(resUserPeople => {
+                          sessionStorage.setItem('userPeople', JSON.stringify(resUserPeople))
+                        })
+                      }
+
                       this._router.navigate([params.navigateTo]);
                     }
                   })
@@ -148,6 +180,22 @@ export class AuthenticationService {
                   if (!sessionStorage.getItem('userData')) {
                     resCompanies[0]['_data']['userType'] = "companies";
                     sessionStorage.setItem('userData', JSON.stringify(resCompanies))
+                  }
+
+                  if (!sessionStorage.getItem('userCompanies')) {
+                    this._crud.read({
+                      collectionsAndDocs: ['companies', fbRes['user']['uid'],'userCompanies']
+                    }).then(resUserCompanies => {
+                      sessionStorage.setItem('userCompanies', JSON.stringify(resUserCompanies))
+                    })
+                  }
+        
+                  if (!sessionStorage.getItem('userPeople')) {
+                    this._crud.read({
+                      collectionsAndDocs: ['companies', fbRes['user']['uid'],'userPeople']
+                    }).then(resUserPeople => {
+                      sessionStorage.setItem('userPeople', JSON.stringify(resUserPeople))
+                    })
                   }
 
                   this._router.navigate([params.navigateTo]);
@@ -159,44 +207,60 @@ export class AuthenticationService {
                 sessionStorage.setItem('userData', JSON.stringify(resPeople))
               }
 
+              if (!sessionStorage.getItem('userCompanies')) {
+                this._crud.read({
+                  collectionsAndDocs: ['people', fbRes['user']['uid'],'userCompanies']
+                }).then(resUserCompanies => {
+                  sessionStorage.setItem('userCompanies', JSON.stringify(resUserCompanies))
+                })
+              }
+    
+              if (!sessionStorage.getItem('userPeople')) {
+                this._crud.read({
+                  collectionsAndDocs: ['people', fbRes['user']['uid'],'userPeople']
+                }).then(resUserPeople => {
+                  sessionStorage.setItem('userPeople', JSON.stringify(resUserPeople))
+                })
+              }
+
               this._router.navigate([params.navigateTo]);
             }
-
-            if (!sessionStorage.getItem('companiesDocuments')) {
-              this._crud.read({
-                collectionsAndDocs: ['documents'],
-                where: [
-                  ['type', '==', 'companies']
-                ]
-              }).then(res => {
-                let documents = res['filter'](el => el._data.name !== "CNPJ")
-
-                sessionStorage.setItem('companiesDocuments', JSON.stringify(documents))
-              })
-            }
-
-            if (!sessionStorage.getItem('peopleDocuments')) {
-              this._crud.read({
-                collectionsAndDocs: ['documents'],
-                where: [
-                  ['type', '==', 'people']
-                ]
-              }).then(res => {
-                let documents = res['filter'](el => el._data.name !== "CPF")
-
-                sessionStorage.setItem('peopleDocuments', JSON.stringify(documents))
-              })
-            }
-
-            if (!sessionStorage.getItem('contacts')) {
-              this._crud.read({
-                collectionsAndDocs: ['contacts'],
-              }).then(res => {
-                sessionStorage.setItem('contacts', JSON.stringify(res))
-              })
-            }
           })
-          
+
+          if (!sessionStorage.getItem('companiesDocuments')) {
+            this._crud.read({
+              collectionsAndDocs: ['documents'],
+              where: [
+                ['type', '==', 'companies']
+              ]
+            }).then(res => {
+              let documents = res['filter'](el => el._data.name !== "CNPJ")
+
+              sessionStorage.setItem('companiesDocuments', JSON.stringify(documents))
+            })
+          }
+
+          if (!sessionStorage.getItem('peopleDocuments')) {
+            this._crud.read({
+              collectionsAndDocs: ['documents'],
+              where: [
+                ['type', '==', 'people']
+              ]
+            }).then(res => {
+              let documents = res['filter'](el => el._data.name !== "CPF")
+
+              sessionStorage.setItem('peopleDocuments', JSON.stringify(documents))
+            })
+          }
+
+          if (!sessionStorage.getItem('contacts')) {
+            this._crud.read({
+              collectionsAndDocs: ['contacts'],
+            }).then(res => {
+              sessionStorage.setItem('contacts', JSON.stringify(res))
+            })
+          }
+
           res(fbRes);
         } else {
           res(fbRes);

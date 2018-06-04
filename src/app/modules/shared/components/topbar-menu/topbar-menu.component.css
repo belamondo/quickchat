@@ -36,8 +36,9 @@
     z-index: 2;
   }
   
-  h1.app-name {
+  .app-name {
     margin-left: 8px;
+    font-size: 14px
   }
   
   .sidenav-container {

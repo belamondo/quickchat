@@ -4,10 +4,7 @@
   </div>
 </mat-card>
 
-<div class="flex">
-  <mat-card *ngIf="isStarted" class="container">
-    Listagem de empresas
-
-    <button mat-raised-button (click)="openCompanyDialog()">Dialog test</button>
-  </mat-card>
+<div class="flex container">
+  <table-data [params]="paramsToTableData"></table-data>
+  <!-- <button mat-raised-button (click)="openCompanyDialog()">Dialog test</button> -->
 </div>

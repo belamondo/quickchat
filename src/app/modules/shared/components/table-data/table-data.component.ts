@@ -1,27 +1,3 @@
-import {
-  DeleteConfirmComponent
-} from './../delete-confirm/delete-confirm.component';
-import {
-  Component,
-  OnInit,
-  Input,
-  OnChanges,
-  Output,
-  EventEmitter
-} from '@angular/core';
-import {
-  FormGroup,
-  FormControl,
-  Validators
-} from '@angular/forms';
-import {
-  MatSnackBar,
-  MatDialog
-} from '@angular/material';
-import {
-  Router
-} from '@angular/router';
-
 /**
  * Deals with a list component.
  * @param {Object} params
@@ -32,7 +8,7 @@ import {
  * @param {string} params.toolbar.delete[].param - field to use as param to deletion and ignite its methods
  * @param {boolean} params.toolbar.search - ignites search area on toolbar and its methods
  * @param {Object} params.list
- * @param {string} params.list.route
+ * @param {string} params.list.dataSource
  * @param {Array} params.list.show
  * @param {Array} params.list.header
  * @param {Array} params.list.order
@@ -49,6 +25,30 @@ import {
  * @param {string} params.list.changeValueReadingDB.field
  * @param {Object} params.list.actionButton
  */
+import {
+  DeleteConfirmComponent
+} from './../delete-confirm/delete-confirm.component';
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  OnChanges
+} from '@angular/core';
+import {
+  FormGroup,
+  FormControl,
+  Validators
+} from '@angular/forms';
+import {
+  MatSnackBar,
+  MatDialog
+} from '@angular/material';
+import {
+  Router
+} from '@angular/router';
+
 
 /**
  * Services
@@ -58,19 +58,20 @@ import {
 } from './../../services/firebase/crud.service';
 
 @Component({
-  selector: 'ntm-table-data',
+  selector: 'table-data',
   templateUrl: './table-data.component.html',
   styleUrls: ['./table-data.component.css']
 })
 export class TableDataComponent implements OnInit, OnChanges {
-  constructor() {
-  }
+  @Input() params;
 
-  ngOnChanges() {
-    
+  constructor() {
   }
 
   ngOnInit() {
     
   } 
+
+  ngOnChanges() {
+  }
 }

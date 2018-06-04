@@ -27,7 +27,10 @@ import { CrudService } from './../../../shared/services/firebase/crud.service';
 })
 export class CompaniesComponent implements OnInit {
   public isStarted: boolean;
+  public paramsToTableData: any;
   public userData: any;
+
+  public userCompanies: any;
   
   constructor(
     private _crud: CrudService,
@@ -43,9 +46,21 @@ export class CompaniesComponent implements OnInit {
     this._crud.read({
       collectionsAndDocs: [this.userData[0]['_data']['userType'],this.userData[0]['_id'],'userCompanies'],
     }).then(res => {
+      this.userCompanies = res;
+
       this.isStarted = true;
-      console.log(res)
+
+      this.makeList();
     })
+
+  }
+
+  makeList = () => {
+    this.paramsToTableData = {
+      dataSource: this.userCompanies,
+      show: ['cnpj', 'business_name'],
+      header: ['CNPJ', 'Nome']
+    }
   }
 
   openCompanyDialog = () => {

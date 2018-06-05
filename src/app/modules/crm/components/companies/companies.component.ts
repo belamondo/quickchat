@@ -57,9 +57,11 @@ export class CompaniesComponent implements OnInit {
 
   makeList = () => {
     this.paramsToTableData = {
-      dataSource: this.userCompanies,
-      show: ['cnpj', 'business_name'],
-      header: ['CNPJ', 'Nome']
+      list: {
+        dataSource: this.userCompanies,
+        show: ['cnpj', 'business_name'],
+        header: ['CNPJ', 'Nome']
+      }
     }
   }
 

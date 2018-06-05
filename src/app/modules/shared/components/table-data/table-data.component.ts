@@ -15,7 +15,6 @@
  * @param {Object} params.list.edit
  * @param {string} params.list.edit.route
  * @param {string} params.list.edit.param
- * @param {number} params.list.page
  * @param {Object[]} params.list.changeValue
  * @param {string} params.list.changeValue.field
  * @param {string} params.list.changeValue.fieldValue
@@ -34,7 +33,8 @@ import {
   Input,
   Output,
   EventEmitter,
-  OnChanges
+  OnChanges,
+  ViewChild
 } from '@angular/core';
 import {
   FormGroup,
@@ -43,7 +43,9 @@ import {
 } from '@angular/forms';
 import {
   MatSnackBar,
-  MatDialog
+  MatDialog, 
+  MatPaginator,
+  MatTableDataSource,
 } from '@angular/material';
 import {
   Router
@@ -63,15 +65,30 @@ import {
   styleUrls: ['./table-data.component.css']
 })
 export class TableDataComponent implements OnInit, OnChanges {
-  @Input() params;
-
+  @Input() params: any;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  
+  public dataSource: any;
+  
+  
   constructor() {
   }
-
+  
   ngOnInit() {
-    
   } 
-
+  
   ngOnChanges() {
+    if(!this.params) {
+      
+    } else {
+      console.log(this.params.list.dataSource)
+      if(!this.params.list.pageSize) this.params.list.pageSize = 5;
+      
+      if(!this.params.list.pageSizeOptions) this.params.list.pageSizeOptions = [5, 10, 25, 100];
+      
+      this.dataSource = new MatTableDataSource<any>(this.params.list.dataSource);
+      
+      this.dataSource = this.paginator;
+    }
   }
 }

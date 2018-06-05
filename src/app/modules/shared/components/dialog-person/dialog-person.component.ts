@@ -201,8 +201,8 @@ export class DialogPersonComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.contacts.forEach(element => {
-          if (element._data.mask === result.type) {
-            result.type = element._data.name;
+          if (element.mask === result.type) {
+            result.type = element.name;
           }
         });
 
@@ -229,8 +229,8 @@ export class DialogPersonComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.documents.forEach(element => {
-          if (element._data.mask === result.type) {
-            result.type = element._data.name;
+          if (element.mask === result.type) {
+            result.type = element.name;
           }
         });
 
@@ -257,8 +257,8 @@ export class DialogPersonComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.relationships.forEach(element => {
-          if (element._data.mask === result.type) {
-            result.type = element._data.name;
+          if (element.mask === result.type) {
+            result.type = element.name;
           }
         });
 
@@ -316,13 +316,13 @@ export class DialogPersonComponent implements OnInit {
     if (this.submitToCreate) {
       this._crud
         .create({
-          collectionsAndDocs: [this.userData[0]['_data']['userType'], this.userData[0]['_id'], 'userPeople'],
+          collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'userPeople'],
           objectToCreate: this.personForm.value
         }).then(res => {
           if (this.documentsObject.length > 0) {
             this._crud
               .create({
-                collectionsAndDocs: [this.userData[0]['_data']['userType'], this.userData[0]['_id'], 'userPeople', res['id'], 'userPeopleDocuments'],
+                collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'userPeople', res['id'], 'userPeopleDocuments'],
                 objectToCreate: {
                   documentsToParse: JSON.stringify(this.documentsObject)
                 }
@@ -332,7 +332,7 @@ export class DialogPersonComponent implements OnInit {
           if (this.contactsObject.length > 0) {
             this._crud
               .create({
-                collectionsAndDocs: [this.userData[0]['_data']['userType'], this.userData[0]['_id'], 'userPeople', res['id'], 'userPeopleContacts'],
+                collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'userPeople', res['id'], 'userPeopleContacts'],
                 objectToCreate: {
                   contactsToParse: JSON.stringify(this.contactsObject)
                 }
@@ -342,7 +342,7 @@ export class DialogPersonComponent implements OnInit {
           if (this.addressesObject.length > 0) {
             this._crud
               .create({
-                collectionsAndDocs: [this.userData[0]['_data']['userType'], this.userData[0]['_id'], 'userPeople', res['id'], 'userPeopleAddresses'],
+                collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'userPeople', res['id'], 'userPeopleAddresses'],
                 objectToCreate: {
                   addressesToParse: JSON.stringify(this.addressesObject)
                 }

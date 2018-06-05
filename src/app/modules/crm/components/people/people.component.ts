@@ -41,7 +41,7 @@ export class PeopleComponent implements OnInit {
     this.isStarted = false;
 
     this._crud.read({
-      collectionsAndDocs: [this.userData[0]['_data']['userType'],this.userData[0]['_id'],'userPeople'],
+      collectionsAndDocs: [this.userData[0]['userType'],this.userData[0]['_id'],'userPeople'],
     }).then(res => {
       this.isStarted = true;
       console.log(res)

@@ -3,8 +3,8 @@
   <div class="flex">
     <mat-form-field appearance="outline">
       <mat-select placeholder="Tipo de contato *" formControlName="type">
-        <mat-option *ngFor="let document of data.documents" [value]="document._data.mask">
-          {{ document._data.name }}
+        <mat-option *ngFor="let document of data.documents" [value]="document.mask">
+          {{ document.name }}
         </mat-option>
       </mat-select>
     </mat-form-field>

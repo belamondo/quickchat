@@ -145,8 +145,8 @@ export class ProfileChoiceComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.contacts.forEach(element => {
-          if (element._data.mask === result.type) {
-            result.type = element._data.name;
+          if (element.mask === result.type) {
+            result.type = element.name;
           }
         });
 
@@ -173,8 +173,8 @@ export class ProfileChoiceComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.documents.forEach(element => {
-          if (element._data.mask === result.type) {
-            result.type = element._data.name;
+          if (element.mask === result.type) {
+            result.type = element.name;
           }
         });
 

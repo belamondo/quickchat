@@ -80,7 +80,7 @@ export class TopbarMenuComponent implements OnInit {
     this.userData = JSON.parse(sessionStorage.getItem('userData'));
 
     this._crud.read({
-      collectionsAndDocs: [this.userData[0]['_data']['userType'],this.userData[0]['_id']]
+      collectionsAndDocs: [this.userData[0]['userType'],this.userData[0]['_id']]
     }).then(res => { 
       this.user = res[0];
     })

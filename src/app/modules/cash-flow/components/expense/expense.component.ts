@@ -76,16 +76,16 @@ export class ExpenseComponent implements OnInit {
         let param = this.paramToSearch.replace(':', '');
 
         this._crud.read({
-          collectionsAndDocs: [this.userData[0]['_data']['userType'],this.userData[0]['_id'],'expensesTypes',param],
+          collectionsAndDocs: [this.userData[0]['userType'],this.userData[0]['_id'],'expensesTypes',param],
         }).then(res => {
-          this.expenseForm.patchValue(res[0]['_data'])
+          this.expenseForm.patchValue(res[0])
 
           /* Check if has additionals fields */
-          if(Object.keys(res[0]['_data']).length > 2){
-            for (var key in res[0]['_data']) {
+          if(Object.keys(res[0]).length > 2){
+            for (var key in res[0]) {
               /* Create form control if it is a additional field */
               if(key !== 'name' && key !== 'type'){
-                this.expenseForm.addControl(key, new FormControl(res[0]['_data'][key]));
+                this.expenseForm.addControl(key, new FormControl(res[0][key]));
                 this.fields.push(key);
               };
             }
@@ -108,7 +108,7 @@ export class ExpenseComponent implements OnInit {
     if (this.submitToUpdate) {
       this._crud
         .update({
-          collectionsAndDocs: [this.userData[0]['_data']['userType'],this.userData[0]['_id'],'expensesTypes',this.paramToSearch.replace(':', '')],
+          collectionsAndDocs: [this.userData[0]['userType'],this.userData[0]['_id'],'expensesTypes',this.paramToSearch.replace(':', '')],
           objectToUpdate: this.expenseForm.value
         }).then(res => {
           this._snackbar.open('Atualização feita com sucesso', '', {
@@ -120,7 +120,7 @@ export class ExpenseComponent implements OnInit {
     if (this.submitToCreate) {
       this._crud
       .create({
-        collectionsAndDocs: [this.userData[0]['_data']['userType'],this.userData[0]['_id'],'expensesTypes'],
+        collectionsAndDocs: [this.userData[0]['userType'],this.userData[0]['_id'],'expensesTypes'],
         objectToCreate: this.expenseForm.value
       }).then(res => { 
         formDirective.resetForm();

@@ -65,7 +65,7 @@ import {
   styleUrls: ['./table-data.component.css']
 })
 export class TableDataComponent implements OnInit, OnChanges {
-  @Input() params: any;
+  @Input('params') params: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   
   public dataSource: any;
@@ -73,22 +73,22 @@ export class TableDataComponent implements OnInit, OnChanges {
   
   constructor() {
   }
-  
+
   ngOnInit() {
-  } 
+  }
   
   ngOnChanges() {
-    if(!this.params) {
-      
-    } else {
-      console.log(this.params.list.dataSource)
+    if(this.params) {
+      let object = this.params.list.dataSource;
+      console.log(object);
+    
       if(!this.params.list.pageSize) this.params.list.pageSize = 5;
       
       if(!this.params.list.pageSizeOptions) this.params.list.pageSizeOptions = [5, 10, 25, 100];
       
-      this.dataSource = new MatTableDataSource<any>(this.params.list.dataSource);
+      this.dataSource = new MatTableDataSource<any>(object);
       
-      this.dataSource = this.paginator;
+      this.dataSource.paginator = this.paginator;
     }
   }
 }

@@ -40,14 +40,14 @@ export class CompaniesComponent implements OnInit {
 
   ngOnInit() {
     this.userData = JSON.parse(sessionStorage.getItem('userData'));
-
+    
     this.isStarted = false;
 
     this._crud.read({
-      collectionsAndDocs: [this.userData[0]['_data']['userType'],this.userData[0]['_id'],'userCompanies'],
+      collectionsAndDocs: [this.userData[0]['userType'],this.userData[0]['_id'],'userCompanies'],
     }).then(res => {
       this.userCompanies = res;
-
+      
       this.isStarted = true;
 
       this.makeList();

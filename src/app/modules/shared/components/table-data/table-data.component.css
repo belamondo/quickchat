@@ -1,3 +1,18 @@
+a {
+  cursor: pointer;
+}
+
 table {
   width: 100%;
+  background: pink;
+}
+
+.footer {
+  width: 100%;
+  background: red;
+}
+
+.tool {
+  width: 100%;
+  background: yellow;
 }

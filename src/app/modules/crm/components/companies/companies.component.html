@@ -4,7 +4,7 @@
   </div>
 </mat-card>
 
-<div class="flex container">
+<div class="flex container" *ngIf="isStarted">
   <table-data [params]="paramsToTableData"></table-data>
   <!-- <button mat-raised-button (click)="openCompanyDialog()">Dialog test</button> -->
 </div>

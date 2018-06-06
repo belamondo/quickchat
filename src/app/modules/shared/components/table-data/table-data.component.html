@@ -1,18 +1,42 @@
-<div *ngIf="params && params.list.pageSize">  
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-    <ng-container *ngFor="let columnDef of params?.list.show; let showI = index;" [matColumnDef]="columnDef">
-      <th mat-header-cell *matHeaderCellDef> {{params?.list.header[showI]}} </th>
-      <td mat-cell *matCellDef="let element"> {{element[columnDef]}} </td>
-    </ng-container>
-  
-    <tr mat-header-row *matHeaderRowDef="params?.list.show"></tr>
-    <tr mat-row *matRowDef="let row; columns: params?.list.show;"></tr>
-  </table>
-  
-  <mat-paginator [length]="params?.list.dataSource.length"
-                [pageSize]="params?.list.pageSize"
-                [pageSizeOptions]="params?.list.pageSizeOptions"
-                showFirstLastButtons
-                class="mat-elevation-z8">
-  </mat-paginator>
+<div class="tool">
+  <form [formGroup]="tableSearchForm">
+    <mat-form-field>
+      <mat-label>Filtrar</mat-label>
+      <input matInput placeholder="Digite filtro" type="text" formControlName="search" (keyup)="searchOverAll()">
+    </mat-form-field>
+  </form>
+</div>
+
+<table>
+  <tr>
+    <th *ngFor="let header of params.list.header">{{header}}</th>
+  </tr>
+
+  <tr *ngFor="let data of dataSource">
+    <td *ngFor="let show of params.list.show">{{data[show]}}</td>
+  </tr>
+</table>
+
+<div class="flex footer">
+  <div>
+    <a>
+      <mat-icon *ngIf="currentPage > 1" (click)="setLimitOverPage(currentPage-1)">keyboard_arrow_left</mat-icon>
+    </a>
+
+    <a>
+      <mat-icon *ngIf="currentPage < lastPage" (click)="setLimitOverPage(currentPage+1)">keyboard_arrow_right</mat-icon>
+    </a>
+  </div>
+
+  <div>
+    <form [formGroup]="tableFooterForm">
+      <mat-form-field>
+        <mat-select placeholder="Número de linhas" formControlName="numberOfLines" (selectionChange)="setLimit()">
+          <mat-option *ngFor="let n of params.footer.numberOfLines" value="{{n}}">
+            {{ n }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </form>
+  </div>
 </div>

@@ -47,8 +47,6 @@ export class CompaniesComponent implements OnInit {
       collectionsAndDocs: [this.userData[0]['userType'],this.userData[0]['_id'],'userCompanies'],
     }).then(res => {
       this.userCompanies = res;
-      
-      this.isStarted = true;
 
       this.makeList();
     })
@@ -61,8 +59,13 @@ export class CompaniesComponent implements OnInit {
         dataSource: this.userCompanies,
         show: ['cnpj', 'business_name'],
         header: ['CNPJ', 'Nome']
+      },
+      footer: {
+        
       }
     }
+
+    this.isStarted = true;
   }
 
   openCompanyDialog = () => {

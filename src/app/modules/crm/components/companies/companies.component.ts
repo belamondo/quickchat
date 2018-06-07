@@ -57,8 +57,15 @@ export class CompaniesComponent implements OnInit {
     this.paramsToTableData = {
       list: {
         dataSource: this.userCompanies,
-        show: ['cnpj', 'business_name'],
-        header: ['CNPJ', 'Nome']
+        show: [{
+          field: 'cnpj',
+          header: 'CNPJ',
+          sort: 'filter_list'
+        }, {
+          field: 'business_name',
+          header: 'Nome',
+          sort: 'filter_list'
+        }]
       },
       footer: {
         

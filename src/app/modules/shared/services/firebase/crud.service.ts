@@ -21,7 +21,7 @@ const _firestore = initializeApp({
 @Injectable()
 export class CrudService {
 
-  constructor() {}
+  constructor() { }
 
   create = (params) => new Promise((resolve, reject) => {
     if (!params) {
@@ -86,7 +86,7 @@ export class CrudService {
           if ((ssObject.length + 1) < 401) {
             params.objectToCreate['_id'] = res['id'];
             ssObject.push(params.objectToCreate);
-            
+
             sessionStorage.setItem(params.collectionsAndDocs[params.collectionsAndDocs.length - 1], JSON.stringify(ssObject));
           }
         }
@@ -143,46 +143,15 @@ export class CrudService {
       if (params.ssFilter) {
         for (let limSs = ssObject.length, ss = 0; ss < limSs; ss++) {
           for (let lim = params.ssFilter.length, i = 0; i < lim; i++) {
-            if (params.ssFilter[i][1] === "==") {
-              if (ssObject[ss][params.ssFilter[i][0]] == params.ssFilter[i][2]) {
-                result.push(ssObject[ss]);
-                readFs = false;
-                continue;
-              }
-            } else if (params.ssFilter[i][1] === "!=") {
-              if (ssObject[ss][params.ssFilter[i][0]] != params.ssFilter[i][2]) {
-                result.push(ssObject[ss]);
-                readFs = false;
-                continue;
-              }
-            } else if (params.ssFilter[i][1] === ">") {
-              if (ssObject[ss][params.ssFilter[i][0]] > params.ssFilter[i][2]) {
-                result.push(ssObject[ss]);
-                readFs = false;
-                continue;
-              }
-            } else if (params.ssFilter[i][1] === "<") {
-              if (ssObject[ss][params.ssFilter[i][0]] < params.ssFilter[i][2]) {
-                result.push(ssObject[ss]);
-                readFs = false;
-                continue;
-              }
-            } else if (params.ssFilter[i][1] === ">=") {
-              if (ssObject[ss][params.ssFilter[i][0]] >= params.ssFilter[i][2]) {
-                result.push(ssObject[ss]);
-                readFs = false;
-                continue;
-              }
-            } else if (params.ssFilter[i][1] === "<=") {
-              if (ssObject[ss][params.ssFilter[i][0]] <= params.ssFilter[i][2]) {
-                result.push(ssObject[ss]);
-                readFs = false;
-                continue;
-              }
-            } else {
-              result.push({
+            if (!["==", "!=", ">", "<", ">=", "<="].includes(params.ssFilter[i][1])) {
+              return result.push({
                 message: "Operador para pesquisa não encontrado"
               })
+            }
+            if (eval("ssObject[ss][params.ssFilter[i][0]] params.ssFilter[i][1] params.ssFilter[i][2]")) {
+              result.push(ssObject[ss]);
+              readFs = false;
+              continue;
             }
           }
         }
@@ -220,13 +189,13 @@ export class CrudService {
             querySnapshot.forEach((doc) => {
               let object = doc.data();
               object['_id'] = doc.id;
-              
+
               result.push(object)
             });
           } else {
             let object = querySnapshot.data();
             object['_id'] = querySnapshot.id;
-            
+
             result.push(object)
           }
 
@@ -302,15 +271,15 @@ export class CrudService {
         if (sessionStorage.getItem(params.collectionsAndDocs[params.collectionsAndDocs.length - 2])) {
           //Collection will be on length - 2 because length - 1 is the doc identifies to be updated
           let ssObject = JSON.parse(sessionStorage.getItem(params.collectionsAndDocs[params.collectionsAndDocs.length - 2]));
-          
-          for(let limSs = ssObject.length, ss = 0; ss < limSs; ss++) {
-            if(ssObject[ss]['_id'] === params.collectionsAndDocs[params.collectionsAndDocs.length - 1]) {
+
+          for (let limSs = ssObject.length, ss = 0; ss < limSs; ss++) {
+            if (ssObject[ss]['_id'] === params.collectionsAndDocs[params.collectionsAndDocs.length - 1]) {
               ssObject[ss] = params.objectToUpdate;
             }
           }
 
           sessionStorage.setItem(params.collectionsAndDocs[params.collectionsAndDocs.length - 1], JSON.stringify(ssObject));
-          
+
         }
         //Check sessionStorage flow over update: end
         resolve(res)

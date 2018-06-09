@@ -4,9 +4,10 @@
   </div>
 </mat-card>
 
-<table-data [params]="paramsToTableData"></table-data>
-
 <div style="max-width: 800px; margin: auto;">
+
+  <table-data [params]="paramsToTableData"></table-data>
+
   <mat-card *ngIf="isStarted" class="container">
     <form [formGroup]="expenseForm" #formDirective="ngForm" (ngSubmit)="onExpenseFormSubmit(this.formDirective)">
       <mat-card-header>

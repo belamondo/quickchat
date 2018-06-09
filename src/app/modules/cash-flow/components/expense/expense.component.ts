@@ -72,8 +72,11 @@ export class ExpenseComponent implements OnInit {
     this.paramsToTableData = {
       list: {
         dataSource: this.expenses,
-        show: ['name'],
-        header: ['Despesa']
+        show: [{
+          field: 'name',
+          header: 'Despesa',
+          sort: 'filter_list'
+        }]
       },
       footer: {
         

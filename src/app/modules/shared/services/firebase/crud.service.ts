@@ -84,13 +84,9 @@ export class CrudService {
           let ssObject = JSON.parse(sessionStorage.getItem(params.collectionsAndDocs[params.collectionsAndDocs.length - 1]));
           //IF ssObject length < 401 THEN push the new created object to it AND set sessionStorage with ssObject
           if ((ssObject.length + 1) < 401) {
-            ssObject.push({
-              _data: params.objectToCreate,
-              _id: res['id']
-            });
-
-            console.log(ssObject)
-
+            params.objectToCreate['_id'] = res['id'];
+            ssObject.push(params.objectToCreate);
+            
             sessionStorage.setItem(params.collectionsAndDocs[params.collectionsAndDocs.length - 1], JSON.stringify(ssObject));
           }
         }
@@ -150,38 +146,38 @@ export class CrudService {
             if (params.ssFilter[i][1] === "==") {
               if (ssObject[ss][params.ssFilter[i][0]] == params.ssFilter[i][2]) {
                 result.push(ssObject[ss]);
-                continue;
                 readFs = false;
+                continue;
               }
             } else if (params.ssFilter[i][1] === "!=") {
               if (ssObject[ss][params.ssFilter[i][0]] != params.ssFilter[i][2]) {
                 result.push(ssObject[ss]);
-                continue;
                 readFs = false;
+                continue;
               }
             } else if (params.ssFilter[i][1] === ">") {
               if (ssObject[ss][params.ssFilter[i][0]] > params.ssFilter[i][2]) {
                 result.push(ssObject[ss]);
-                continue;
                 readFs = false;
+                continue;
               }
             } else if (params.ssFilter[i][1] === "<") {
               if (ssObject[ss][params.ssFilter[i][0]] < params.ssFilter[i][2]) {
                 result.push(ssObject[ss]);
-                continue;
                 readFs = false;
+                continue;
               }
             } else if (params.ssFilter[i][1] === ">=") {
               if (ssObject[ss][params.ssFilter[i][0]] >= params.ssFilter[i][2]) {
                 result.push(ssObject[ss]);
-                continue;
                 readFs = false;
+                continue;
               }
             } else if (params.ssFilter[i][1] === "<=") {
               if (ssObject[ss][params.ssFilter[i][0]] <= params.ssFilter[i][2]) {
                 result.push(ssObject[ss]);
-                continue;
                 readFs = false;
+                continue;
               }
             } else {
               result.push({
@@ -222,16 +218,16 @@ export class CrudService {
           let result = [];
           if (querySnapshot.docs) {
             querySnapshot.forEach((doc) => {
-              result.push({
-                _id: doc.id,
-                _data: doc.data()
-              })
+              let object = doc.data();
+              object['_id'] = doc.id;
+              
+              result.push(object)
             });
           } else {
-            result.push({
-              _id: querySnapshot.id,
-              _data: querySnapshot.data()
-            })
+            let object = querySnapshot.data();
+            object['_id'] = querySnapshot.id;
+            
+            result.push(object)
           }
 
           //IF sessionStorage flow AND something found on firestore AND sessionStorage length is lower than 401 (after calculating new responses) PUSH results to sessionStorage
@@ -303,17 +299,19 @@ export class CrudService {
       .set(params.objectToUpdate)
       .then(res => {
         //Check sessionStorage flow over update: start
-        // if (sessionStorage.getItem(params.collectionsAndDocs[params.collectionsAndDocs.length - 2])) {
-        //   //Collection will be on length - 2 because length - 1 is the doc identifies to be updated
-        //   let ssObject = JSON.parse(sessionStorage.getItem(params.collectionsAndDocs[params.collectionsAndDocs.length - 2]));
+        if (sessionStorage.getItem(params.collectionsAndDocs[params.collectionsAndDocs.length - 2])) {
+          //Collection will be on length - 2 because length - 1 is the doc identifies to be updated
+          let ssObject = JSON.parse(sessionStorage.getItem(params.collectionsAndDocs[params.collectionsAndDocs.length - 2]));
           
-        //   //for(let limSs = ssObject.length)
+          for(let limSs = ssObject.length, ss = 0; ss < limSs; ss++) {
+            if(ssObject[ss]['_id'] === params.collectionsAndDocs[params.collectionsAndDocs.length - 1]) {
+              ssObject[ss] = params.objectToUpdate;
+            }
+          }
 
-        //   console.log(ssObject)
-
-        //   sessionStorage.setItem(params.collectionsAndDocs[params.collectionsAndDocs.length - 1], JSON.stringify(ssObject));
+          sessionStorage.setItem(params.collectionsAndDocs[params.collectionsAndDocs.length - 1], JSON.stringify(ssObject));
           
-        // }
+        }
         //Check sessionStorage flow over update: end
         resolve(res)
       })

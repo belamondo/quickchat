@@ -15,18 +15,18 @@ export class CashFlowComponent implements OnInit {
 
     /* Options to show in side nav menu */
     this.paramsToTopbarMenu = {
-      title: "BelaMondo Fluxo de Caixa",
+      title: "Fluxo de Caixa",
       views: [{
         name: 'Painel inicial',
         icon: 'home',
         link: ['dashboard']
       },{
-        name: 'Cadastro de despesas',
+        name: 'Cadastros',
         icon: 'assignment',
         link: ['expense']
       },{
         name: 'Lançamentos',
-        icon: 'attach_money',
+        icon: 'compare_arrows',
         link: ['incoming-outcoming']
       },{
         name: 'Contas a pagar/receber',

@@ -108,7 +108,7 @@ export class IncomingOutcomingComponent implements OnInit {
 
     /* Get expenses types from database */
     this._crud.read({
-      collectionsAndDocs: [this.userData[0]['_data']['userType'],this.userData[0]['_id'],'expensesTypes'],
+      collectionsAndDocs: [this.userData[0]['userType'],this.userData[0]['_id'],'expensesTypes'],
     }).then(res => {
       this.outcomingsTypes = res;
     })
@@ -129,12 +129,12 @@ export class IncomingOutcomingComponent implements OnInit {
 
     /* Get incomings and outcomings of the actual month from database */
     this._crud.read({
-      collectionsAndDocs: [this.userData[0]['_data']['userType'],this.userData[0]['_id'],'inAndOut',this.monthAndYear]
+      collectionsAndDocs: [this.userData[0]['userType'],this.userData[0]['_id'],'inAndOut','201806']  // TODO: pegar ano e mês atual
     }).then(res => {
-      if(res[0]['_data'] !== undefined){
+      if(res[0] !== undefined){
         this.inAndOut = {
-          arrayOfOutcoming: res[0]['_data']['arrayOfOutcoming'],
-          arrayOfIncoming: res[0]['_data']['arrayOfIncoming']
+          arrayOfOutcoming: res[0]['arrayOfOutcoming'],
+          arrayOfIncoming: res[0]['arrayOfIncoming']
         }
       }
     })
@@ -238,7 +238,7 @@ export class IncomingOutcomingComponent implements OnInit {
 
       this._crud
       .update({
-        collectionsAndDocs: [this.userData[0]['_data']['userType'],this.userData[0]['_id'],'inAndOut', this.monthAndYear],
+        collectionsAndDocs: [this.userData[0]['userType'],this.userData[0]['_id'],'inAndOut', '201806'], // TODO: pegar ano e mês atual
         objectToUpdate: this.inAndOut
       }).then(res => { 
         formDirective.resetForm();

@@ -8,19 +8,19 @@
       </div>
       
       <div>
-        <span *ngIf="userData[0]['_data']['userType'] == 'people'" style="font-size: small">
-          {{user?._data.name.split(' ')[0]}}
+        <span *ngIf="userData[0]['userType'] == 'people'" style="font-size: small">
+          {{user?.name.split(' ')[0]}}
         </span>
   
-        <span *ngIf="userData[0]['_data']['userType'] == 'companies'" style="font-size: small">
-          {{user?._data.business_name}}
+        <span *ngIf="userData[0]['userType'] == 'companies'" style="font-size: small">
+          {{user?.business_name}}
         </span>
 
         <mat-menu #appMenu="matMenu" yPosition="below">
-          <a mat-menu-item routerLink="">Almoxarifado</a>
-          <a mat-menu-item routerLink="/crm">CRM</a>
-          <a mat-menu-item routerLink="/cash-flow">Fluxo de caixa</a>
-          <a mat-menu-item routerLink="/system">Sistema</a>
+          <a mat-menu-item routerLink="" class="menu-item">Almoxarifado</a>
+          <a mat-menu-item routerLink="/crm" class="menu-item">CRM</a>
+          <a mat-menu-item routerLink="/cash-flow" class="menu-item">Fluxo de caixa</a>
+          <a mat-menu-item routerLink="/system" class="menu-item">Sistema</a>
         </mat-menu>
 
         <button *ngIf="params.views" mat-icon-button [matMenuTriggerFor]="appMenu">
@@ -38,15 +38,16 @@
     <mat-sidenav #snav [opened]="options.opened" [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="options.fixed"
       [fixedTopGap]="options.top" [fixedBottomGap]="options.bottom">
       <mat-nav-list>
-        <span class="app-name" (click)="_router.navigate(['/main'])">{{params.title}}</span>
+        <span class="app-title" (click)="_router.navigate(['/main'])">Belamondo</span><br />
+        <span class="app-name" (click)="_router.navigate(['/main'])">{{params.title}}</span> <hr />
         <!--
         <mat-card *ngIf="options.userCard">
-          <span *ngIf="userData[0]['_data']['userType'] == 'people'">
-            {{user?._data.name.split(' ')[0]}}
+          <span *ngIf="userData[0]['userType'] == 'people'">
+            {{user?.name.split(' ')[0]}}
           </span>
 
-          <span *ngIf="userData[0]['_data']['userType'] == 'companies'">
-            {{user?._data.business_name}}
+          <span *ngIf="userData[0]['userType'] == 'companies'">
+            {{user?.business_name}}
           </span>
           <div>
             <a routerLink="/user">
@@ -67,8 +68,8 @@
         <ng-template ngFor let-view [ngForOf]="params.views" let-even="even" let-odd="odd" let-rowIndex="index">
           <a mat-list-item [routerLink]="view.link" routerLinkActive="active-link" (click)="mobile ? snav.close() : {}">
             <mat-icon mat-list-icon>{{view.icon}}</mat-icon>
-            <span mat-line>{{view.name}}</span>
-            <span mat-line class="secondary">{{view.description}}</span>
+            <span mat-line style="font-size: small; font-weight: bold; margin-bottom: 5px;">{{view.name}}</span>
+            <span mat-line style="font-size: small; color: gray;">{{view.description}}</span>
           </a>
         </ng-template>
       </mat-nav-list>

@@ -75,7 +75,7 @@ export class InvitationComponent implements OnInit {
   onInvitationFormSubmit = (formDirective: FormGroupDirective) => {
     this._crud
       .create({
-        collectionsAndDocs: [this.userData[0]['_data']['userType'], this.userData[0]['_id'], 'invitationsTypes'],
+        collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'invitationsTypes'],
         objectToCreate: this.invitationForm.value
       }).then(res => {
         formDirective.resetForm();

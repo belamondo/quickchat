@@ -5,9 +5,9 @@ import {
   Component,
   OnInit,
   Input,
-  OnChanges,
   Output,
-  EventEmitter
+  EventEmitter,
+  ViewChild
 } from '@angular/core';
 import {
   FormGroup,
@@ -16,39 +16,14 @@ import {
 } from '@angular/forms';
 import {
   MatSnackBar,
-  MatDialog
+  MatDialog,
+  MatPaginator,
+  MatTableDataSource,
 } from '@angular/material';
 import {
   Router
 } from '@angular/router';
 
-/**
- * Deals with a list component.
- * @param {Object} params
- * @param {Object} params.toolbar
- * @param {string} params.toolbar.title - gives a title to toolbar 
- * @param {Object[]} params.toolbar.delete - ignites delete area on toolbar, list and its methods
- * @param {string} params.toolbar.delete[].route - route to access after deleting
- * @param {string} params.toolbar.delete[].param - field to use as param to deletion and ignite its methods
- * @param {boolean} params.toolbar.search - ignites search area on toolbar and its methods
- * @param {Object} params.list
- * @param {string} params.list.route
- * @param {Array} params.list.show
- * @param {Array} params.list.header
- * @param {Array} params.list.order
- * @param {Object} params.list.edit
- * @param {string} params.list.edit.route
- * @param {string} params.list.edit.param
- * @param {number} params.list.page
- * @param {Object[]} params.list.changeValue
- * @param {string} params.list.changeValue.field
- * @param {string} params.list.changeValue.fieldValue
- * @param {string} params.list.changeValue.newValue
- * @param {Object[]} params.list.changeValueReadingDB
- * @param {string} params.list.changeValueReadingDB.collection
- * @param {string} params.list.changeValueReadingDB.field
- * @param {Object} params.list.actionButton
- */
 
 /**
  * Services
@@ -58,19 +33,88 @@ import {
 } from './../../services/firebase/crud.service';
 
 @Component({
-  selector: 'ntm-table-data',
+  selector: 'table-data',
   templateUrl: './table-data.component.html',
   styleUrls: ['./table-data.component.css']
 })
-export class TableDataComponent implements OnInit, OnChanges {
+export class TableDataComponent implements OnInit {
+  @Input('params') params: any;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
+  public currentPage: number;
+  public dataSource: any;
+  public dataTemp: any;
+  public lastPage: number;
+  public numberOfLines: any;
+  public tableFooterForm: FormGroup;
+  public tableSearchForm: FormGroup;
+
   constructor() {
   }
 
-  ngOnChanges() {
+  ngOnInit() {
+    this.tableFooterForm = new FormGroup({
+      numberOfLines: new FormControl(null)
+    });
+
+    this.tableSearchForm = new FormGroup({
+      search: new FormControl(null)
+    });
     
+    if(!this.params) {
+      //error object
+    }
+    
+    if(this.params.footer) {
+      if(!this.params.footer.numberOfLines) this.params.footer.numberOfLines = ['1','5','10','20','50'];
+    }
+    
+    if(!this.params.list) {
+      //error object
+    }
+    
+    if(!this.params.list.dataTotalLength) this.params.list.dataTotalLength = this.params.list.dataSource.length;
+    
+    if(!this.params.list.limit) this.params.list.limit = 5;
+    
+
+    if(!this.params.list.page) this.currentPage = 1;
+
+    this.dataTemp = this.params.list.dataSource;
+
+    this.lastPage = Math.ceil(this.params.list.dataTotalLength/this.params.list.limit);
+    this.setLimitOverPage(this.currentPage);
+
   }
 
-  ngOnInit() {
+  setLimit = () => { console.log(90)
+    this.params.list.limit = this.tableFooterForm.value.numberOfLines;
+
+    this.setLimitOverPage(1);
+  }
+
+  setLimitOverPage = (page) => {
+    this.dataSource = this.dataTemp.slice(this.params.list.limit*(page-1),(this.params.list.limit*page));
+
+    this.lastPage = Math.ceil(this.dataTemp.length/this.params.list.limit);
     
-  } 
+    this.currentPage = page;
+  }
+
+  searchOverAll = () => {
+    if(!this.tableSearchForm.value.search && this.tableSearchForm.value.search == "") {
+      this.dataTemp = this.params.list.dataSource;
+      this.lastPage = Math.ceil(this.params.list.dataTotalLength/this.params.list.limit);
+      this.setLimitOverPage(1);
+      return false;
+    }
+
+    this.dataTemp = this.params.list.dataSource.filter(object => {
+      return Object.values(object).join().match(new RegExp(this.tableSearchForm.value.search, 'gi')) 
+    })
+
+    this.lastPage = Math.ceil(this.dataTemp.length/this.params.list.limit);
+
+    this.setLimitOverPage(1);
+  }
 }

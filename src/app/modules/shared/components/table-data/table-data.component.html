@@ -1,3 +1,42 @@
-<p>
-  Coming soon
-</p>
+<div class="tool">
+  <form [formGroup]="tableSearchForm">
+    <mat-form-field>
+      <mat-label>Filtrar</mat-label>
+      <input matInput placeholder="Digite filtro" type="text" formControlName="search" (keyup)="searchOverAll()">
+    </mat-form-field>
+  </form>
+</div>
+
+<table>
+  <tr>
+    <th *ngFor="let header of params.list.header">{{header}}</th>
+  </tr>
+
+  <tr *ngFor="let data of dataSource">
+    <td *ngFor="let show of params.list.show">{{data[show]}}</td>
+  </tr>
+</table>
+
+<div class="flex footer">
+  <div>
+    <a>
+      <mat-icon *ngIf="currentPage > 1" (click)="setLimitOverPage(currentPage-1)">keyboard_arrow_left</mat-icon>
+    </a>
+
+    <a>
+      <mat-icon *ngIf="currentPage < lastPage" (click)="setLimitOverPage(currentPage+1)">keyboard_arrow_right</mat-icon>
+    </a>
+  </div>
+
+  <div>
+    <form [formGroup]="tableFooterForm">
+      <mat-form-field>
+        <mat-select placeholder="Número de linhas" formControlName="numberOfLines" (selectionChange)="setLimit()">
+          <mat-option *ngFor="let n of params.footer.numberOfLines" value="{{n}}">
+            {{ n }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </form>
+  </div>
+</div>

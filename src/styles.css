@@ -41,6 +41,10 @@ mat-spinner {
     align-items: center;
 }
 
+table-data {
+    width: 100%;
+}
+
 video {
     width: 100%;
     height: auto;
@@ -52,7 +56,7 @@ img {
 }
 
 .container {
-    width: 100%;
+    width: 96%;
     margin: 2%;
 }
 

@@ -112,23 +112,23 @@ export class AuthenticationService {
           this._crud.read({
             collectionsAndDocs: ['people', fbRes['user']['uid']]
           }).then(resPeople => { console.log(resPeople)
-            if (!resPeople[0]['_data']) {
+            if (!resPeople[0]) {
               this._crud.read({
                 collectionsAndDocs: ['companies', fbRes['user']['uid']]
               }).then(resCompanies => {
-                if (!resCompanies[0]['_data']) {
+                if (!resCompanies[0]) {
                   this._crud.read({
                     collectionsAndDocs: ['animals', fbRes['user']['uid']]
                   }).then(resAnimals => {
-                    if (!resAnimals[0]['_data']) {
+                    if (!resAnimals[0]) {
                       this._crud.read({
                         collectionsAndDocs: ['entities', fbRes['user']['uid']]
                       }).then(resEntities => {
-                        if (!resEntities[0]['_data']) {
+                        if (!resEntities[0]) {
                           this._router.navigate(['/main/profile_choice'])
                         } else {
                           if (!sessionStorage.getItem('userData')) {
-                            resEntities[0]['_data']['userType'] = "entities";
+                            resEntities[0]['userType'] = "entities";
                             sessionStorage.setItem('userData', JSON.stringify(resEntities))
                           }
 
@@ -153,7 +153,7 @@ export class AuthenticationService {
                       })
                     } else {
                       if (!sessionStorage.getItem('userData')) {
-                        resAnimals[0]['_data']['userType'] = "animals";
+                        resAnimals[0]['userType'] = "animals";
                         sessionStorage.setItem('userData', JSON.stringify(resAnimals))
                       }
 
@@ -178,7 +178,7 @@ export class AuthenticationService {
                   })
                 } else {
                   if (!sessionStorage.getItem('userData')) {
-                    resCompanies[0]['_data']['userType'] = "companies";
+                    resCompanies[0]['userType'] = "companies";
                     sessionStorage.setItem('userData', JSON.stringify(resCompanies))
                   }
 
@@ -203,7 +203,7 @@ export class AuthenticationService {
               })
             } else {
               if (!sessionStorage.getItem('userData')) {
-                resPeople[0]['_data']['userType'] = "people";
+                resPeople[0]['userType'] = "people";
                 sessionStorage.setItem('userData', JSON.stringify(resPeople))
               }
 
@@ -234,7 +234,7 @@ export class AuthenticationService {
                 ['type', '==', 'companies']
               ]
             }).then(res => {
-              let documents = res['filter'](el => el._data.name !== "CNPJ")
+              let documents = res['filter'](el => el.name !== "CNPJ")
 
               sessionStorage.setItem('companiesDocuments', JSON.stringify(documents))
             })
@@ -247,7 +247,7 @@ export class AuthenticationService {
                 ['type', '==', 'people']
               ]
             }).then(res => {
-              let documents = res['filter'](el => el._data.name !== "CPF")
+              let documents = res['filter'](el => el.name !== "CPF")
 
               sessionStorage.setItem('peopleDocuments', JSON.stringify(documents))
             })

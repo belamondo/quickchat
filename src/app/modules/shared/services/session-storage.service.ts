@@ -29,7 +29,7 @@ export class SessionStorageService {
     } else {
       //Read firestore to check for response
       this._crud.read({
-        collectionsAndDocs: [this.userData[0]['_data']['userType'],this.userData[0]['_id'],'userCompanies'],
+        collectionsAndDocs: [this.userData[0]['userType'],this.userData[0]['_id'],'userCompanies'],
       }).then(res => {
         let response = JSON.stringify(res);
         //IF something found on firestore PUSH results to sessionStorage

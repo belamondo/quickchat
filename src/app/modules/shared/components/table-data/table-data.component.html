@@ -1,10 +1,16 @@
 <div class="tbl-header">
+  <div class="action-button-area"  style="margin-top: -20px;" *ngIf="params.header.actionIcon">
+    <button mat-mini-fab *ngFor="let icon of params.header.actionIcon ; let i = index;" (click)="onTableDataOutput($event)">
+      <mat-icon>{{icon.icon}}</mat-icon>
+    </button>
+  </div>
+
   <table cellpadding="0" cellspacing="0" border="0">
     <thead>
       <tr>
         <th *ngFor="let show of params.list.show; let headerId = index">
           {{show['header']}}
-          <i class="material-icons" *ngIf="show['sort']" (click)="sort($event, headerId)">{{show['sort']}}</i>
+          <i class="material-icons" (click)="sort($event, headerId)">filter_list</i>
         </th>
       </tr>
     </thead>
@@ -14,9 +20,15 @@
 <div class="tbl-content">
   <table cellpadding="0" cellspacing="0" border="0">
     <tbody>
-      <tr *ngFor="let data of dataSource">
-        <td *ngFor="let show of params.list.show">{{data[show['field']]}}</td>
-      </tr>
+      <div *ngIf='dataSource.length > 0'>
+        <tr *ngFor="let data of dataSource">
+          <td *ngFor="let show of params.list.show">{{data[show['field']]}}</td>
+        </tr>
+      </div>
+
+      <div *ngIf='dataSource.length < 1'>
+        Nenhum dado cadastrado.
+      </div>
     </tbody>
   </table>
 </div>
@@ -42,7 +54,7 @@
             <mat-form-field>
               <mat-select placeholder="Nº de linhas" formControlName="numberOfLines" (selectionChange)="setLimit()">
                 <mat-option *ngFor="let n of params.footer.numberOfLines" value="{{n}}">
-                  {{ n }}
+                <p> {{ n }}</p> 
                 </mat-option>
               </mat-select>
             </mat-form-field>

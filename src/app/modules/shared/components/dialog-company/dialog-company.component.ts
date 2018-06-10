@@ -97,11 +97,13 @@ export class DialogCompanyComponent implements OnInit {
   public relationshipsObject: any;
 
   constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
     private _crud: CrudService,
     private _dialog: MatDialog,
     private _route: ActivatedRoute,
     private _router: Router,
-    public _snackbar: MatSnackBar
+    public _snackbar: MatSnackBar,
+    public dialogRef: MatDialogRef<DialogCompanyComponent>,
   ) {}
 
   ngOnInit() {

@@ -45,7 +45,7 @@ export class CompaniesComponent implements OnInit {
 
     this._crud.read({
       collectionsAndDocs: [this.userData[0]['userType'],this.userData[0]['_id'],'userCompanies'],
-    }).then(res => {
+    }).then(res => {  
       this.userCompanies = res;
 
       this.makeList();
@@ -55,16 +55,20 @@ export class CompaniesComponent implements OnInit {
 
   makeList = () => {
     this.paramsToTableData = {
+      header:{
+        actionIcon: [{
+          icon: 'add',
+          label: 'Adicionar nova empresa'
+        }]
+      },
       list: {
         dataSource: this.userCompanies,
         show: [{
           field: 'cnpj',
-          header: 'CNPJ',
-          sort: 'filter_list'
+          header: 'CNPJ'
         }, {
           field: 'business_name',
-          header: 'Nome',
-          sort: 'filter_list'
+          header: 'Nome'
         }]
       },
       footer: {

@@ -39,6 +39,7 @@ import {
 })
 export class TableDataComponent implements OnInit {
   @Input('params') params: any;
+  @Output() outputFromTableData: EventEmitter<any>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   public currentPage: number;
@@ -53,6 +54,8 @@ export class TableDataComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.outputFromTableData = new EventEmitter();
+    
     this.tableFooterForm = new FormGroup({
       numberOfLines: new FormControl(null)
     });
@@ -76,6 +79,11 @@ export class TableDataComponent implements OnInit {
     this.lastPage = Math.ceil(this.params.list.dataTotalLength/this.params.list.limit);
     this.setLimitOverPage(this.currentPage);
 
+  }
+
+  onTableDataOutput = (event) => {
+    console.log(event)
+    this.outputFromTableData.emit();
   }
 
   setLimit = () => {

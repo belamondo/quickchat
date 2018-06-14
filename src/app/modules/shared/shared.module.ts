@@ -20,6 +20,7 @@ import { MaterialModule } from './material.module';
  */
 import { AuthenticationService } from './services/firebase/authentication.service';
 import { CrudService } from './services/firebase/crud.service';
+import { StrategicDataService } from './services/strategic-data.service';
 
 /**
  * Third party modules
@@ -63,7 +64,8 @@ import { TopbarMenuComponent } from './components/topbar-menu/topbar-menu.compon
   ], providers: [
     AuthenticationService,
     AuthGuard,
-    CrudService
+    CrudService,
+    StrategicDataService,
   ], declarations: [
     DeleteConfirmComponent,
     DialogAddressComponent,

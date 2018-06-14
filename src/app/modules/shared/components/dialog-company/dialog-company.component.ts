@@ -72,7 +72,7 @@ import {
   styleUrls: ['./dialog-company.component.css']
 })
 export class DialogCompanyComponent implements OnInit {
-  //Common properties: start
+  // Common properties: start
   public companyForm: FormGroup;
   public isDisabled: boolean;
   public isStarted: boolean;
@@ -83,7 +83,7 @@ export class DialogCompanyComponent implements OnInit {
   public submitToUpdate: boolean;
   public title: string;
   public userData: any;
-  //Common properties: end
+  // Common properties: end
 
   public autoCorrectedDatePipe: any;
   public addressesObject: any;
@@ -113,7 +113,7 @@ export class DialogCompanyComponent implements OnInit {
       company_name: new FormControl(null)
     });
 
-    this.userData = JSON.parse(sessionStorage.getItem('userData'))
+    this.userData = JSON.parse(sessionStorage.getItem('userData'));
 
     this.autoCorrectedDatePipe = createAutoCorrectedDatePipe('dd/mm/yyyy');
 
@@ -137,37 +137,38 @@ export class DialogCompanyComponent implements OnInit {
   }
 
   clientFormInit = () => {
-    this._route.params.subscribe(params => {
-      if (params.id) {
-        this.paramToSearch = params.id;
-        this.submitToCreate = false;
-        this.submitToUpdate = true;
-        this.title = "Atualizar empresa";
-        this.submitButton = "Atualizar";
+    if (this.data.id) {
+      this.submitToCreate = false;
+      this.submitToUpdate = true;
+      this.title = 'Atualizar empresa';
+      this.submitButton = 'Atualizar';
 
-        let param = this.paramToSearch.replace(':', '');
+      this._crud
+        .read({
+          collectionsAndDocs: [
+            this.userData[0]['userType'],
+            this.userData[0]['_id'],
+            'userCompanies',
+            this.data.id
+          ]
+        }).then(res => {
+          this.companyForm.patchValue(res[0]);
 
-        this._crud
-          .read({
-            collectionsAndDocs: ['companies', param]
-          }).then(res => {
-            this.companyForm.patchValue(res['obj'][0]);
+          this.isStarted = true;
+        });
+    } else {
+      this.submitToCreate = true;
+      this.submitToUpdate = false;
+      this.title = 'Cadastrar empresa';
+      this.submitButton = 'Cadastrar';
 
-            this.isStarted = true;
-          })
-      } else {
-        this.submitToCreate = true;
-        this.submitToUpdate = false;
-        this.title = "Cadastrar empresa";
-        this.submitButton = "Cadastrar";
-
-        this.isStarted = true;
-      }
-    })
+      this.isStarted = true;
+    }
   }
 
   addAddress = () => {
-    let dialogRef = this._dialog.open(DialogAddressComponent, {
+    let dialogRef;
+    dialogRef = this._dialog.open(DialogAddressComponent, {
       height: '500px',
       width: '800px',
       data: {
@@ -178,8 +179,6 @@ export class DialogCompanyComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log(result)
-
         this.addressesObject.push(result);
       }
     });
@@ -190,7 +189,8 @@ export class DialogCompanyComponent implements OnInit {
   }
 
   addContact = () => {
-    let dialogRef = this._dialog.open(DialogContactComponent, {
+    let dialogRef;
+    dialogRef = this._dialog.open(DialogContactComponent, {
       height: '250px',
       width: '800px',
       data: {
@@ -217,11 +217,11 @@ export class DialogCompanyComponent implements OnInit {
   }
 
   addDocument = () => {
-    let dialogRef = this._dialog.open(DialogDocumentComponent, {
+    let dialogRef;
+    dialogRef = this._dialog.open(DialogDocumentComponent, {
       height: '320px',
       width: '800px',
       data: {
-        documents: this.documents,
         mask: this.mask,
         autoCorrectedDatePipe: this.autoCorrectedDatePipe
       }
@@ -245,7 +245,8 @@ export class DialogCompanyComponent implements OnInit {
   }
 
   addRelationship = () => {
-    let dialogRef = this._dialog.open(DialogRelationshipComponent, {
+    let dialogRef;
+    dialogRef = this._dialog.open(DialogRelationshipComponent, {
       height: '320px',
       width: '800px',
       data: {
@@ -274,8 +275,14 @@ export class DialogCompanyComponent implements OnInit {
 
   checkCompanyExistence = (cnpj) => {
     if (!this.companyForm.get('cnpj').errors) {
-      //Check existence of peopleRelated by cpf, first on sessionStorage, then, if there are at least 400 peopleRelated in the sesionStorage (populated on crm.guard || cash-flow.guard) and none of then are related to the cpf, look on firestore peopleRelated collection
+      // Check existence of peopleRelated by cpf, first on sessionStorage, then,
+      // if there are at least 400 peopleRelated in the sesionStorage (populated on crm.guard || cash-flow.guard)
+      // and none of then are related to the cpf, look on firestore peopleRelated collection
     }
+  }
+
+  onClose(): void {
+    this.dialogRef.close();
   }
 
   onCompanyFormSubmit = (formDirective: FormGroupDirective) => {
@@ -317,45 +324,67 @@ export class DialogCompanyComponent implements OnInit {
     if (this.submitToCreate) {
       this._crud
         .create({
-          collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'userCompanies'],
+          collectionsAndDocs: [
+            this.userData[0]['userType'],
+            this.userData[0]['_id'],
+            'userCompanies'
+          ],
           objectToCreate: this.companyForm.value
         }).then(res => {
           if (this.documentsObject.length > 0) {
             this._crud
               .create({
-                collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'userCompanies', res['id'], 'userCompaniesDocuments'],
+                collectionsAndDocs: [
+                  this.userData[0]['userType'],
+                  this.userData[0]['_id'],
+                  'userCompanies',
+                  res['id'],
+                  'userCompaniesDocuments'
+                ],
                 objectToCreate: {
                   documentsToParse: JSON.stringify(this.documentsObject)
                 }
-              })
-          };
+              });
+          }
 
           if (this.contactsObject.length > 0) {
             this._crud
               .create({
-                collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'userCompanies', res['id'], 'userCompaniesContacts'],
+                collectionsAndDocs: [
+                  this.userData[0]['userType'],
+                  this.userData[0]['_id'],
+                  'userCompanies',
+                  res['id'],
+                  'userCompaniesContacts'
+                ],
                 objectToCreate: {
                   contactsToParse: JSON.stringify(this.contactsObject)
                 }
-              })
-          };
+              });
+          }
 
           if (this.addressesObject.length > 0) {
             this._crud
               .create({
-                collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'userCompanies', res['id'], 'userCompaniesAddresses'],
+                collectionsAndDocs: [
+                  this.userData[0]['userType'],
+                  this.userData[0]['_id'],
+                  'userCompanies',
+                  res['id'],
+                  'userCompaniesAddresses'
+                ],
                 objectToCreate: {
                   addressesToParse: JSON.stringify(this.addressesObject)
                 }
-              })
-          };
+              });
+          }
 
           formDirective.resetForm();
 
           this._snackbar.open('Cadastro feito com sucesso', '', {
             duration: 4000
-          })
-        })
+          });
+        });
     }
   }
 }

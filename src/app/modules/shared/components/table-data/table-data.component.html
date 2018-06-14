@@ -1,7 +1,8 @@
 <div class="tbl-header">
   <div class="action-button-area"  style="margin-top: -20px;" *ngIf="params.header.actionIcon">
-    <button mat-mini-fab *ngFor="let icon of params.header.actionIcon ; let i = index;" (click)="onTableDataOutput($event)">
-      <mat-icon>{{icon.icon}}</mat-icon>
+    <button mat-mini-fab *ngFor="let icon of params.header.actionIcon ; let i = index;" (click)="onTableDataOutput($event, undefined)">
+      <mat-icon [matTooltip]="icon.tooltip" *ngIf="icon.tooltip">{{icon.icon}}</mat-icon>
+      <mat-icon *ngIf="!icon.tooltip">{{icon.icon}}</mat-icon>
     </button>
   </div>
 
@@ -10,24 +11,34 @@
       <tr>
         <th *ngFor="let show of params.list.show; let headerId = index">
           {{show['header']}}
-          <i class="material-icons" (click)="sort($event, headerId)">filter_list</i>
+          <a *ngIf="show.sort">            
+            <i class="material-icons" (click)="sort($event, headerId)">{{show.sort}}</i>
+          </a>
         </th>
       </tr>
     </thead>
-  </table>
-</div>
 
-<div class="tbl-content">
-  <table cellpadding="0" cellspacing="0" border="0">
     <tbody>
-      <div *ngIf='dataSource.length > 0'>
-        <tr *ngFor="let data of dataSource">
-          <td *ngFor="let show of params.list.show">{{data[show['field']]}}</td>
-        </tr>
-      </div>
+      <tr *ngFor="let data of dataSource; let i = index">
+        <td *ngFor="let show of params.list.show, let j = index;">
+          {{data[show['field']]}}
+        </td>
+
+        <td style="min-width: 2%; text-align: right;">
+          <a *ngFor="let icon of params.list.actionIcon ; let i = index;">            
+            <mat-icon [matTooltip]="icon.tooltip" *ngIf="icon.tooltip" (click)="onTableDataOutput($event, data)">
+              {{icon.icon}}
+            </mat-icon>
+  
+            <mat-icon *ngIf="!icon.tooltip" (click)="onTableDataOutput($event, data)">
+              {{icon.icon}}
+            </mat-icon>
+          </a>
+        </td>
+      </tr>
 
       <div *ngIf='dataSource.length < 1'>
-        Nenhum dado cadastrado.
+        Nenhum dado encontrado.
       </div>
     </tbody>
   </table>

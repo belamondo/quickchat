@@ -10,7 +10,7 @@
       <mat-card-title>{{title}}</mat-card-title>
     </mat-card-header>
 
-    <form [formGroup]="companyForm" #formDirective="ngForm" (ngSubmit)="onCompanyFormSubmit(this.formDirective)">
+    <form [formGroup]="companyForm" #formDirective="ngForm">
       <mat-card-header>
         <mat-card-subtitle>Dados mínimos</mat-card-subtitle>
       </mat-card-header>
@@ -145,7 +145,11 @@
 
       <mat-card-actions>
         <div class="flex">
-          <button mat-raised-button [disabled]="companyForm.invalid || isDisabled">{{submitButton}}</button>
+          <button mat-raised-button [disabled]="companyForm.invalid || isDisabled" (click)="onCompanyFormSubmit(this.formDirective)" color="primary">
+            {{submitButton}}
+          </button>
+
+          <button mat-raised-button (click)="onClose();" color="warn">Fechar</button>
         </div>
       </mat-card-actions>
     </form>

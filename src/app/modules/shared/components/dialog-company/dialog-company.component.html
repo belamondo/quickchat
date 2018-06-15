@@ -7,14 +7,11 @@
 <div class="flex">
   <div *ngIf="isStarted" class="container">
     <mat-card-header>
-      <mat-card-title>{{title}}</mat-card-title>
+      <mat-card-title class="dialog-title">{{title}}</mat-card-title>
+      <mat-card-subtitle>Dados mínimos</mat-card-subtitle>
     </mat-card-header>
 
-    <form [formGroup]="companyForm" #formDirective="ngForm" (ngSubmit)="onCompanyFormSubmit(this.formDirective)">
-      <mat-card-header>
-        <mat-card-subtitle>Dados mínimos</mat-card-subtitle>
-      </mat-card-header>
-
+    <form [formGroup]="companyForm" #formDirective="ngForm">
       <mat-card-content>
         <mat-form-field appearance="outline" id="cnpj">
           <mat-label>CNPJ</mat-label>
@@ -86,11 +83,13 @@
           </section>
 
 
-          <!-- <section class="checkbox">
-                <mat-label>Checkboxes</mat-label>
-                <mat-checkbox>Checked</mat-checkbox>
-                <mat-checkbox>Indeterminate</mat-checkbox>
-              </section> -->
+          <!--
+          <section class="checkbox">
+            <mat-label>Checkboxes</mat-label>
+            <mat-checkbox>Checked</mat-checkbox>
+            <mat-checkbox>Indeterminate</mat-checkbox>
+          </section>
+          -->
         </div>
 
         <div class="flex">
@@ -145,7 +144,11 @@
 
       <mat-card-actions>
         <div class="flex">
-          <button mat-raised-button [disabled]="companyForm.invalid || isDisabled">{{submitButton}}</button>
+          <button mat-raised-button [disabled]="companyForm.invalid || isDisabled" (click)="onCompanyFormSubmit(this.formDirective)" color="primary">
+            {{submitButton}}
+          </button>
+
+          <button mat-raised-button (click)="onClose();" color="warn">Fechar</button>
         </div>
       </mat-card-actions>
     </form>

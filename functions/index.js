@@ -14,7 +14,7 @@ const functions = require('firebase-functions');
 /* Find address by zip code */
 exports.findByZipCode = functions.https.onRequest((req, res) => {
     app.post('/user-type', (req, res) => {
-        console.log()
+        console.log(req)
     })
     /*app.get('http://cep.republicavirtual.com.br/web_cep.php?cep='+ req.body.zipCode +'&formato=json', (childReq, childRes) => {
     app.get('http://cep.republicavirtual.com.br/web_cep.php?cep=57046367&formato=json', (childReq, childRes) => {

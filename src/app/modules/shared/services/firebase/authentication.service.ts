@@ -30,14 +30,15 @@ import { CrudService } from './crud.service';
  * Third party class
  */
 import { initializeApp } from 'firebase';
+import { StrategicDataService } from '../strategic-data.service';
 
 const _authentication = initializeApp({
-  apiKey: "AIzaSyBGXN1FkZjubMRWJ-KuAaAnpCTXlHFl9zw",
-  authDomain: "quickstart-belamondo.firebaseapp.com",
-  databaseURL: "https://quickstart-belamondo.firebaseio.com",
-  projectId: "quickstart-belamondo",
-  storageBucket: "quickstart-belamondo.appspot.com",
-  messagingSenderId: "506374782568"
+  apiKey: 'AIzaSyBGXN1FkZjubMRWJ-KuAaAnpCTXlHFl9zw',
+  authDomain: 'quickstart-belamondo.firebaseapp.com',
+  databaseURL: 'https://quickstart-belamondo.firebaseio.com',
+  projectId: 'quickstart-belamondo',
+  storageBucket: 'quickstart-belamondo.appspot.com',
+  messagingSenderId: '506374782568'
 }, 'auth').auth();
 
 @Injectable()
@@ -45,7 +46,8 @@ export class AuthenticationService {
   constructor(
     private _crud: CrudService,
     private _router: Router,
-    public _snackbar: MatSnackBar
+    public _snackbar: MatSnackBar,
+    public _strategicData: StrategicDataService
   ) {}
 
   login = (params) => new Promise((res, rej) =>{ 
@@ -97,21 +99,21 @@ export class AuthenticationService {
       })
       .then(fbRes => {
         if(fbRes && fbRes['user']['uid']) {
-          fbRes['code'] = "l-success-01";
-          fbRes['message'] = "Welcome";
-          
+          fbRes['code'] = 'l-success-01';
+          fbRes['message'] = 'Welcome';
+
           sessionStorage.clear();
-          
+
           this._snackbar.open(fbRes['message'],'',{
             duration: 4000
           })
 
           sessionStorage.setItem('user', JSON.stringify(fbRes))
-          //Check if user loggedin is assigned and on what type of user
-          //Case not assigned, sending to profile choice
+          // Check if user loggedin is assigned and on what type of user
+          // Case not assigned, sending to profile choice
           this._crud.read({
             collectionsAndDocs: ['people', fbRes['user']['uid']]
-          }).then(resPeople => { console.log(resPeople)
+          }).then(resPeople => {
             if (!resPeople[0]) {
               this._crud.read({
                 collectionsAndDocs: ['companies', fbRes['user']['uid']]
@@ -128,7 +130,7 @@ export class AuthenticationService {
                           this._router.navigate(['/main/profile_choice'])
                         } else {
                           if (!sessionStorage.getItem('userData')) {
-                            resEntities[0]['userType'] = "entities";
+                            resEntities[0]['userType'] = 'entities';
                             sessionStorage.setItem('userData', JSON.stringify(resEntities))
                           }
 
@@ -203,8 +205,8 @@ export class AuthenticationService {
               })
             } else {
               if (!sessionStorage.getItem('userData')) {
-                resPeople[0]['userType'] = "people";
-                sessionStorage.setItem('userData', JSON.stringify(resPeople))
+                resPeople[0]['userType'] = 'people';
+                sessionStorage.setItem('userData', JSON.stringify(resPeople));
               }
 
               if (!sessionStorage.getItem('userCompanies')) {
@@ -234,9 +236,10 @@ export class AuthenticationService {
                 ['type', '==', 'companies']
               ]
             }).then(res => {
-              let documents = res['filter'](el => el.name !== "CNPJ")
+              let documents;
+              documents = res['filter'](el => el.name !== 'CNPJ')
 
-              sessionStorage.setItem('companiesDocuments', JSON.stringify(documents))
+              sessionStorage.setItem('companiesDocuments', JSON.stringify(documents));
             })
           }
 

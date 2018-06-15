@@ -31,7 +31,7 @@ export class CompaniesComponent implements OnInit {
   public userData: any;
 
   public userCompanies: any;
-  
+
   constructor(
     private _crud: CrudService,
     private _dialog: MatDialog,
@@ -40,53 +40,70 @@ export class CompaniesComponent implements OnInit {
 
   ngOnInit() {
     this.userData = JSON.parse(sessionStorage.getItem('userData'));
-    
+
     this.isStarted = false;
 
     this._crud.read({
-      collectionsAndDocs: [this.userData[0]['userType'],this.userData[0]['_id'],'userCompanies'],
+      collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'userCompanies'],
     }).then(res => {
       this.userCompanies = res;
 
       this.makeList();
-    })
-
+    });
   }
 
   makeList = () => {
     this.paramsToTableData = {
+      header: {
+        actionIcon: [{
+          icon: 'add',
+          tooltip: 'Adicionar nova empresa'
+        }]
+      },
       list: {
         dataSource: this.userCompanies,
         show: [{
           field: 'cnpj',
-          header: 'CNPJ',
-          sort: 'filter_list'
+          header: 'CNPJ'
         }, {
           field: 'business_name',
           header: 'Nome',
-          sort: 'filter_list'
+          sort: 'sort'
+        }],
+        actionIcon: [{
+          icon: 'edit',
+          tooltip: 'Editar empresa'
         }]
       },
       footer: {
-        
       }
-    }
+    };
 
     this.isStarted = true;
   }
 
-  openCompanyDialog = () => {
-    let dialogRef = this._dialog.open(DialogCompanyComponent, {
-      width: '99%',
-      height: '99%',
+  onOutputFromTableData = (e) => {
+    if (e.icon === 'add') {
+      this.openCompanyDialog(undefined);
+    }
+
+    if (e.icon === 'edit') {
+      this.openCompanyDialog(e.data['_id']);
+    }
+  }
+
+  openCompanyDialog = (idIfUpdate) => {
+    let dialogRef;
+    dialogRef = this._dialog.open(DialogCompanyComponent, {
       data: {
-        isCRM: true
+        isCRM: true,
+        id: idIfUpdate
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log(result)
+        console.log(result);
       }
     });
   }

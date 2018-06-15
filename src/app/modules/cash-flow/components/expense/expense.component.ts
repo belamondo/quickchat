@@ -22,6 +22,11 @@ import { ActivatedRoute, Router } from '@angular/router';
  */
 import { CrudService } from './../../../shared/services/firebase/crud.service';
 
+/**
+ * Components
+ */
+import { DialogExpenseComponent } from '../../../shared/components/dialog-expense/dialog-expense.component';
+
 import { Observable } from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 
@@ -47,9 +52,9 @@ export class ExpenseComponent implements OnInit {
   //Common properties: end
 
   constructor(
+    private _dialog: MatDialog,
     private _crud: CrudService,
     private _route: ActivatedRoute,
-    private _router: Router,
     public _snackbar: MatSnackBar,
     public dialog: MatDialog
   ) { }
@@ -70,20 +75,53 @@ export class ExpenseComponent implements OnInit {
 
   makeList = () => {
     this.paramsToTableData = {
+      header: {
+        actionIcon: [{
+          icon: 'add',
+          tooltip: 'Adicionar nova despesa'
+        }]
+      },
       list: {
         dataSource: this.expenses,
         show: [{
           field: 'name',
           header: 'Despesa',
-          sort: 'filter_list'
+        }],
+        actionIcon: [{
+          icon: 'edit',
+          tooltip: 'Editar despesa'
         }]
       },
-      footer: {
-        
-      }
+      footer: {  }
     }
 
     this.isStarted = true;
+  }
+
+  onOutputFromTableData = (e) => {
+    if (e.icon === 'add') {
+      this.openCompanyDialog(undefined);
+    }
+
+    if (e.icon === 'edit') {
+      this.openCompanyDialog(e.data['_id']);
+    }
+  }
+
+  openCompanyDialog = (idIfUpdate) => {
+    let dialogRef;
+    dialogRef = this._dialog.open(DialogExpenseComponent, {
+      data: {
+        isExpense: true,
+        id: idIfUpdate
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log(result);
+      }
+    });
   }
 
   expenseFormInit = () => {

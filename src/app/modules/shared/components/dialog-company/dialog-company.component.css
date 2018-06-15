@@ -11,6 +11,14 @@ section button {
     cursor: pointer;
 }
 
+.container {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.dialog-title {
+    font-size: large;
+}
+
 .subtext {
     font-size: 10px;
     margin-right: 10px;

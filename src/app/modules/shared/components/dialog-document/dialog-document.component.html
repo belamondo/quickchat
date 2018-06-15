@@ -1,37 +1,45 @@
-<h2 mat-dialog-title>Adicionar documento</h2>
-<form [formGroup]="documentForm">
-  <div class="flex">
-    <mat-form-field appearance="outline">
-      <mat-select placeholder="Tipo de contato *" formControlName="type">
-        <mat-option *ngFor="let document of data.documents" [value]="document.mask">
-          {{ document.name }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+<div *ngIf="!isStarted" class="container">
+  <div class="spinner-container">
+    <mat-spinner></mat-spinner>
+  </div>
+</div>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Valor</mat-label>
-      <input matInput placeholder="Identificador do contato" type="text" formControlName="value" required [textMask]="{mask: mask[documentForm.value.type]}">
-    </mat-form-field>
-  </div>
+<div *ngIf="isStarted" class="container">
+  <h2 mat-dialog-title>Adicionar documento</h2>
+  <form [formGroup]="documentForm">
+    <div class="flex">
+      <mat-form-field appearance="outline">
+        <mat-select placeholder="Tipo de documento *" formControlName="type">
+          <mat-option *ngFor="let document of documents" [value]="document.mask">
+            {{ document.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
   
-  <div class="flex">
-    <mat-form-field appearance="outline">
-      <mat-label>Data de emissão</mat-label>
-      <input matInput placeholder="Digite data" [textMask]="{mask: mask.date, pipe: autoCorrectedDatePipe}" formControlName="makingDate">
-    </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Valor</mat-label>
+        <input matInput placeholder="Identificador do contato" type="text" formControlName="value" required [textMask]="{mask: mask[documentForm.value.type]}">
+      </mat-form-field>
+    </div>
+    
+    <div class="flex">
+      <mat-form-field appearance="outline">
+        <mat-label>Data de emissão</mat-label>
+        <input matInput placeholder="Digite data" [textMask]="{mask: mask.date, pipe: autoCorrectedDatePipe}" formControlName="makingDate">
+      </mat-form-field>
+    
+      <mat-form-field appearance="outline">
+        <mat-label>Data de validade</mat-label>
+        <input matInput placeholder="Digite data" [textMask]="{mask: mask.date, pipe: autoCorrectedDatePipe}" formControlName="validityDate">
+      </mat-form-field>
+    </div>
   
-    <mat-form-field appearance="outline">
-      <mat-label>Data de validade</mat-label>
-      <input matInput placeholder="Digite data" [textMask]="{mask: mask.date, pipe: autoCorrectedDatePipe}" formControlName="validityDate">
-    </mat-form-field>
-  </div>
-
-  <div class="flex">
-    <button mat-button [mat-dialog-close]="{
-        type: documentForm.value.type,
-        value: documentForm.value.value
-      }" [disabled]="documentForm.invalid">Adicionar</button>
-    <button mat-button [mat-dialog-close]="false">Cancelar</button>
-  </div>
-</form>
+    <div class="flex">
+      <button mat-button [mat-dialog-close]="{
+          type: documentForm.value.type,
+          value: documentForm.value.value
+        }" [disabled]="documentForm.invalid">Adicionar</button>
+      <button mat-button [mat-dialog-close]="false">Cancelar</button>
+    </div>
+  </form>
+</div>

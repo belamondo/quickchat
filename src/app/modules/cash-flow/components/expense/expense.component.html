@@ -4,10 +4,11 @@
   </div>
 </mat-card>
 
-<div style="max-width: 800px; margin: auto;">
+<div style="margin-top: 20px;" class="flex container">
 
-  <table-data [params]="paramsToTableData"></table-data>
+  <table-data [params]="paramsToTableData" (changeTable)="onOutputFromTableData($event)"></table-data>
 
+  <!--
   <mat-card *ngIf="isStarted" class="container">
     <form [formGroup]="expenseForm" #formDirective="ngForm" (ngSubmit)="onExpenseFormSubmit(this.formDirective)">
       <mat-card-header>
@@ -47,5 +48,6 @@
       <button mat-raised-button [disabled]="expenseForm.invalid" style="width: 100%;">{{submitButton}}</button>
     </form>
   </mat-card>
+  -->
 
 </div>

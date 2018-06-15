@@ -14,29 +14,51 @@ table{
   width:100%;
   table-layout: fixed;
 }
+
+.action-button-area {
+  position: absolute;
+  margin-top: -20px;
+  right: 30px;
+}
+
+.icon {
+  float: right;
+}
+
+.link-disable {
+  cursor: default;
+  color: lightgray;
+}
+
+.search {
+  width: 80%;
+}
+
 .tbl-header{
-  background-color: rgba(39, 28, 28, 0.3);
-  box-shadow: 0 4px 40px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  background-color: #fff;
 }
 
 .tbl-body{
   font-size: small;
   font-family: Arial, Helvetica, sans-serif;
+  background: rgb(247, 247, 247)
 }
 
 .tbl-content{
-  max-height:300px;
+  max-width: 1024px;
+  /*max-height:300px;*/
   overflow-x:auto;
+  margin: auto;
   margin-top: 0px;
-  border: 1px solid rgba(34, 21, 21, 0.3);
-  box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.2), 0 0 20px 0 rgba(0, 0, 0, 0.19);
+  border-radius: 5px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
+  
 }
 
 .tbl-footer{
-  background-color: rgba(39, 28, 28, 0.3);
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  background-color: #fff;
+  border-radius: 3px;
 }
-
 
 .tbl-footer td:nth-child(1) {
   width: 20px;
@@ -59,9 +81,10 @@ th{
   text-align: left;
   font-weight: 900;
   font-size: 12px;
-  color: #fff;
+  color: #000;
   text-transform: uppercase;
 }
+
 td{
   padding: 15px;
   text-align: left;
@@ -72,6 +95,23 @@ td{
   border-bottom: solid 1px rgba(34, 21, 21, 0.1);
 }
 
+thead {
+  background: rgb(247, 247, 247);
+  border-bottom: solid 1px rgba(34, 21, 21, 0.1);
+}
+
+tbody {
+  background: white;
+}
+
+tbody tr:hover {
+  background: rgb(247, 247, 247);
+  color: white;
+}
+
+tfoot {
+  background: rgb(247, 247, 247);
+}
 
 /* demo styles */
 

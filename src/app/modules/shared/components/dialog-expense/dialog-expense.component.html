@@ -1,0 +1,39 @@
+<div class="container">
+  <form [formGroup]="expenseForm" #formDirective="ngForm" (ngSubmit)="onExpenseFormSubmit(this.formDirective)">
+    <mat-card-header class="header">
+      <mat-card-title class="title">Cadastro de tipo de despesa</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <mat-form-field appearance="outline">
+        <mat-label>Nome</mat-label>
+        <input matInput placeholder="Nome da despesa" type="text" formControlName="name" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Modalidade</mat-label>
+        <mat-select placeholder="Modalidade da despesa" formControlName="type" required>
+          <mat-option value="expense">Despesa adm</mat-option>
+          <mat-option value="fixed-cost">Custo Fixo</mat-option>
+          <mat-option value="variable-cost">Custo Variável</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div *ngFor="let field of fields; let i = index">
+        <mat-form-field appearance="outline" style="width: 85%">
+          <mat-label>{{field}}</mat-label>
+          <input matInput placeholder="{{field}}" type="text" formControlName="{{field}}">
+        </mat-form-field>
+        <i class="material-icons" style="cursor: pointer;" (click)="removeField(i)">
+          remove_circle
+        </i>
+      </div>
+    </mat-card-content>
+    
+    <div class="button-container">
+      <button mat-raised-button type="button" (click)="addField()" class="button">Adicionar campo</button>
+      <button mat-raised-button [disabled]="expenseForm.invalid" class="button">{{submitButton}}</button>
+    </div>
+    
+  </form>
+</div>

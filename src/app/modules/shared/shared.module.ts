@@ -35,7 +35,7 @@ import { DialogAddressComponent } from './components/dialog-address/dialog-addre
 import { DialogCompanyComponent } from './components/dialog-company/dialog-company.component';
 import { DialogContactComponent } from './components/dialog-contact/dialog-contact.component';
 import { DialogDocumentComponent } from './components/dialog-document/dialog-document.component';
-import { DialogExpenseComponent } from './components/dialog-expense/dialog-expense.component';
+import { DialogExpenseComponent, SubDialogExpenseComponent } from './components/dialog-expense/dialog-expense.component';
 import { DialogPersonComponent } from './components/dialog-person/dialog-person.component';
 import { DialogRelationshipComponent } from './components/dialog-relationship/dialog-relationship.component';
 import { TableDataComponent } from './components/table-data/table-data.component';
@@ -57,6 +57,7 @@ import { TopbarMenuComponent } from './components/topbar-menu/topbar-menu.compon
     DialogDocumentComponent,
     DialogPersonComponent,
     DialogRelationshipComponent,
+    SubDialogExpenseComponent,
     MaterialModule,
     ReactiveFormsModule,
     RouterModule,
@@ -77,6 +78,7 @@ import { TopbarMenuComponent } from './components/topbar-menu/topbar-menu.compon
     DialogExpenseComponent,
     DialogPersonComponent,
     DialogRelationshipComponent,
+    SubDialogExpenseComponent,
     TableDataComponent,
     TopbarMenuComponent,
   ], entryComponents: [
@@ -88,6 +90,7 @@ import { TopbarMenuComponent } from './components/topbar-menu/topbar-menu.compon
     DialogExpenseComponent,
     DialogPersonComponent,
     DialogRelationshipComponent,
+    SubDialogExpenseComponent,
   ]
 })
 export class SharedModule { }

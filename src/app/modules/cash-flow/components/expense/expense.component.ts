@@ -13,7 +13,6 @@ import {
   MatDialog,
   MatDialogRef,
   MAT_DIALOG_DATA,
-  MatSnackBar
 } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -37,78 +36,67 @@ import {map, startWith} from 'rxjs/operators';
 })
 export class ExpenseComponent implements OnInit {
 
-  //Common properties: start
-  public expenseForm: FormGroup;
+  // Common properties: start
   public isStarted: boolean;
-  public paramToSearch: any;
-  public submitButton: string;
-  public submitToCreate: boolean;
-  public submitToUpdate: boolean;
-  public title: string;
-  public fields: any = [];
   public userData: any;
-  public expenses:any = [{name: 'luz'}, {name: 'aluguel'}, {name: 'segurança'}];
   public paramsToTableData: any;
-  //Common properties: end
+  // Common properties: end
 
   constructor(
     private _dialog: MatDialog,
     private _crud: CrudService,
     private _route: ActivatedRoute,
-    public _snackbar: MatSnackBar,
     public dialog: MatDialog
   ) { }
 
   ngOnInit() {
     this.userData = JSON.parse(sessionStorage.getItem('userData'));
-
-    this.expenseForm = new FormGroup({
-      name: new FormControl(null, Validators.required),
-      type: new FormControl(null, Validators.required)
-    });
-
-    this.expenseFormInit();
-
     this.makeList();
 
   }
 
   makeList = () => {
-    this.paramsToTableData = {
-      header: {
-        actionIcon: [{
-          icon: 'add',
-          tooltip: 'Adicionar nova despesa'
-        }]
-      },
-      list: {
-        dataSource: this.expenses,
-        show: [{
-          field: 'name',
-          header: 'Despesa',
-        }],
-        actionIcon: [{
-          icon: 'edit',
-          tooltip: 'Editar despesa'
-        }]
-      },
-      footer: {  }
-    }
+    /* Get expenses types from database */
+    this._crud.read({
+      collectionsAndDocs: [this.userData[0]['userType'], this.userData[0]['_id'], 'expensesTypes'],
+    }).then(res => {
 
-    this.isStarted = true;
+      this.paramsToTableData = {
+        header: {
+          actionIcon: [{
+            icon: 'add',
+            tooltip: 'Adicionar nova despesa'
+          }]
+        },
+        list: {
+          dataSource: res,
+          show: [{
+            field: 'name',
+            header: 'Despesa',
+          }],
+          actionIcon: [{
+            icon: 'edit',
+            tooltip: 'Editar despesa'
+          }]
+        },
+        footer: {  }
+      };
+
+      this.isStarted = true;
+    });
   }
 
   onOutputFromTableData = (e) => {
     if (e.icon === 'add') {
-      this.openCompanyDialog(undefined);
+      this.openExpenseDialog(undefined);
     }
 
     if (e.icon === 'edit') {
-      this.openCompanyDialog(e.data['_id']);
+      this.openExpenseDialog(e.data['_id']);
     }
   }
 
-  openCompanyDialog = (idIfUpdate) => {
+  openExpenseDialog = (idIfUpdate) => {
     let dialogRef;
     dialogRef = this._dialog.open(DialogExpenseComponent, {
       data: {
@@ -122,117 +110,6 @@ export class ExpenseComponent implements OnInit {
         console.log(result);
       }
     });
-  }
-
-  expenseFormInit = () => {
-    this._route.params.subscribe(params => {
-      if (params.id) {
-        this.paramToSearch = params.id;
-        this.submitToCreate = false;
-        this.submitToUpdate = true;
-        this.title = "Atualizar tipo de despesa";
-        this.submitButton = "Atualizar";
-
-        let param = this.paramToSearch.replace(':', '');
-
-        this._crud.read({
-          collectionsAndDocs: [this.userData[0]['userType'],this.userData[0]['_id'],'expensesTypes',param],
-        }).then(res => {
-          this.expenseForm.patchValue(res[0])
-
-          /* Check if has additionals fields */
-          if(Object.keys(res[0]).length > 2){
-            for (var key in res[0]) {
-              /* Create form control if it is a additional field */
-              if(key !== 'name' && key !== 'type'){
-                this.expenseForm.addControl(key, new FormControl(res[0][key]));
-                this.fields.push(key);
-              };
-            }
-          }
-
-          this.isStarted = true;
-        })
-      } else {
-        this.submitToCreate = true;
-        this.submitToUpdate = false;
-        this.title = "Cadastrar tipo de despesa";
-        this.submitButton = "Cadastrar";
-
-        this.isStarted = true;
-      }
-    })
-  }
-
-  onExpenseFormSubmit = (formDirective: FormGroupDirective) => {
-    if (this.submitToUpdate) {
-      this._crud
-        .update({
-          collectionsAndDocs: [this.userData[0]['userType'],this.userData[0]['_id'],'expensesTypes',this.paramToSearch.replace(':', '')],
-          objectToUpdate: this.expenseForm.value
-        }).then(res => {
-          formDirective.resetForm();
-          this.fields = [];
-          
-          this._snackbar.open('Atualização feita com sucesso', '', {
-            duration: 4000
-          })
-        })
-    }
-
-    if (this.submitToCreate) {
-      this._crud
-      .create({
-        collectionsAndDocs: [this.userData[0]['userType'],this.userData[0]['_id'],'expensesTypes'],
-        objectToCreate: this.expenseForm.value
-      }).then(res => { 
-        formDirective.resetForm();
-        this.fields = [];
-        
-        this._snackbar.open('Cadastro feito com sucesso', '', {
-          duration: 4000
-        })
-      })
-    }
-  }
-
-  addField = () => {
-    let dialogRef = this.dialog.open(DialogFormExpenseComponent, {
-      height: '250px',
-      width: '600px',
-      data: { title: 'Adicionar campo', field: 'Nome do campo', buttonDescription: 'Adicionar' }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if(result){
-        this.expenseForm.addControl(result, new FormControl(null));
-        this.fields.push(result);
-      }
-    });
-  }
-
-  removeField = (index) => {
-    this.expenseForm.removeControl(this.fields[index]);
-    this.fields.splice(index, 1);
-  }
-
-}
-
-/**
- * Dialog
- */
-@Component({
-  selector: 'dialog-form',
-  templateUrl: './dialog-form.html',
-})
-export class DialogFormExpenseComponent {
-
-  constructor(
-    public dialogRef: MatDialogRef<DialogFormExpenseComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any) { }
-
-  onNoClick(): void {
-    this.dialogRef.close();
   }
 
 }

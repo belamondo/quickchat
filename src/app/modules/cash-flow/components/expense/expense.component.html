@@ -4,50 +4,8 @@
   </div>
 </mat-card>
 
-<div style="margin-top: 20px;" class="flex container">
+<div style="margin-top: 20px;" class="flex container" *ngIf="isStarted">
 
   <table-data [params]="paramsToTableData" (changeTable)="onOutputFromTableData($event)"></table-data>
-
-  <!--
-  <mat-card *ngIf="isStarted" class="container">
-    <form [formGroup]="expenseForm" #formDirective="ngForm" (ngSubmit)="onExpenseFormSubmit(this.formDirective)">
-      <mat-card-header>
-        <mat-card-title>Cadastro de tipo de despesa</mat-card-title>
-      </mat-card-header>
-
-      <hr>
-      <mat-card-content>
-        <mat-form-field appearance="outline">
-          <mat-label>Nome</mat-label>
-          <input matInput placeholder="Nome da despesa" type="text" formControlName="name" required>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Modalidade</mat-label>
-          <mat-select placeholder="Modalidade da despesa" formControlName="type" required>
-            <mat-option value="expense">Despesa adm</mat-option>
-            <mat-option value="fixed-cost">Custo Fixo</mat-option>
-            <mat-option value="variable-cost">Custo Variável</mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <div *ngFor="let field of fields; let i = index">
-          <mat-form-field appearance="outline" style="width: 85%">
-            <mat-label>{{field}}</mat-label>
-            <input matInput placeholder="{{field}}" type="text" formControlName="{{field}}">
-          </mat-form-field>
-          <i class="material-icons" style="cursor: pointer;" (click)="removeField(i)">
-            remove_circle
-          </i>
-        </div>
-
-        <button mat-raised-button type="button" (click)="addField()" style="width: 100%;">Adicionar campo</button>
-      </mat-card-content>
-      <hr>  
-      
-      <button mat-raised-button [disabled]="expenseForm.invalid" style="width: 100%;">{{submitButton}}</button>
-    </form>
-  </mat-card>
-  -->
 
 </div>

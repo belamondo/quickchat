@@ -7,13 +7,15 @@
 <mat-card *ngIf="isStarted" class="container">
     <div id="room-action">
         <form [formGroup]="chatSearchForm">
-            <mat-form-field>
-                <input matInput placeholder="Novo tópico" formControlName="room">
-            </mat-form-field>
+            <div class="flex">
+                <mat-form-field>
+                    <input matInput placeholder="Novo tópico" formControlName="room">
+                </mat-form-field>
 
-            <button mat-mini-fab (click)="createRoomList()">
-                <mat-icon>add</mat-icon>
-            </button>
+                <button mat-mini-fab (click)="createRoomList()">
+                    <mat-icon>add</mat-icon>
+                </button>
+            </div>
         </form>
     </div>
 
@@ -26,18 +28,25 @@
         </div>
     </div>
 
-    <div id="chat" *ngIf="chatContent && chatContent[0] && chatContent[0].length > 0">
+    <div id="chat" *ngIf="chatContent != null && chatContent?.length > 0">
+        <div *ngFor="let data of chatContent">{{data.name}}: {{data.message}}</div>
+
         <form [formGroup]="chatForm">
-            <mat-form-field>
-                <input matInput placeholder="Mensagem" formControlName="message">
-            </mat-form-field>
+            <div class="flex">
+                <mat-form-field>
+                    <input matInput placeholder="Mensagem" formControlName="message" (enter)="sendMessage()">
+                </mat-form-field>
+
+                <button mat-mini-fab (click)="sendMessage()">
+                    <mat-icon>send</mat-icon>
+                </button>
+            </div>
         </form>
     </div>
 
-    <p *ngFor="let data of chatContent">{{data.name}}: {{data.message}}</p>
-    <br>
-    <div id="chat" >
-        <p *ngIf="chatContent?.length < 1">Ninguém escreveu neste tópico ainda.</p>
+
+    <div id="chat" *ngIf="chatContent != null && chatContent?.length < 1">
+        <p>Ninguém escreveu neste tópico ainda.</p>
 
         <form [formGroup]="chatForm">
             <div class="flex">

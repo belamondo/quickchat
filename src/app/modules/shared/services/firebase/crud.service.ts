@@ -13,12 +13,12 @@ import {
 } from 'firebase';
 
 const _firestore = initializeApp({
-  apiKey: 'AIzaSyBGXN1FkZjubMRWJ-KuAaAnpCTXlHFl9zw',
-  authDomain: 'quickstart-belamondo.firebaseapp.com',
-  databaseURL: 'https://quickstart-belamondo.firebaseio.com',
-  projectId: 'quickstart-belamondo',
-  storageBucket: 'quickstart-belamondo.appspot.com',
-  messagingSenderId: '506374782568'
+  apiKey: "AIzaSyCYoHZwVNJfJ-e1R1ar9_sg0W2PLbRvXtI",
+  authDomain: "tem-example.firebaseapp.com",
+  databaseURL: "https://tem-example.firebaseio.com",
+  projectId: "tem-example",
+  storageBucket: "tem-example.appspot.com",
+  messagingSenderId: "489891966787"
 }, 'database').firestore();
 
 @Injectable()

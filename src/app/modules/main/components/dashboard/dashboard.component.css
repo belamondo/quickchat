@@ -4,6 +4,7 @@
     border-radius: 25px;
     padding: 10px;
     width: fit-content;
+    cursor: pointer;
 }
 
 #room-list {

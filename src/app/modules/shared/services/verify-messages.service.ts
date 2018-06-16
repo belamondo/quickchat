@@ -17,8 +17,7 @@ export class VerifyMessagesService {
     }).then(messages => {
       observer.next(messages);
     });
-  }
-  )
+  })
 
   // getMessages(room): Observable<Object[]> {
   //   return this._crud.read({

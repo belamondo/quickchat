@@ -31,6 +31,7 @@ export class DashboardComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.chatContent = null;
     this.chatForm = new FormGroup({
       message: new FormControl(null)
     });
@@ -46,6 +47,8 @@ export class DashboardComponent implements OnInit {
   }
 
   createRoomList = () => {
+    let room;
+    room = this.chatSearchForm.value.room;
     this.isStarted = false;
 
     this._crud
@@ -70,6 +73,8 @@ export class DashboardComponent implements OnInit {
           this.rooms.push(this.chatSearchForm.get('room').value);
           this.chatSearchForm.reset();
         }
+
+        this.openChatRoom(room);
       });
   }
 
@@ -81,8 +86,13 @@ export class DashboardComponent implements OnInit {
     }).then(messages => {
       this.chatContent = messages;
     });
+
+    this.vMessages.getMessages(room).subscribe(mess => {
+      this.chatContent = mess;
+    });
+
     setInterval(() => {
-      this.vMessages.getMessages(room).subscribe(mess => {
+      this.vMessages.getMessages(this.currentRoom).subscribe(mess => {
         this.chatContent = mess;
       });
     }, 1000);
@@ -90,22 +100,41 @@ export class DashboardComponent implements OnInit {
 
   removeFromRoomArray = (index) => {
     this.rooms.splice(index, 1);
+
+    this.chatContent = null;
   }
 
   sendMessage = () => {
     let newMessageDoc;
     newMessageDoc = Date.now() + this.user['user']['uid'];
-    console.log(this.currentRoom);
+
     this._crud
-      .update({
-        collectionsAndDocs: ['chats', this.currentRoom.toLowerCase(), 'messages', newMessageDoc],
-        objectToUpdate: {
-          message: this.chatForm.value.message,
-          owner: this.user['user']['uid'],
-          name: this.userData[0]['name'],
-          timestamp: Date.now()
-        }
+    .update({
+      collectionsAndDocs: ['chats', this.currentRoom.toLowerCase(), 'messages', newMessageDoc],
+      objectToUpdate: {
+        message: this.chatForm.value.message,
+        owner: this.user['user']['uid'],
+        name: this.userData[0]['name'],
+        timestamp: Date.now()
+      }
+    }).then(res => {
+      this.vMessages.getMessages(this.currentRoom).subscribe(mess => {
+        this.chatContent = mess;
       });
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
     this.chatForm.reset();
   }
 }

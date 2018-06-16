@@ -11,13 +11,18 @@
                 <input matInput placeholder="Novo tópico" formControlName="room">
             </mat-form-field>
 
-            <button mat-mini-fab (click)="createRoomList()"><mat-icon>add</mat-icon></button>
+            <button mat-mini-fab (click)="createRoomList()">
+                <mat-icon>add</mat-icon>
+            </button>
         </form>
     </div>
 
-    <div id="room-list" *ngIf="rooms && rooms.length > 0">
+    <div id="room-list">
         <div *ngFor="let room of rooms; let i = index;" class="room" (click)="openChatRoom(room)">
-            {{room}} <button mat-mini-fab (click)="removeFromRoomArray(i)"><mat-icon color="default">close</mat-icon></button>
+            {{room}}
+            <button mat-mini-fab (click)="removeFromRoomArray(i)">
+                <mat-icon color="default">close</mat-icon>
+            </button>
         </div>
     </div>
 
@@ -29,15 +34,21 @@
         </form>
     </div>
 
-    <div id="chat" *ngIf="chatContent && (!chatContent[0] || chatContent[0].length < 1)">
-        Ninguém escreveu neste tópico ainda.
+    <p *ngFor="let data of chatContent">{{data.name}}: {{data.message}}</p>
+    <br>
+    <div id="chat" >
+        <p *ngIf="chatContent?.length < 1">Ninguém escreveu neste tópico ainda.</p>
 
         <form [formGroup]="chatForm">
-            <mat-form-field>
-                <input matInput placeholder="Mensagem" formControlName="message">
-            </mat-form-field>
+            <div class="flex">
+                <mat-form-field>
+                    <input matInput placeholder="Mensagem" formControlName="message" (enter)="sendMessage()">
+                </mat-form-field>
 
-            <button mat-mini-fab (click)="sendMessage()"><mat-icon>send</mat-icon></button>
+                <button mat-mini-fab (click)="sendMessage()">
+                    <mat-icon>send</mat-icon>
+                </button>
+            </div>
         </form>
     </div>
 </mat-card>

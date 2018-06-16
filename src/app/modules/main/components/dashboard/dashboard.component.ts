@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 
 /**
@@ -6,6 +6,8 @@ import { FormGroup, FormControl } from '@angular/forms';
  */
 import { CrudService } from '../../../shared/services/firebase/crud.service';
 import { timestamp } from 'rxjs/operators';
+import { VerifyMessagesService } from '../../../shared/services/verify-messages.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,6 +15,7 @@ import { timestamp } from 'rxjs/operators';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
+  // @Output() verifyMessages = new EventEmitter<any>();
   public chatContent: any;
   public chatForm: FormGroup;
   public chatSearchForm: FormGroup;
@@ -23,7 +26,8 @@ export class DashboardComponent implements OnInit {
   public userData: any;
 
   constructor(
-    private _crud: CrudService
+    private _crud: CrudService,
+    public vMessages: VerifyMessagesService
   ) { }
 
   ngOnInit() {
@@ -45,28 +49,28 @@ export class DashboardComponent implements OnInit {
     this.isStarted = false;
 
     this._crud
-    .read({
-      collectionsAndDocs: ['chats', this.chatSearchForm.value.room.toLowerCase()]
-    }).then(res => {
-      if (!res[0] || res[0].length > 0) {
-        this._crud
-        .update({
-          collectionsAndDocs: ['chats', this.chatSearchForm.value.room.toLowerCase()],
-          objectToUpdate: {
-            createdAt: new Date(),
-            owner: this.user['user']['uid']
-          }
-        }).then(newRoom => {
+      .read({
+        collectionsAndDocs: ['chats', this.chatSearchForm.value.room.toLowerCase()]
+      }).then(res => {
+        if (!res[0] || res[0].length > 0) {
+          this._crud
+            .update({
+              collectionsAndDocs: ['chats', this.chatSearchForm.value.room.toLowerCase()],
+              objectToUpdate: {
+                createdAt: new Date(),
+                owner: this.user['user']['uid']
+              }
+            }).then(newRoom => {
+              this.isStarted = true;
+              this.rooms.push(this.chatSearchForm.get('room').value);
+              this.chatSearchForm.reset();
+            });
+        } else {
           this.isStarted = true;
           this.rooms.push(this.chatSearchForm.get('room').value);
           this.chatSearchForm.reset();
-        });
-      } else {
-        this.isStarted = true;
-        this.rooms.push(this.chatSearchForm.get('room').value);
-        this.chatSearchForm.reset();
-      }
-    });
+        }
+      });
   }
 
   openChatRoom = (room) => {
@@ -77,6 +81,11 @@ export class DashboardComponent implements OnInit {
     }).then(messages => {
       this.chatContent = messages;
     });
+    setInterval(() => {
+      this.vMessages.getMessages(room).subscribe(mess => {
+        this.chatContent = mess;
+      });
+    }, 1000);
   }
 
   removeFromRoomArray = (index) => {
@@ -88,14 +97,15 @@ export class DashboardComponent implements OnInit {
     newMessageDoc = Date.now() + this.user['user']['uid'];
     console.log(this.currentRoom);
     this._crud
-    .update({
-      collectionsAndDocs: ['chats', this.currentRoom.toLowerCase(), 'messages', newMessageDoc],
-      objectToUpdate: {
-        message: this.chatForm.value.message,
-        owner: this.user['user']['uid'],
-        name: this.userData[0]['name'],
-        timestamp: Date.now()
-      }
-    });
+      .update({
+        collectionsAndDocs: ['chats', this.currentRoom.toLowerCase(), 'messages', newMessageDoc],
+        objectToUpdate: {
+          message: this.chatForm.value.message,
+          owner: this.user['user']['uid'],
+          name: this.userData[0]['name'],
+          timestamp: Date.now()
+        }
+      });
+    this.chatForm.reset();
   }
 }

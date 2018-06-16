@@ -91,11 +91,6 @@ export class DashboardComponent implements OnInit {
       this.chatContent = mess;
     });
 
-    setInterval(() => {
-      this.vMessages.getMessages(this.currentRoom).subscribe(mess => {
-        this.chatContent = mess;
-      });
-    }, 1000);
   }
 
   removeFromRoomArray = (index) => {
@@ -118,9 +113,6 @@ export class DashboardComponent implements OnInit {
         timestamp: Date.now()
       }
     }).then(res => {
-      this.vMessages.getMessages(this.currentRoom).subscribe(mess => {
-        this.chatContent = mess;
-      });
     });
 
 

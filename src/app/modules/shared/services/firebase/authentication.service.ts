@@ -1,6 +1,6 @@
 /**
  * @description Deals with authentication properties and methods based on firebase authentication service
- * 
+ *
  * @method login() - validates or not the authentication of user and its password
  *    @param {Object} params - required
  *    @param {string} params.loginMode - required - possible values: emailAndPassword
@@ -8,11 +8,11 @@
  *    @param {string} params.password - required
  *    @param {string} params.navigateTo - required - e.g.: '/main'
  *        @returns default data from firebase authentication method (according to loginMode) plus code and message hard coded if login is successful
- * 
+ *
  * @method logout - destroys loggedin user session using firebase method
  *    @param {string} params.navigateTo - required - e.g.: '/login'
  *    @returns code and message according to succesful or failed logout
- * 
+ *
  * @method setUser - returns user data if there is one loggedin
  *    @returns user id and firebase object related to loggedin user if there is one, and false if there is no user loggedin
  */
@@ -33,12 +33,12 @@ import { initializeApp } from 'firebase';
 import { StrategicDataService } from '../strategic-data.service';
 
 const _authentication = initializeApp({
-  apiKey: 'AIzaSyCYoHZwVNJfJ-e1R1ar9_sg0W2PLbRvXtI',
-    authDomain: 'tem-example.firebaseapp.com',
-    databaseURL: 'https://tem-example.firebaseio.com',
-    projectId: 'tem-example',
-    storageBucket: 'tem-example.appspot.com',
-    messagingSenderId: '489891966787'
+     apiKey: "AIzaSyAp36V2YYbBeKyDuqkDxnmoiIctuz-Qn10",
+    authDomain: "ryzzan-1d7f1.firebaseapp.com",
+    databaseURL: "https://ryzzan-1d7f1.firebaseio.com",
+    projectId: "ryzzan-1d7f1",
+    storageBucket: "ryzzan-1d7f1.appspot.com",
+    messagingSenderId: "129749049624"
 }, 'auth').auth();
 
 @Injectable()
@@ -141,7 +141,7 @@ export class AuthenticationService {
                               sessionStorage.setItem('userCompanies', JSON.stringify(resUserCompanies))
                             })
                           }
-                
+
                           if (!sessionStorage.getItem('userPeople')) {
                             this._crud.read({
                               collectionsAndDocs: ['entities', fbRes['user']['uid'],'userPeople']
@@ -191,7 +191,7 @@ export class AuthenticationService {
                       sessionStorage.setItem('userCompanies', JSON.stringify(resUserCompanies))
                     })
                   }
-        
+
                   if (!sessionStorage.getItem('userPeople')) {
                     this._crud.read({
                       collectionsAndDocs: ['companies', fbRes['user']['uid'],'userPeople']
@@ -216,7 +216,7 @@ export class AuthenticationService {
                   sessionStorage.setItem('userCompanies', JSON.stringify(resUserCompanies))
                 })
               }
-    
+
               if (!sessionStorage.getItem('userPeople')) {
                 this._crud.read({
                   collectionsAndDocs: ['people', fbRes['user']['uid'],'userPeople']
@@ -277,7 +277,7 @@ export class AuthenticationService {
     }
   })
 
-  logout = (params) => new Promise((res, rej) => {  
+  logout = (params) => new Promise((res, rej) => {
     if(!params) {
       res({
         code: 'lg-error-01',
@@ -306,7 +306,7 @@ export class AuthenticationService {
           id: resAuth.uid,
           fbObject: resAuth
         }
-    
+
         res(user);
       } else {
         res(false);

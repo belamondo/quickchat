@@ -12,9 +12,9 @@ export class VerifyMessagesService {
   constructor(private _crud: CrudService) { }
 
   getMessages = (room) => new Observable(observer => {
-    this._crud.read({
+    this._crud.readMsg({
       collectionsAndDocs: ['chats', room.toLowerCase(), 'messages']
-    }).then(messages => {
+    }).subscribe(messages => {
       observer.next(messages);
     });
   })

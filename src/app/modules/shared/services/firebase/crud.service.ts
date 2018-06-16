@@ -278,7 +278,7 @@ export class CrudService {
 
     stringToFilter += stringCreatingFilter;
     functionToFilter = eval(stringToFilter);
-
+    console.log(stringToFilter);
     functionToFilter
       .set(params.objectToUpdate)
       .then(res => {

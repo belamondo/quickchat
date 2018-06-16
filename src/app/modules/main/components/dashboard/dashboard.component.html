@@ -5,5 +5,13 @@
 </mat-card>
 
 <mat-card *ngIf="isStarted" class="container">
-    <p>Welcome</p>
+    <td>
+        <form [formGroup]="chatSearchForm">
+            <mat-form-field>
+                <input matInput placeholder="Novo tópico" formControlName="room">
+            </mat-form-field>
+
+            <button mat-fab (click)="openChatRoom()"><mat-icon>add</mat-icon></button>
+        </form>
+    </td>
 </mat-card>

@@ -4,7 +4,7 @@
  * @method login() - validates or not the authentication of user and its password
  *    @param {Object} params - required
  *    @param {string} params.loginMode - required - possible values: emailAndPassword
- *    @param {string} params.user -required - possible values: will depend on loginMode (a validate email so far, based on emailAndPassword loginMode)
+ *    @param {string} params.user - required - possible values: will depend on loginMode (a validate email so far, based on emailAndPassword loginMode)
  *    @param {string} params.password - required
  *    @param {string} params.navigateTo - required - e.g.: '/main'
  *        @returns default data from firebase authentication method (according to loginMode) plus code and message hard coded if login is successful
@@ -50,51 +50,51 @@ export class AuthenticationService {
     public _strategicData: StrategicDataService
   ) {}
 
-  login = (params) => new Promise((res, rej) =>{ 
-    //Set params errors: start
-    if(!params) {
+  login = (params) => new Promise((res, rej) =>{
+    // Set params errors: start
+    if (!params) {
       res({
         code: 'l-error-01',
         message: 'Defina parâmetros mínimos'
-      })
+      });
     } else {
-      if(!params.user) {
+      if (!params.user) {
         res({
           code: 'l-error-02',
           message: 'Parâmetro obrigatório: user'
-        })
+        });
       }
-  
-      if(!params.password) {
+
+      if (!params.password) {
         res({
           code: 'l-error-03',
           message: 'Parâmetro obrigatório: password'
-        })
+        });
       }
 
-      if(!params.loginMode) {
+      if (!params.loginMode) {
         res({
           code: 'l-error-04',
           message: 'Parâmetro obrigatório: loginMode'
-        })
+        });
       }
 
-      if(!params.navigateTo) {
+      if (!params.navigateTo) {
         res({
           code: 'l-error-05',
           message: 'Parâmetro obrigatório: navigateTo'
-        })
+        });
       }
     }
-    //Set params errors: end
-    
-    if(params.loginMode === "emailAndPassword") {
+    // Set params errors: end
+
+    if (params.loginMode === 'emailAndPassword') {
       _authentication.signInWithEmailAndPassword(params.user, params.password)
       .catch(fbErr => {
-        if(fbErr) {
-          this._snackbar.open(fbErr['message'],'',{
+        if (fbErr) {
+          this._snackbar.open(fbErr['message'], '', {
             duration: 4000
-          })
+          });
         }
       })
       .then(fbRes => {
@@ -166,7 +166,7 @@ export class AuthenticationService {
                           sessionStorage.setItem('userCompanies', JSON.stringify(resUserCompanies))
                         })
                       }
-            
+
                       if (!sessionStorage.getItem('userPeople')) {
                         this._crud.read({
                           collectionsAndDocs: ['animals', fbRes['user']['uid'],'userPeople']

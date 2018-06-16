@@ -29,11 +29,11 @@ export class TopbarMenuComponent implements OnInit {
   public mobile = (typeof window !== 'undefined') ?
   (window.screen.availWidth < 800) :
   true;
-  
+
   public options: any;
   public user: any;
   public userData: any;
-  
+
   @Input() params;
 
   constructor(
@@ -79,11 +79,13 @@ export class TopbarMenuComponent implements OnInit {
   ngOnInit() {
     this.userData = JSON.parse(sessionStorage.getItem('userData'));
 
-    this._crud.read({
-      collectionsAndDocs: [this.userData[0]['userType'],this.userData[0]['_id']]
-    }).then(res => { 
-      this.user = res[0];
-    })
+    if(this.userData) {
+      this._crud.read({
+        collectionsAndDocs: [this.userData[0]['userType'],this.userData[0]['_id']]
+      }).then(res => {
+        this.user = res[0];
+      });
+    }
   }
 
   logout = () => {

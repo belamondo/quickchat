@@ -191,45 +191,45 @@ export class ProfileChoiceComponent implements OnInit {
     if (!this.companiesForm.get('cnpj').errors) {
       this._crud.read({
         collectionsAndDocs: [this.profileChoiceForm.get('description').value,this.user['user']['uid']],
-        where: ['cnpj','==',cnpj]
+        where: ['cnpj', '==', cnpj]
       }).then(res => {
-        console.log(res)
+        console.log(res);
       })
     }
   }
 
-  onBirthdayChange = (event) => {
-    this.peopleForm.get('birthday').setValue(event.targetElement.value);
-  }
-
   onPeopleFormSubmit = () => {
-
+    console.log(this.profileChoiceForm.get('description').value, this.user['user']['uid']);
     this._crud.read({
-      collectionsAndDocs: [this.profileChoiceForm.get('description').value,this.user['user']['uid']]
+      collectionsAndDocs: [this.profileChoiceForm.get('description').value, this.user['user']['uid']]
     }).then(resPeople => {
-      if (resPeople['length'] > 0) {
-        this._router.navigate(['/main/dashboard'])
-  
+      if (resPeople && resPeople[0] && resPeople[0]['length'] > 0) {
+        this._router.navigate(['/main/dashboard']);
+
         this._snackbar.open('Você já escolheu seu tipo de perfil e não pode alterá-lo.', '', {
           duration: 4000
-        })
-  
+        });
+
         return false;
       } else {
         this._crud.update({
-          collectionsAndDocs: [this.profileChoiceForm.get('description').value,this.user['user']['uid']],
+          collectionsAndDocs: [this.profileChoiceForm.get('description').value, this.user['user']['uid']],
           objectToUpdate: this.peopleForm.value
         }).then(res => {
-          this._router.navigate(['/main/dashboard'])
-  
-          this._snackbar.open('Perfil cadastrado. Bem vindo.', '', {
-            duration: 4000
-          })
-  
-          return true;
-        })
+          this._crud.read({
+            collectionsAndDocs: ['people', this.user['user']['uid']]
+          }).then(user => {
+            sessionStorage.setItem('userData', JSON.stringify(user));
+            this._router.navigate(['/main/dashboard']);
+            this._snackbar.open('Perfil cadastrado. Bem vindo.', '', {
+              duration: 4000
+            });
+
+            return true;
+          });
+        });
       }
-    })
+    });
   }
 
   onCompaniesFormSubmit = () => {

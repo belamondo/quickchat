@@ -193,7 +193,7 @@ export class CrudService {
         .then((querySnapshot) => {
           let result;
           result = [];
-          if (querySnapshot.docs) { console.log(196);
+          if (querySnapshot.docs) {
             querySnapshot.forEach((doc) => {
               let object;
               object = doc.data();
@@ -278,7 +278,7 @@ export class CrudService {
 
     stringToFilter += stringCreatingFilter;
     functionToFilter = eval(stringToFilter);
-    console.log(stringToFilter);
+
     functionToFilter
       .set(params.objectToUpdate)
       .then(res => {

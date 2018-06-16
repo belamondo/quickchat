@@ -2,17 +2,17 @@
   <mat-toolbar class="header-toolbar">
     <div id="header-content">
       <div>
-        <button mat-icon-button (click)="snav.toggle()">
+        <button mat-icon-button (click)="snav.toggle()" *ngIf="userData">
           <mat-icon>menu</mat-icon>
         </button>
       </div>
       
       <div>
-        <span *ngIf="userData[0]['userType'] == 'people'" style="font-size: small">
+        <span *ngIf="userData && userData[0]['userType'] == 'people'" style="font-size: small">
           {{user?.name.split(' ')[0]}}
         </span>
   
-        <span *ngIf="userData[0]['userType'] == 'companies'" style="font-size: small">
+        <span *ngIf="userData && userData[0]['userType'] == 'companies'" style="font-size: small">
           {{user?.business_name}}
         </span>
 
@@ -23,7 +23,7 @@
           <a mat-menu-item routerLink="/system" class="menu-item">Sistema</a>
         </mat-menu>
 
-        <button *ngIf="params.views" mat-icon-button [matMenuTriggerFor]="appMenu">
+        <button *ngIf="params.views && userData" mat-icon-button [matMenuTriggerFor]="appMenu">
           <mat-icon>view_module</mat-icon>
         </button>
 
